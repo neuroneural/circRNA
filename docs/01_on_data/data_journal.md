@@ -86,9 +86,12 @@ It allows for **Pathway-Based Feature Selection**. Instead of selecting 50 rando
 | **`Description`** | Human-readable name of the pathway (e.g., "Motor proteins") |
 | **`setSize`** | Number of genes from your dataset that belong to this pathway |
 | **`enrichmentScore`** | The raw enrichment score (ES) (Degree to which the gene set is overrepresented at the extremes of your ranked list) |
-| **`NES`** | Normalized Enrichment Score (Positive = Upregulated in Post-treatment, Negative = Downregulated) |
+| **`NES`** | Normalized Enrichment Score: The primary effect size metric. Positive NES means the pathway is overall upregulated; negative means downregulated. It is the raw Enrichment Score divided by the mean of permutation scores. Normalizing it this way corrects for the number of genes in the pathway, allowing you to fairly compare a tiny pathway (10 genes) against a massive one (500 genes). |
 | **`p.adjust`** | Adjusted p-value (FDR) (**Filter pathways using this, e.g., `< 0.05`**) |
-| **`core_enrichment`** | The specific genes (usually Entrez IDs) that drove the pathway's significance (**Extract these IDs, map them back to gene symbols, and use them as your ML features!**) |
+| **`qvalue`** | Another metric for False Discovery Rate control (typically via the Storey procedure). It is very similar to `p.adjust` but mathematically estimates the overall proportion of "true negatives" in the data, making it slightly more sensitive/less conservative than standard `p.adjust`. |
+| **`core_enrichment`** | A slash-separated list of numeric Entrez Gene IDs (e.g., `6218/6133`) representing the specific "leading edge" genes that drove the pathway's significance. **Note: These must be translated back to HGNC symbols to match the circRNA matrix.** |
+
+
 
 ---
 *Date:* 2026-04-30

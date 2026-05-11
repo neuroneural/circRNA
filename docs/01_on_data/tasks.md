@@ -19,7 +19,7 @@ CREATED /Users/ppopov1/_circRNA/_investigation/01_on_data/data
     - `PrevsPost_ERVIN_DE_GSEA_results*.csv` (Check column names to verify it already contains only significant pathways).
 - [x] **Subject ID Matching**: 
     - Read `RNAseq/demo_data.csv` and extract the metadata for the sample IDs.
-- [ ] **Gene ID Matching**:
+- [x] **Gene ID Matching**:
     - Develop a mapping strategy to cross-reference Entrez IDs (from GSEA), HGNC Gene Symbols (from DE results), and the `Gene` column in the circRNA counts.
 
 ## Phase 3: High-Level Statistical Analysis
@@ -36,11 +36,11 @@ CREATED /Users/ppopov1/_circRNA/_investigation/01_on_data/data
 
 - [x] **Criterion 1: The `exon-exon` Approach**:
     - Filter the matrix to include only `exon-exon` back-splices (highly reliable, Junction Type 1). Analyze how many features/counts are retained.
-- [ ] **Criterion 2: The Differential Expression (DE) Approach**:
+- [x] **Criterion 2: The Differential Expression (DE) Approach**:
     - Filter the matrix using only features that overlap with significant genes from the DE results (`padj < 0.05`). Analyze how many features/counts are retained.
-- [ ] **Criterion 3: Unannotated vs. Known**:
+- [x] **Criterion 3: Unannotated vs. Known**:
     - Compare the statistics of using only known genes vs. including `not_annotated` circRNA loops.
-- [ ] **Criterion 4: The GSEA Pathway Approach**:
+- [x] **Criterion 4: The GSEA Pathway Approach**:
     - Filter the matrix using only the `core_enrichment` genes from significant GSEA pathways. Analyze how many features/counts are retained compared to the raw DE approach.
 - [ ] **Compare & Discuss**:
     - Compare the overlaps and differences between these filtering criteria.
