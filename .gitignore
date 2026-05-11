@@ -1,6 +1,7 @@
 archives/
 imaging_data/
-RNAseq/
+RNAseq
+docs/01_on_data/data
 
 # macOS
 .DS_Store
