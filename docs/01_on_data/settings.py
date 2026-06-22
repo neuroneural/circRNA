@@ -12,9 +12,9 @@ node = platform.node()
 if "arctrd" in node:
     DATASET_ROOT = os.path.join("/data/users2/ppopov1/datasets/circRNA/")
 elif "URSMWJ" in node:
-    DATASET_ROOT = os.path.join(PROJECT_ROOT, "RNAseq")
-else:
     DATASET_ROOT = os.path.join("/Users/ppopov1/_circRNA/RNAseq")
+else:
+    DATASET_ROOT = os.path.join(PROJECT_ROOT, "RNAseq")
 
 if __name__ == "__main__":
     print("PROJECT_ROOT: ", PROJECT_ROOT)
