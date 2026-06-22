@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+# pyrefly: ignore [missing-import]
 from settings import DATA_ROOT
 
 def _load_base_data():
@@ -19,7 +20,7 @@ def load_raw_filtered_circRNAs(criterion='annotated_only', apply_filter=True):
     Filters circRNAs based on raw annotation and junction heuristics.
     
     Parameters:
-    - criterion (str): Must be 'annotated_only', 'exon_exon_only', or 'multi_circ_genes_only'.
+    - criterion (str): Must be 'annotated_only', 'exon_exon_only', 'junction_type_1', or 'multi_circ_genes_only'.
     - apply_filter (bool): If True, counts_df is filtered. If False, the full dataset is returned.
     
     Returns:
@@ -31,6 +32,11 @@ def load_raw_filtered_circRNAs(criterion='annotated_only', apply_filter=True):
         valid_df = counts_df[counts_df['Gene'] != 'not_annotated']
         
     elif criterion == 'exon_exon_only':
+        # Strictly filters for circles made entirely of exons
+        valid_df = counts_df[counts_df['Start-End Region'] == 'exon-exon']
+        
+    elif criterion == 'junction_type_1':
+        # Filters for canonical splicing signals, even if they occur in intergenic space
         valid_df = counts_df[counts_df['JunctionType'] == 1]
         
     elif criterion == 'multi_circ_genes_only':
@@ -41,7 +47,7 @@ def load_raw_filtered_circRNAs(criterion='annotated_only', apply_filter=True):
         valid_df = annotated[annotated['Gene'].isin(multi_genes)]
         
     else:
-        raise ValueError("criterion must be 'annotated_only', 'exon_exon_only', or 'multi_circ_genes_only'")
+        raise ValueError("criterion must be 'annotated_only', 'exon_exon_only', 'junction_type_1', or 'multi_circ_genes_only'")
         
     # Get exact list of valid targets
     target_ids = valid_df['circRNA_id'].tolist()
