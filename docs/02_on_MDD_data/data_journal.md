@@ -182,6 +182,16 @@ The same ICA run is stored in three forms:
 * 105-component version (`mdd_direct_ica105_sfnc`): a **5,460-length** vector = upper triangle of the 105×105 matrix.
 * Also derived and local for the 105-component ICA: **`spectra`** and **`mips`** (`mdd_direct_ica105_spectra`, `mdd_direct_ica105_mips`).
 
+### 3.4 Voxelwise maps (fALFF / ALFF / ReHo) — archive only
+
+* **Where on the cluster**: `/data/qneuromark/Data/Depression/MDD_DIRECT/DIRECT_II_Results.zip` (~112 GB; contents listed in `DIRECT_II_Results_filelist.txt`).
+* **Where inside the zip** (per-subject 3-D NIfTI): `Results/Results/FunVolu/fALFF_FunVoluW{C,globalC}/fALFF_{ID}.nii.gz` — **3,525 subjects × 2 variants = 7,050 files**.
+* **Two variants (the 2 file types)**:
+  * `fALFF_FunVoluWC/` — nuisance-regressed, **without** global-signal regression
+  * `fALFF_FunVoluWglobalC/` — same, **with** global-signal regression
+* Extract just what you need, e.g.: `7z x DIRECT_II_Results.zip "Results/Results/FunVolu/fALFF_FunVoluWC/*" -o<dest>`.
+* Not to be confused with `MDD_preproc/results/falff/` — that is *component-level* fALFF (one value per Neuromark component), see §3.1.
+
 ## 4. Mapping Metadata → Neuroimaging Data
 
 ### 4.1 Join keys
