@@ -159,6 +159,8 @@ The same ICA run is stored in three forms:
 
 **Two resolutions**: 53-component (`neuromark53_clean/`) and 105-component / Neuromark 2.2 (`results/ica/neuromark105_clean/`, `neuromark105_super_clean/`).
 
+**Original / full ICA output** (unfiltered 3,525-subject GIFT results incl. `_br`/`_c` intermediates, numbered `sub{N}` 1–3525) lives at `/data/qneuromark/Results/ICA/MDD_DIRECT/{Neuromark1.0 = 53, Neuromark2.2 = 105, NeuromarkWM}/` — the source that the `*_clean` copies are filtered/renumbered from.
+
 
 ### 3.2 dFNC — dynamic (sliding-window) FNC
 
