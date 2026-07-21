@@ -54,7 +54,7 @@ SUPER_LIST = f"{PREPROC_ROOT}/data/MDDD/Subjlist_super_clean.txt"    # -> neurom
 ICA53_DIR = f"{PREPROC_ROOT}/neuromark53_clean"
 ICA105_DIR = f"{PREPROC_ROOT}/results/ica/neuromark105_super_clean"
 
-OUT = "mdd_master.csv"   # curated columns; also writes mdd_master_full.csv (+ all FULL_sites clinical cols)
+OUT = "data/mdd_master.csv"   # curated cols (in data/); also writes data/mdd_master_full.csv (+ all FULL_sites cols)
 SUBSET = "full"          # "full" (3,525) | "clean" (2,526) | "super_clean" (2,426)
                          # in_clean / in_super_clean columns let you filter tiers from the full CSV
 CHECK = True             # stat() each path and blank it if the file is missing
@@ -214,6 +214,7 @@ def build():
     # ── Write both versions + summary ──────────────────────────────────────────
     base, ext = os.path.splitext(OUT)
     full_out = f"{base}_full{ext}"
+    os.makedirs(os.path.dirname(OUT) or ".", exist_ok=True)
     df_lean.to_csv(OUT, index=False)
     df_full.to_csv(full_out, index=False)
     print(f"Wrote {len(df_lean)} rows -> {OUT} ({df_lean.shape[1]} cols, curated)")

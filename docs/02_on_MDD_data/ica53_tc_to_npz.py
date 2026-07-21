@@ -26,7 +26,7 @@ import pandas as pd
 import nibabel as nib
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-IN_CSV = "mdd_master.csv"          # master CSV produced by build_mdd_master_csv.py
+IN_CSV = "data/mdd_master.csv"     # master CSV produced by build_mdd_master_csv.py (in data/)
 OUT_NPZ = "data/mdd_ica53_tc_superclean.npz"   # saved into the data/ subdirectory
 TC_COL = "ica53_tc"                # timecourse path column to load
 FILTER_COL = "in_super_clean"      # keep only rows where this column is truthy; None = no filter

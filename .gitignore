@@ -2,9 +2,28 @@ archives/
 imaging_data/
 RNAseq
 docs/01_on_data/data
+docs/02_on_MDD_data/data
+
+# Editors / IDEs
+.vscode/
+.idea/
+.history/
+*.code-workspace
+
+# Local environment files
+.env
+.env.*
+.python-version
+
+# Logs / temp files
+*.log
+*.out
+*.tmp
+*.bak
 
 # macOS
 .DS_Store
+Thumbs.db
 *.swp
 
 # Python
@@ -12,6 +31,17 @@ __pycache__/
 *.py[cod]
 *$py.class
 .ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.nox/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+*.egg-info/
 
 # Virtual Environments
 .venv/
