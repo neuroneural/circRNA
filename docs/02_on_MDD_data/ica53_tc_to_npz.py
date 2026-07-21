@@ -7,7 +7,8 @@ Read the ICA-53 timecourse NIfTIs referenced by the MDD master CSV
 (`ica53_tc` column) and pack them, together with selected metadata columns,
 into a single compressed .npz. Arrays inside the .npz are named by their CSV
 column name (`ica53_tc`, `id`, `Diagnosis`, `Sex`, `Age`, `Education`,
-`HAMDTotal17`, `HAMATotal`, `HAMD3`).
+`HAMDTotal17`, `HAMATotal`, `HAMD3`), plus a boolean `full` array (True where
+`Diagnosis`, `Sex` and `Age` are all present).
 
 Edit the CONFIG block and run:  python ica53_tc_to_npz.py
 
@@ -43,11 +44,13 @@ def load_tc(path):
     return np.squeeze(np.asarray(nib.load(path).get_fdata(), dtype=np.float32))
 
 
-def write_legend(df, out_md, tc_shape):
+def write_legend(df, out_md, tc_shape, full_mask):
     """Auto-generate a stats legend (TC shape + categorical counts + continuous summaries)."""
     n, t_min = tc_shape[0], tc_shape[1]
     rows = [("ica53_tc", "Shape (N, T, components)",
-             f"({tc_shape[0]}, {tc_shape[1]}, {tc_shape[2]})")]  # (Category, Statistic/Label, Value)
+             f"({tc_shape[0]}, {tc_shape[1]}, {tc_shape[2]})"),  # (Category, Statistic/Label, Value)
+            ("full", "Count True (Dx+Sex+Age present)", int(full_mask.sum())),
+            ("full", "Count False (any missing)", int((~full_mask).sum()))]
 
     for col in CATEGORICAL:
         if col not in df.columns:
@@ -151,6 +154,12 @@ def main():
         else:
             out[c] = pd.to_numeric(df[c], errors="coerce").to_numpy(dtype=np.float32)
 
+    # boolean: entries with Diagnosis, Sex AND Age all present
+    def _present(c):
+        return (pd.to_numeric(df[c], errors="coerce").notna().to_numpy()
+                if c in df.columns else np.zeros(len(df), bool))
+    out["full"] = _present("Diagnosis") & _present("Sex") & _present("Age")
+
     os.makedirs(os.path.dirname(OUT_NPZ) or ".", exist_ok=True)
     np.savez_compressed(OUT_NPZ, **out)
 
@@ -160,10 +169,12 @@ def main():
     for c in META_COLS:
         if c in out:
             print(f"  {c:12s}: {out[c].shape} {out[c].dtype}")
+    print(f"  {'full':12s}: {out['full'].shape} bool — "
+          f"{int(out['full'].sum())}/{len(df)} complete (Dx+Sex+Age)")
 
     # auto-generate the stats legend next to the archive: <npz>_legend.md
     out_legend = os.path.splitext(OUT_NPZ)[0] + "_legend.md"
-    write_legend(df, out_legend, tc_arr.shape)
+    write_legend(df, out_legend, tc_arr.shape, out["full"])
     print(f"Wrote legend -> {out_legend}")
 
 
