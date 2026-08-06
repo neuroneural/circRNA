@@ -8,11 +8,11 @@ Source
 phase_prediction/models/gru.py               (BiGRU)
 phase_prediction/models/bigru_attention.py   (BiGRUAttention)
 
-These are a different design from the MDD_preproc RNNs: much deeper (5 layers),
-and they summarise the sequence by *flattening every time step* into one big
-vector (`Linear(seq_len * hidden * n_directions, hidden)`) rather than pooling.
-They also normalise across the time axis with `BatchNorm1d(seq_len)`, and
-normalise the FC output a second time with `BatchNorm1d(hidden)`.
+These are a different design from the MDD_preproc RNNs: they summarise the
+sequence by *flattening every time step* into one big vector
+(`Linear(seq_len * hidden * n_directions, hidden)`) rather than pooling. They
+normalise across the time axis with `BatchNorm1d(seq_len)`, and normalise the
+FC output a second time with `BatchNorm1d(hidden)`.
 
 The sequence-length problem
 ---------------------------
@@ -52,9 +52,33 @@ Other adaptations for ml4fmri
 * Added `lr`, `compute_loss`, `handle_batch`, `get_optimizer`,
   `prepare_dataloader` and `train_model`.
 
-Note: with `pool="flatten"` these models are large. At 53 components, 140 TRs,
-hidden 512 (the original BiGRU default) bidirectional, the flatten head alone is
-140*1024*512 ≈ 73M weights — drop `hidden_size` for anything realistic.
+Where the defaults come from
+----------------------------
+Taken from phase_prediction's own grid search on MDDD/Diagnosis
+(`experiments/C001_grid_mddd.sh` -> `grids/C001_grid.txt`, summarised in
+`tables/C001_valid_auc.csv`; `B001_valid_auc.csv` is the earlier MDDD grid).
+The score is max-over-epochs validation AUC averaged over 5 folds.
+
+Best `ica53_timeseries` config for `bigru`: batch 128, lr 1e-4,
+hidden_size 64, num_layers 1 -> val AUC 0.706 +/- 0.105, the best result any
+model reached on ICA-53 timecourses in that grid. hidden_size 64 was also the
+best on average for bigru, and B001 found num_layers made no meaningful
+difference, so 1 is used as the cheapest.
+
+Three caveats on those numbers:
+
+* The grid ran `do_softmax=1` *together with* CrossEntropyLoss, i.e. softmax was
+  applied twice. This port feeds raw logits to CE (correctly), so the tuned LRs
+  are a starting point, not a transferable optimum.
+* Fold std is 0.03-0.15 and the statistic is max-over-epochs, which is
+  optimistically biased. Most differences between neighbouring settings are
+  inside the noise.
+* The grid never went above lr=1e-4 on MDDD (`{1e-8, 1e-6, 1e-4}`); 1e-2 was
+  tried only in B001 and was clearly worst.
+
+Note: with `pool="flatten"` the FC head scales with seq_len * hidden. At the
+grid-best hidden_size=64 that is modest; at the original source default of 512
+it is ~73M weights at 140 TRs.
 """
 
 from typing import Literal, Optional
@@ -101,8 +125,8 @@ class PhaseBiGRU(nn.Module):
     """
     TIME SERIES MODEL
 
-    phase_prediction's BiGRU: 5-layer bidirectional GRU, BatchNorm over the time
-    axis, then the whole sequence flattened into a single FC head, with a second
+    phase_prediction's BiGRU: bidirectional GRU, BatchNorm over the time axis,
+    then the whole sequence flattened into a single FC head, with a second
     BatchNorm on the FC output.
     Expected input shape: [batch_size, time_length, input_feature_size].
     Output: [batch_size, n_classes]
@@ -113,15 +137,15 @@ class PhaseBiGRU(nn.Module):
         input_size: int,
         output_size: int,
         seq_len: Optional[int] = None,
-        hidden_size: int = 128,
-        num_layers: int = 5,
+        hidden_size: int = 64,
+        num_layers: int = 1,
         bidirectional: bool = True,
         dropout: float = 0.1,
         pool: Literal["auto", "flatten", "mean", "last_bidir", "attention"] = "auto",
         norm: Literal["auto", "batch", "layer", "none"] = "auto",
         activation: Literal["relu", "tanh", "lrelu"] = "relu",
         activation_alpha: float = 0.0,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
     ):
         """
         Initialize the model.
@@ -132,9 +156,10 @@ class PhaseBiGRU(nn.Module):
             seq_len (int, optional): Number of time points (`seqlen` in the original). \
                 Required for pool="flatten" and norm="batch". If None, the model falls back \
                 to length-agnostic mean pooling and LayerNorm. Use `with_seq_len` to pin it.
-            hidden_size (int, hyperparameter): GRU hidden size. Defaults to 128 (the original \
-                default was 512, which makes the flatten head enormous).
-            num_layers (int, hyperparameter): Number of GRU layers. Defaults to 5.
+            hidden_size (int, hyperparameter): GRU hidden size, and the width of the FC head. \
+                Defaults to 64, the grid-best for bigru on ICA-53 timecourses (the original \
+                source default was 512, which makes the flatten head enormous).
+            num_layers (int, hyperparameter): Number of GRU layers. Defaults to 1 (grid-best).
             bidirectional (bool, hyperparameter): Bidirectional GRU. Defaults to True.
             dropout (float, hyperparameter): Dropout before the output layer (`drp`). Defaults to 0.1.
             pool (str, hyperparameter): "flatten" (original), "mean", "last_bidir" or "attention". \
@@ -144,7 +169,8 @@ class PhaseBiGRU(nn.Module):
                 seq_len is given, else "layer".
             activation (str, hyperparameter): "relu", "tanh" or "lrelu". Defaults to "relu".
             activation_alpha (float, hyperparameter): Negative slope for "lrelu". Defaults to 0.0.
-            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-3.
+            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-4, the best \
+                credible value in phase_prediction's MDDD grid.
         """
         super().__init__()
         self.lr = lr
@@ -238,7 +264,11 @@ class PhaseBiGRU(nn.Module):
         h, _ = self.rnn(x)
         h = self.norm(h)
         pooled = self._pool(h)
-        embedding = self.fc_norm(self.act(self.linear(pooled)))
+        embedding = self.act(self.linear(pooled))
+        # BatchNorm1d over the FC output needs >1 sample; a trailing batch of one
+        # (n_train % batch_size == 1) would otherwise crash mid-epoch.
+        if not (self.training and isinstance(self.fc_norm, nn.BatchNorm1d) and embedding.size(0) < 2):
+            embedding = self.fc_norm(embedding)
         logits = self.outlayer(self.dropout(embedding))
         return logits, {"logits": logits, "embedding": embedding}
 
@@ -282,13 +312,14 @@ class PhaseBiGRU(nn.Module):
         return basic_Adam_optimizer(self, lr)
 
     @staticmethod
-    def prepare_dataloader(data, labels, batch_size: int = 64, shuffle: bool = True):
+    def prepare_dataloader(data, labels, batch_size: int = 128, shuffle: bool = True):
         """
         Returns a torch DataLoader producing batches appropriate for the model.
         Args:
             data (array-like): Time series data of shape (B, T, D).
             labels (array-like): Class labels for the data.
-            batch_size (int, optional): Batch size. Defaults to 64.
+            batch_size (int, optional): Batch size. Defaults to 128 — cvbench calls this \
+                without a batch size, and 128 beat 64 and 256 in phase_prediction's grid.
             shuffle (bool, optional): Whether to shuffle batching. Defaults to True.
         Returns:
             DataLoader: batches of time series data and labels.
@@ -348,14 +379,14 @@ class PhaseBiGRUAttention(PhaseBiGRU):
         input_size: int,
         output_size: int,
         seq_len: Optional[int] = None,
-        hidden_size: int = 128,
-        num_layers: int = 5,
+        hidden_size: int = 64,
+        num_layers: int = 1,
         bidirectional: bool = True,
         dropout: float = 0.1,
         norm: Literal["auto", "batch", "layer", "none"] = "auto",
         activation: Literal["relu", "tanh", "lrelu"] = "relu",
         activation_alpha: float = 0.0,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
     ):
         """Same arguments as PhaseBiGRU, with `pool` fixed to "attention"."""
         super().__init__(

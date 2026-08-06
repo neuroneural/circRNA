@@ -8,10 +8,10 @@ Source
 phase_prediction/models/bilstm.py            (BiLSTM)
 phase_prediction/models/bisltm_attention.py  (BiLSTMAttention)
 
-These are a different design from the MDD_preproc RNNs: deeper (3 layers), and
-they summarise the sequence by *flattening every time step* into one big vector
-(`Linear(seq_len * hidden * n_directions, hidden)`) rather than pooling. They
-also normalise across the time axis with `BatchNorm1d(seq_len)`.
+These are a different design from the MDD_preproc RNNs: they summarise the
+sequence by *flattening every time step* into one big vector
+(`Linear(seq_len * hidden * n_directions, hidden)`) rather than pooling, and
+they normalise across the time axis with `BatchNorm1d(seq_len)`.
 
 The sequence-length problem
 ---------------------------
@@ -51,8 +51,36 @@ Other adaptations for ml4fmri
 * Added `lr`, `compute_loss`, `handle_batch`, `get_optimizer`,
   `prepare_dataloader` and `train_model`.
 
-Note: with `pool="flatten"` these models are large. At 53 components, 140 TRs,
-hidden 128 bidirectional, the flatten head alone is 140*256*128 ≈ 4.6M weights.
+Where the defaults come from
+----------------------------
+Taken from phase_prediction's own grid search on MDDD/Diagnosis
+(`experiments/C001_grid_mddd.sh` -> `grids/C001_grid.txt`, summarised in
+`tables/C001_valid_auc.csv`; `B001_valid_auc.csv` is the earlier MDDD grid).
+The score is max-over-epochs validation AUC averaged over 5 folds.
+
+Best `ica53_timeseries` config for `bilstm`, restricting to LRs above the
+degenerate 1e-8: batch 128, lr 1e-4, hidden_size 512, num_layers 1 ->
+val AUC 0.687 +/- 0.080. (The nominal overall best was lr=1e-8 at 0.696, which
+is not a credible learning rate.) B001 swept num_layers 1/3/5/10 and found no
+meaningful difference, so 1 is used as the cheapest.
+
+Heads-up on size: hidden_size=512 bidirectional with pool="flatten" at 230 TRs
+puts ~120M weights in the FC head alone. hidden_size=64 scored 0.628 on the
+same grid -- well inside the fold noise -- for ~1/60th of the parameters.
+
+Three caveats on those numbers:
+
+* The grid ran `do_softmax=1` *together with* CrossEntropyLoss, i.e. softmax was
+  applied twice. This port feeds raw logits to CE (correctly), so the tuned LRs
+  are a starting point, not a transferable optimum.
+* Fold std is 0.03-0.15 and the statistic is max-over-epochs, which is
+  optimistically biased. Most differences between neighbouring settings are
+  inside the noise.
+* The grid never went above lr=1e-4 on MDDD (`{1e-8, 1e-6, 1e-4}`); 1e-2 was
+  tried only in B001 and was clearly worst.
+
+Note: with `pool="flatten"` these models are large -- see the size heads-up
+above before raising `hidden_size` or the number of TRs.
 """
 
 from typing import Literal, Optional
@@ -99,8 +127,8 @@ class PhaseBiLSTM(nn.Module):
     """
     TIME SERIES MODEL
 
-    phase_prediction's BiLSTM: 3-layer bidirectional LSTM, BatchNorm over the
-    time axis, then the whole sequence flattened into a single FC head.
+    phase_prediction's BiLSTM: bidirectional LSTM, BatchNorm over the time axis,
+    then the whole sequence flattened into a single FC head.
     Expected input shape: [batch_size, time_length, input_feature_size].
     Output: [batch_size, n_classes]
     """
@@ -110,15 +138,15 @@ class PhaseBiLSTM(nn.Module):
         input_size: int,
         output_size: int,
         seq_len: Optional[int] = None,
-        hidden_size: int = 128,
-        num_layers: int = 3,
+        hidden_size: int = 512,
+        num_layers: int = 1,
         bidirectional: bool = True,
         dropout: float = 0.1,
         pool: Literal["auto", "flatten", "mean", "last_bidir", "attention"] = "auto",
         norm: Literal["auto", "batch", "layer", "none"] = "auto",
         activation: Literal["relu", "tanh", "lrelu"] = "relu",
         activation_alpha: float = 0.0,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
     ):
         """
         Initialize the model.
@@ -129,8 +157,10 @@ class PhaseBiLSTM(nn.Module):
             seq_len (int, optional): Number of time points (`seqlen` in the original). \
                 Required for pool="flatten" and norm="batch". If None, the model falls back \
                 to length-agnostic mean pooling and LayerNorm. Use `with_seq_len` to pin it.
-            hidden_size (int, hyperparameter): LSTM hidden size. Defaults to 128.
-            num_layers (int, hyperparameter): Number of LSTM layers. Defaults to 3.
+            hidden_size (int, hyperparameter): LSTM hidden size, and the width of the FC head. \
+                Defaults to 512, the grid-best for bilstm on ICA-53 timecourses. See the size \
+                warning in the module docstring; 64 is a far cheaper near-equivalent.
+            num_layers (int, hyperparameter): Number of LSTM layers. Defaults to 1 (grid-best).
             bidirectional (bool, hyperparameter): Bidirectional LSTM. Defaults to True.
             dropout (float, hyperparameter): Dropout before the output layer (`drp`). Defaults to 0.1.
             pool (str, hyperparameter): "flatten" (original), "mean", "last_bidir" or "attention". \
@@ -139,7 +169,8 @@ class PhaseBiLSTM(nn.Module):
                 "layer", or "none". "auto" picks "batch" when seq_len is given, else "layer".
             activation (str, hyperparameter): "relu", "tanh" or "lrelu". Defaults to "relu".
             activation_alpha (float, hyperparameter): Negative slope for "lrelu". Defaults to 0.0.
-            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-3.
+            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-4, the best \
+                credible value in phase_prediction's MDDD grid.
         """
         super().__init__()
         self.lr = lr
@@ -269,13 +300,14 @@ class PhaseBiLSTM(nn.Module):
         return basic_Adam_optimizer(self, lr)
 
     @staticmethod
-    def prepare_dataloader(data, labels, batch_size: int = 64, shuffle: bool = True):
+    def prepare_dataloader(data, labels, batch_size: int = 128, shuffle: bool = True):
         """
         Returns a torch DataLoader producing batches appropriate for the model.
         Args:
             data (array-like): Time series data of shape (B, T, D).
             labels (array-like): Class labels for the data.
-            batch_size (int, optional): Batch size. Defaults to 64.
+            batch_size (int, optional): Batch size. Defaults to 128 — cvbench calls this \
+                without a batch size, and 128 beat 64 and 256 in phase_prediction's grid.
             shuffle (bool, optional): Whether to shuffle batching. Defaults to True.
         Returns:
             DataLoader: batches of time series data and labels.
@@ -335,14 +367,14 @@ class PhaseBiLSTMAttention(PhaseBiLSTM):
         input_size: int,
         output_size: int,
         seq_len: Optional[int] = None,
-        hidden_size: int = 128,
-        num_layers: int = 3,
+        hidden_size: int = 512,
+        num_layers: int = 1,
         bidirectional: bool = True,
         dropout: float = 0.1,
         norm: Literal["auto", "batch", "layer", "none"] = "auto",
         activation: Literal["relu", "tanh", "lrelu"] = "relu",
         activation_alpha: float = 0.0,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
     ):
         """Same arguments as PhaseBiLSTM, with `pool` fixed to "attention"."""
         super().__init__(

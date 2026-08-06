@@ -36,9 +36,9 @@ report = cvbench(
         MDDLSTM, MDDLSTMAttention, MDDGRU, MDDGRUAttention, MDDTransformer,
         with_seq_len(PhaseBiLSTM, T),
         with_seq_len(PhaseBiLSTMAttention, T),
-        with_seq_len(PhaseBiGRU, T, hidden_size=64),
-        with_seq_len(PhaseBiGRUAttention, T, hidden_size=64),
-        with_seq_len(PhaseTransformer, T, hidden_size=128),
+        with_seq_len(PhaseBiGRU, T),
+        with_seq_len(PhaseBiGRUAttention, T),
+        with_seq_len(PhaseTransformer, T),
     ],
     n_folds=5,
 )
@@ -81,7 +81,7 @@ Required by `cvbench`, following `ml4fmri/src/ml4fmri/models/LSTM.py`:
 - `prepare_dataloader(data, labels, batch_size, shuffle)` — `basic_dataloader(type="TS")`,
   z-scores along time. All six are time-series models.
 - `self.lr` — reference learning rate: `3e-4` for the MDD_ models (their time-series runs),
-  `1e-3` for the phase_ models.
+  `1e-4` / `1e-6` for the phase_ models (see the table below).
 
 ## Deviations from the originals
 
@@ -109,13 +109,52 @@ Required by `cvbench`, following `ml4fmri/src/ml4fmri/models/LSTM.py`:
 **phase_ models**
 
 6. **`seq_len` handling** — see above.
-7. **`PhaseBiGRU` default `hidden_size` lowered to 128** (original 512). With flatten pooling at
-   512 bidirectional the FC head alone is ~73M weights at 140 TRs.
+7. **Defaults come from phase_prediction's own grid search**, not the source files' constructor
+   defaults — see the table below.
 8. **`PhaseTransformer` head count is constrained.** The encoder runs at `d_model = input_size`
    (no input projection, faithful to the original), so `nhead` must divide `input_size` — with
    53 components that is 1 or 53; with 105 it is 1, 3, 5, 7, 15, 21, 35, 105. The constructor
    raises a clear error listing the valid divisors instead of failing inside torch.
 9. **`PhaseTransformer`'s unused `bidirectional` argument** is dropped.
+
+## phase_ defaults and where they come from
+
+`experiments/C001_grid_mddd.sh` generates a grid (8 MDDD datasets x 3 models x 4 model_kwargs x
+3 batch sizes x 3 LRs x 5 folds) into `grids/C001_grid.txt`, run as a slurm array. Results are
+summarised in `tables/C001_valid_auc.csv` (and `B001_valid_auc.csv` for the earlier grid) as
+max-over-epochs validation AUC averaged over folds. The defaults below are the best credible
+configuration from that grid.
+
+| Model | hidden_size | num_layers | lr | batch | source row |
+|---|---|---|---|---|---|
+| `PhaseBiLSTM` | 512 | 1 | 1e-4 | 128 | `ica53_timeseries`, val AUC 0.687 +/- 0.080 |
+| `PhaseBiGRU` | 64 | 1 | 1e-4 | 128 | `ica53_timeseries`, val AUC 0.706 +/- 0.105 (best of any model on timecourses) |
+| `PhaseTransformer` | 256 | 1 | 1e-6 | 128 | `dfnc_60s`, val AUC 0.786 +/- 0.076 — see note |
+
+Batch size is set through `prepare_dataloader`'s default, since `cvbench` calls it without one.
+
+Notes on those numbers:
+
+- **The grid never tried an LR above 1e-4 on MDDD** (`{1e-8, 1e-6, 1e-4}`; B001 also tried 1e-2
+  and it was clearly worst). The earlier 1e-3 default in these files was outside the swept range.
+- **The grid ran `do_softmax=1` together with CrossEntropyLoss** — softmax applied twice. This
+  port feeds raw logits to CE, so the tuned LRs are a starting point, not a transferable optimum.
+- **Fold std is 0.03-0.15 and the statistic is max-over-epochs**, which is optimistically biased.
+  Most differences between neighbouring settings sit inside the noise. In particular
+  `PhaseBiLSTM` at `hidden_size=64` scored 0.628 vs 0.687 at 512 — statistically a wash, but 512
+  with `pool="flatten"` puts ~120M weights in the FC head at 230 TRs. Consider overriding:
+  `with_seq_len(PhaseBiLSTM, T, hidden_size=64)`.
+- **`PhaseTransformer` has zero `ica53_timeseries` rows** in the C001 results while every other
+  dataset has ~300 — those runs all crashed, almost certainly because the source default
+  `nhead=2` cannot divide 53. It was never successfully trained on 53-component timecourses, so
+  its defaults are borrowed from the other MDDD modalities.
+- `num_layers=1` throughout: C001 only ran 1-layer configs, and B001 (which swept 1/3/5/10)
+  found no meaningful difference, so 1 is the cheapest.
+
+- `PhaseBiGRU`/`PhaseBiGRUAttention` skip their FC BatchNorm when a training batch contains a
+  single sample (`n_train % batch_size == 1`), which would otherwise raise
+  "Expected more than 1 value per channel". The time-axis BatchNorm is unaffected — it still has
+  `n_components` values per channel at batch size 1.
 
 ## Caveats
 

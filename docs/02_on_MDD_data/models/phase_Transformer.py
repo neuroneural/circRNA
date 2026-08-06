@@ -47,6 +47,35 @@ Other adaptations for ml4fmri
 * Added `lr`, `compute_loss`, `handle_batch`, `get_optimizer`,
   `prepare_dataloader` and `train_model`.
 
+Where the defaults come from
+----------------------------
+Taken from phase_prediction's own grid search on MDDD/Diagnosis
+(`experiments/C001_grid_mddd.sh` -> `grids/C001_grid.txt`, summarised in
+`tables/C001_valid_auc.csv`; `B001_valid_auc.csv` is the earlier MDDD grid).
+The score is max-over-epochs validation AUC averaged over 5 folds.
+
+The transformer has **no `ica53_timeseries` rows at all** in the C001 results —
+every other dataset has ~300, that cell has 0. Those runs crashed, almost
+certainly on exactly the divisibility constraint above: the source default is
+`nhead=2` and 53 is prime, so `nn.TransformerEncoderLayer(d_model=53, nhead=2)`
+fails. The phase transformer was therefore never successfully trained on
+53-component timecourses. Defaults here fall back to its best config on the
+other MDDD modalities: batch 128, lr 1e-6, hidden_size 256, num_layers 1
+(val AUC 0.786 +/- 0.076 on dfnc_60s; B001's best was the same batch/lr/layers
+with hidden_size 64 at 0.770). lr=1e-6 was best by mean for this model in both
+grids.
+
+Three caveats on those numbers:
+
+* The grid ran `do_softmax=1` *together with* CrossEntropyLoss, i.e. softmax was
+  applied twice. This port feeds raw logits to CE (correctly), so the tuned LRs
+  are a starting point, not a transferable optimum.
+* Fold std is 0.03-0.15 and the statistic is max-over-epochs, which is
+  optimistically biased. Most differences between neighbouring settings are
+  inside the noise.
+* The grid never went above lr=1e-4 on MDDD (`{1e-8, 1e-6, 1e-4}`); 1e-2 was
+  tried only in B001 and was clearly worst.
+
 Note: no positional encoding, faithful to the original. With `pool="mean"` the
 model is therefore permutation-invariant over time; with `pool="flatten"` the
 head does carry position information.
@@ -112,12 +141,12 @@ class PhaseTransformer(nn.Module):
         input_size: int,
         output_size: int,
         seq_len: Optional[int] = None,
-        hidden_size: int = 1024,
+        hidden_size: int = 256,
         nhead: int = 1,
-        num_layers: int = 3,
+        num_layers: int = 1,
         dropout: float = 0.1,
         pool: Literal["auto", "flatten", "mean"] = "auto",
-        lr: float = 1e-3,
+        lr: float = 1e-6,
     ):
         """
         Initialize the model.
@@ -129,14 +158,16 @@ class PhaseTransformer(nn.Module):
             seq_len (int, optional): Number of time points (`seqlen` in the original). \
                 Required for pool="flatten". If None, the model mean-pools over time. \
                 Use `with_seq_len` to pin it.
-            hidden_size (int, hyperparameter): Width of the FC head. Defaults to 1024.
+            hidden_size (int, hyperparameter): Width of the FC head. Defaults to 256 (grid-best; \
+                note this is the head only — the encoder always runs at d_model=input_size).
             nhead (int, hyperparameter): Attention heads. Must divide `input_size`. Defaults to 1.
-            num_layers (int, hyperparameter): Encoder layers. Defaults to 3.
+            num_layers (int, hyperparameter): Encoder layers. Defaults to 1 (grid-best).
             dropout (float, hyperparameter): Dropout in the encoder and before the output layer. \
                 Defaults to 0.1.
             pool (str, hyperparameter): "flatten" (original) or "mean". "auto" picks "flatten" \
                 when seq_len is given, else "mean".
-            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-3.
+            lr (float, hyperparameter): Reference learning rate. Defaults to 1e-6, which was \
+                the best LR for this model in both phase_prediction MDDD grids.
         """
         super().__init__()
         self.lr = lr
@@ -224,13 +255,14 @@ class PhaseTransformer(nn.Module):
         return basic_Adam_optimizer(self, lr)
 
     @staticmethod
-    def prepare_dataloader(data, labels, batch_size: int = 64, shuffle: bool = True):
+    def prepare_dataloader(data, labels, batch_size: int = 128, shuffle: bool = True):
         """
         Returns a torch DataLoader producing batches appropriate for the model.
         Args:
             data (array-like): Time series data of shape (B, T, D).
             labels (array-like): Class labels for the data.
-            batch_size (int, optional): Batch size. Defaults to 64.
+            batch_size (int, optional): Batch size. Defaults to 128 — cvbench calls this \
+                without a batch size, and 128 beat 64 and 256 in phase_prediction's grid.
             shuffle (bool, optional): Whether to shuffle batching. Defaults to True.
         Returns:
             DataLoader: batches of time series data and labels.
