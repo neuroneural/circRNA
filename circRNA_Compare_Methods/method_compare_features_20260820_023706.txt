@@ -1,0 +1,1521 @@
+
+============================================================================
+FEATURES  |  Target: GAD-7
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.974 +/- 0.024  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_-                 Gene: not_annotated
+      2    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      3    7/9  [XXXXXXX..]  freq=0.78  chr21_36247517_36248568_+                 Gene: DOP1B
+      4    7/9  [XXXXXXX..]  freq=0.78  chr2_201344170_201351451_+                Gene: not_annotated
+      5    6/9  [XXXXXX...]  freq=0.67  chr8_140585119_140605914_-                Gene: AGO2
+      6    6/9  [XXXXXX...]  freq=0.67  chr1_45640210_45642499_+                  Gene: not_annotated
+      7    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    6/9  [XXXXXX...]  freq=0.67  chr12_829062_829944_+                     Gene: WNK1
+      9    6/9  [XXXXXX...]  freq=0.67  chr7_102227367_102227669_+                Gene: CUX1
+      10   5/9  [XXXXX....]  freq=0.56  chr11_16095996_16097688_-                 Gene: SOX6
+      11   5/9  [XXXXX....]  freq=0.56  chr1_95143891_95173889_-                  Gene: AC092802.2
+      12   5/9  [XXXXX....]  freq=0.56  chr2_8908621_8958642_+                    Gene: not_annotated
+      13   5/9  [XXXXX....]  freq=0.56  chr1_95143891_95151419_-                  Gene: not_annotated
+      14   5/9  [XXXXX....]  freq=0.56  chr7_102227367_102227669_-                Gene: not_annotated
+      15   5/9  [XXXXX....]  freq=0.56  chr16_11020193_11126146_-                 Gene: AC007014.1
+      16   5/9  [XXXXX....]  freq=0.56  chr2_8908621_8958642_-                    Gene: MBOAT2
+      17   5/9  [XXXXX....]  freq=0.56  chr17_67945409_67975958_-                 Gene: AC134407.1
+      18   4/9  [XXXX.....]  freq=0.44  chr2_8943187_8958642_+                    Gene: not_annotated
+      19   4/9  [XXXX.....]  freq=0.44  chr17_39419717_39423821_-                 Gene: MED1
+      20   4/9  [XXXX.....]  freq=0.44  chr15_65729072_65756472_-                 Gene: DENND4A
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: 0.999 +/- 0.003  (9/9 valid folds)
+
+  STABLE features (9 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr16_85633914_85634132_-                 Gene: not_annotated
+    2    7/9  [XXXXXXX..]  chr16_85633914_85634132_+                 Gene: GSE1
+    3    7/9  [XXXXXXX..]  chr21_36247517_36248568_+                 Gene: DOP1B
+    4    6/9  [XXXXXX...]  chr8_140585119_140605914_-                Gene: AGO2
+    5    6/9  [XXXXXX...]  chr1_45640210_45642499_+                  Gene: not_annotated
+    6    6/9  [XXXXXX...]  chr8_21974670_21980203_-                  Gene: not_annotated
+    7    7/9  [XXXXXXX..]  chr2_201344170_201351451_+                Gene: not_annotated
+    8    6/9  [XXXXXX...]  chr12_829062_829944_+                     Gene: WNK1
+    9    6/9  [XXXXXX...]  chr7_102227367_102227669_+                Gene: CUX1
+    TOP 20 features by Stage 1 selection freq
+      1    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_-                 Gene: not_annotated
+      2    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      3    7/9  [XXXXXXX..]  freq=0.78  chr21_36247517_36248568_+                 Gene: DOP1B
+      4    7/9  [XXXXXXX..]  freq=0.78  chr2_201344170_201351451_+                Gene: not_annotated
+      5    6/9  [XXXXXX...]  freq=0.67  chr8_140585119_140605914_-                Gene: AGO2
+      6    6/9  [XXXXXX...]  freq=0.67  chr1_45640210_45642499_+                  Gene: not_annotated
+      7    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    6/9  [XXXXXX...]  freq=0.67  chr12_829062_829944_+                     Gene: WNK1
+      9    6/9  [XXXXXX...]  freq=0.67  chr7_102227367_102227669_+                Gene: CUX1
+      10   5/9  [XXXXX....]  freq=0.56  chr11_16095996_16097688_-                 Gene: SOX6
+      11   5/9  [XXXXX....]  freq=0.56  chr1_95143891_95173889_-                  Gene: AC092802.2
+      12   5/9  [XXXXX....]  freq=0.56  chr2_8908621_8958642_+                    Gene: not_annotated
+      13   5/9  [XXXXX....]  freq=0.56  chr1_95143891_95151419_-                  Gene: not_annotated
+      14   5/9  [XXXXX....]  freq=0.56  chr7_102227367_102227669_-                Gene: not_annotated
+      15   5/9  [XXXXX....]  freq=0.56  chr16_11020193_11126146_-                 Gene: AC007014.1
+      16   5/9  [XXXXX....]  freq=0.56  chr2_8908621_8958642_-                    Gene: MBOAT2
+      17   5/9  [XXXXX....]  freq=0.56  chr17_67945409_67975958_-                 Gene: AC134407.1
+      18   4/9  [XXXX.....]  freq=0.44  chr2_8943187_8958642_+                    Gene: not_annotated
+      19   4/9  [XXXX.....]  freq=0.44  chr17_39419717_39423821_-                 Gene: MED1
+      20   4/9  [XXXX.....]  freq=0.44  chr15_65729072_65756472_-                 Gene: DENND4A
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.940 +/- 0.135  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    26/36  [XXXXXXXXXXXXXXXXXXXXXXXXXX..........]  freq=0.72  chr16_85633914_85634132_-                 Gene: not_annotated
+      2    25/36  [XXXXXXXXXXXXXXXXXXXXXXXXX...........]  freq=0.69  chr2_201344170_201351451_+                Gene: not_annotated
+      3    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  freq=0.67  chr16_85633914_85634132_+                 Gene: GSE1
+      4    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr1_45640210_45642499_+                  Gene: not_annotated
+      5    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr21_36247517_36248568_+                 Gene: DOP1B
+      6    21/36  [XXXXXXXXXXXXXXXXXXXXX...............]  freq=0.58  chr8_140585119_140605914_-                Gene: AGO2
+      7    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr16_11020193_11126146_-                 Gene: AC007014.1
+      9    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr11_16095996_16097688_-                 Gene: SOX6
+      10   17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr9_98018289_98026451_+                  Gene: not_annotated
+      11   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr19_1430222_1432690_-                   Gene: not_annotated
+      12   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr8_123380529_123380677_+                Gene: not_annotated
+      13   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr7_102227367_102227669_+                Gene: CUX1
+      14   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr3_196058284_196060247_-                Gene: TFRC
+      15   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr7_102227367_102227669_-                Gene: not_annotated
+      16   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr10_13659323_13663509_-                 Gene: FRMD4A
+      17   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr3_172247533_172251541_-                Gene: not_annotated
+      18   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr2_8908621_8958642_+                    Gene: not_annotated
+      19   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr12_829062_829944_+                     Gene: WNK1
+      20   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr3_119500695_119504021_-                Gene: not_annotated
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: 0.958 +/- 0.138  (36/36 valid folds)
+
+  STABLE features (5 total, chosen in >= 22/36 folds):
+    1    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  chr1_45640210_45642499_+                  Gene: not_annotated
+    2    25/36  [XXXXXXXXXXXXXXXXXXXXXXXXX...........]  chr2_201344170_201351451_+                Gene: not_annotated
+    3    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  chr21_36247517_36248568_+                 Gene: DOP1B
+    4    26/36  [XXXXXXXXXXXXXXXXXXXXXXXXXX..........]  chr16_85633914_85634132_-                 Gene: not_annotated
+    5    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  chr16_85633914_85634132_+                 Gene: GSE1
+    TOP 20 features by Stage 1 selection freq
+      1    26/36  [XXXXXXXXXXXXXXXXXXXXXXXXXX..........]  freq=0.72  chr16_85633914_85634132_-                 Gene: not_annotated
+      2    25/36  [XXXXXXXXXXXXXXXXXXXXXXXXX...........]  freq=0.69  chr2_201344170_201351451_+                Gene: not_annotated
+      3    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  freq=0.67  chr16_85633914_85634132_+                 Gene: GSE1
+      4    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr1_45640210_45642499_+                  Gene: not_annotated
+      5    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr21_36247517_36248568_+                 Gene: DOP1B
+      6    21/36  [XXXXXXXXXXXXXXXXXXXXX...............]  freq=0.58  chr8_140585119_140605914_-                Gene: AGO2
+      7    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr16_11020193_11126146_-                 Gene: AC007014.1
+      9    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr11_16095996_16097688_-                 Gene: SOX6
+      10   17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr9_98018289_98026451_+                  Gene: not_annotated
+      11   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr19_1430222_1432690_-                   Gene: not_annotated
+      12   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr8_123380529_123380677_+                Gene: not_annotated
+      13   16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr7_102227367_102227669_+                Gene: CUX1
+      14   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr3_196058284_196060247_-                Gene: TFRC
+      15   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr7_102227367_102227669_-                Gene: not_annotated
+      16   15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr10_13659323_13663509_-                 Gene: FRMD4A
+      17   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr3_172247533_172251541_-                Gene: not_annotated
+      18   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr2_8908621_8958642_+                    Gene: not_annotated
+      19   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr12_829062_829944_+                     Gene: WNK1
+      20   14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr3_119500695_119504021_-                Gene: not_annotated
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.833 +/- 0.236  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr11_120440129_120445464_+               Gene: ARHGEF12
+      2    3/9  [XXX......]  freq=0.33  chr2_33186856_33222151_+                  Gene: LTBP1
+      3    3/9  [XXX......]  freq=0.33  chr2_195680032_195683906_-                Gene: not_annotated
+      4    3/9  [XXX......]  freq=0.33  chr14_49602370_49608121_+                 Gene: LRR1
+      5    3/9  [XXX......]  freq=0.33  chr19_10163326_10177367_+                 Gene: not_annotated
+      6    3/9  [XXX......]  freq=0.33  chr11_16183886_16186955_+                 Gene: not_annotated
+      7    3/9  [XXX......]  freq=0.33  chr4_98574457_98574905_-                  Gene: TSPAN5
+      8    3/9  [XXX......]  freq=0.33  chr2_74046278_74048411_+                  Gene: TET3
+      9    3/9  [XXX......]  freq=0.33  chr22_41342529_41343576_+                 Gene: ZC3H7B
+      10   3/9  [XXX......]  freq=0.33  chr1_155921375_155921918_+                Gene: not_annotated
+      11   2/9  [XX.......]  freq=0.22  chr11_34957384_34980503_+                 Gene: PDHX
+      12   2/9  [XX.......]  freq=0.22  chr1_20757166_20780540_+                  Gene: not_annotated
+      13   2/9  [XX.......]  freq=0.22  chr8_123077111_123120188_+                Gene: TBC1D31
+      14   2/9  [XX.......]  freq=0.22  chr17_30876374_30879487_-                 Gene: not_annotated
+      15   2/9  [XX.......]  freq=0.22  chr2_201344170_201351451_-                Gene: FLACC1
+      16   2/9  [XX.......]  freq=0.22  chr17_28348019_28355876_-                 Gene: POLDIP2
+      17   2/9  [XX.......]  freq=0.22  chr1_158654811_158654951_+                Gene: not_annotated
+      18   2/9  [XX.......]  freq=0.22  chr3_148446266_148455531_-                Gene: AC069410.1
+      19   2/9  [XX.......]  freq=0.22  chr15_85113873_85115487_-                 Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chr9_98018289_98026451_+                  Gene: not_annotated
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 0.833 +/- 0.236  (9/9 valid folds)
+
+  STABLE features (1 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  chr11_120440129_120445464_+               Gene: ARHGEF12
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr11_120440129_120445464_+               Gene: ARHGEF12
+      2    3/9  [XXX......]  freq=0.33  chr2_33186856_33222151_+                  Gene: LTBP1
+      3    3/9  [XXX......]  freq=0.33  chr2_195680032_195683906_-                Gene: not_annotated
+      4    3/9  [XXX......]  freq=0.33  chr14_49602370_49608121_+                 Gene: LRR1
+      5    3/9  [XXX......]  freq=0.33  chr19_10163326_10177367_+                 Gene: not_annotated
+      6    3/9  [XXX......]  freq=0.33  chr11_16183886_16186955_+                 Gene: not_annotated
+      7    3/9  [XXX......]  freq=0.33  chr4_98574457_98574905_-                  Gene: TSPAN5
+      8    3/9  [XXX......]  freq=0.33  chr2_74046278_74048411_+                  Gene: TET3
+      9    3/9  [XXX......]  freq=0.33  chr22_41342529_41343576_+                 Gene: ZC3H7B
+      10   3/9  [XXX......]  freq=0.33  chr1_155921375_155921918_+                Gene: not_annotated
+      11   2/9  [XX.......]  freq=0.22  chr11_34957384_34980503_+                 Gene: PDHX
+      12   2/9  [XX.......]  freq=0.22  chr1_20757166_20780540_+                  Gene: not_annotated
+      13   2/9  [XX.......]  freq=0.22  chr8_123077111_123120188_+                Gene: TBC1D31
+      14   2/9  [XX.......]  freq=0.22  chr17_30876374_30879487_-                 Gene: not_annotated
+      15   2/9  [XX.......]  freq=0.22  chr2_201344170_201351451_-                Gene: FLACC1
+      16   2/9  [XX.......]  freq=0.22  chr17_28348019_28355876_-                 Gene: POLDIP2
+      17   2/9  [XX.......]  freq=0.22  chr1_158654811_158654951_+                Gene: not_annotated
+      18   2/9  [XX.......]  freq=0.22  chr3_148446266_148455531_-                Gene: AC069410.1
+      19   2/9  [XX.......]  freq=0.22  chr15_85113873_85115487_-                 Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chr9_98018289_98026451_+                  Gene: not_annotated
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.972 +/- 0.022  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr16_85633914_85634132_+                 Gene: GSE1
+      2    9/9  [XXXXXXXXX]  freq=1.00  chr21_36247517_36248568_+                 Gene: DOP1B
+      3    9/9  [XXXXXXXXX]  freq=1.00  chr3_196058284_196060247_-                Gene: TFRC
+      4    9/9  [XXXXXXXXX]  freq=1.00  chr8_140585119_140605914_-                Gene: AGO2
+      5    9/9  [XXXXXXXXX]  freq=1.00  chr1_45640210_45642499_-                  Gene: GPBP1L1
+      6    9/9  [XXXXXXXXX]  freq=1.00  chr7_102227367_102227669_+                Gene: CUX1
+      7    9/9  [XXXXXXXXX]  freq=1.00  chr10_13659323_13663509_-                 Gene: FRMD4A
+      8    8/9  [XXXXXXXX.]  freq=0.89  chr11_16095996_16097688_-                 Gene: SOX6
+      9    8/9  [XXXXXXXX.]  freq=0.89  chr2_61482380_61490776_-                  Gene: XPO1
+      10   8/9  [XXXXXXXX.]  freq=0.89  chr16_11020193_11126146_-                 Gene: AC007014.1
+      11   8/9  [XXXXXXXX.]  freq=0.89  chr12_829062_829944_+                     Gene: WNK1
+      12   8/9  [XXXXXXXX.]  freq=0.89  chr5_73058433_73077493_+                  Gene: FCHO2
+      13   8/9  [XXXXXXXX.]  freq=0.89  chr17_67945409_67975958_-                 Gene: AC134407.1
+      14   8/9  [XXXXXXXX.]  freq=0.89  chr2_201344170_201351451_-                Gene: FLACC1
+      15   8/9  [XXXXXXXX.]  freq=0.89  chr2_8908621_8958642_-                    Gene: MBOAT2
+      16   8/9  [XXXXXXXX.]  freq=0.89  chr17_78086503_78087093_+                 Gene: TNRC6C
+      17   7/9  [XXXXXXX..]  freq=0.78  chr1_95143891_95173889_-                  Gene: AC092802.2
+      18   7/9  [XXXXXXX..]  freq=0.78  chr17_39419717_39423821_-                 Gene: MED1
+      19   7/9  [XXXXXXX..]  freq=0.78  chr16_1809238_1809833_-                   Gene: HAGH
+      20   7/9  [XXXXXXX..]  freq=0.78  chr3_170145423_170149244_-                Gene: PHC3
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.988 +/- 0.014  (9/9 valid folds)
+
+  STABLE features (36 total, chosen in >= 6/9 folds):
+    1    9/9  [XXXXXXXXX]  chr16_85633914_85634132_+                 Gene: GSE1
+    2    9/9  [XXXXXXXXX]  chr21_36247517_36248568_+                 Gene: DOP1B
+    3    8/9  [XXXXXXXX.]  chr11_16095996_16097688_-                 Gene: SOX6
+    4    7/9  [XXXXXXX..]  chr1_95143891_95173889_-                  Gene: AC092802.2
+    5    7/9  [XXXXXXX..]  chr17_39419717_39423821_-                 Gene: MED1
+    6    9/9  [XXXXXXXXX]  chr3_196058284_196060247_-                Gene: TFRC
+    7    9/9  [XXXXXXXXX]  chr8_140585119_140605914_-                Gene: AGO2
+    8    8/9  [XXXXXXXX.]  chr2_61482380_61490776_-                  Gene: XPO1
+    9    6/9  [XXXXXX...]  chr4_177353308_177360677_+                Gene: NEIL3
+    10   8/9  [XXXXXXXX.]  chr16_11020193_11126146_-                 Gene: AC007014.1
+    11   9/9  [XXXXXXXXX]  chr1_45640210_45642499_-                  Gene: GPBP1L1
+    12   8/9  [XXXXXXXX.]  chr12_829062_829944_+                     Gene: WNK1
+    13   8/9  [XXXXXXXX.]  chr5_73058433_73077493_+                  Gene: FCHO2
+    14   9/9  [XXXXXXXXX]  chr7_102227367_102227669_+                Gene: CUX1
+    15   7/9  [XXXXXXX..]  chr16_1809238_1809833_-                   Gene: HAGH
+    16   9/9  [XXXXXXXXX]  chr10_13659323_13663509_-                 Gene: FRMD4A
+    17   8/9  [XXXXXXXX.]  chr17_67945409_67975958_-                 Gene: AC134407.1
+    18   6/9  [XXXXXX...]  chr1_65364635_65366196_+                  Gene: DNAJC6
+    19   8/9  [XXXXXXXX.]  chr2_201344170_201351451_-                Gene: FLACC1
+    20   8/9  [XXXXXXXX.]  chr2_8908621_8958642_-                    Gene: MBOAT2
+    21   7/9  [XXXXXXX..]  chr3_170145423_170149244_-                Gene: PHC3
+    22   6/9  [XXXXXX...]  chr20_43702490_43705358_+                 Gene: MYBL2
+    23   7/9  [XXXXXXX..]  chr8_21974670_21980203_+                  Gene: XPO7
+    24   8/9  [XXXXXXXX.]  chr17_78086503_78087093_+                 Gene: TNRC6C
+    25   7/9  [XXXXXXX..]  chr3_170122591_170129552_-                Gene: PHC3
+    26   7/9  [XXXXXXX..]  chr4_109491327_109494856_+                Gene: SEC24B
+    27   6/9  [XXXXXX...]  chr17_67945409_67948306_+                 Gene: BPTF
+    28   7/9  [XXXXXXX..]  chr3_172247533_172251541_+                Gene: FNDC3B
+    29   7/9  [XXXXXXX..]  chr4_177353308_177360677_-                Gene: AC027627.1
+    30   7/9  [XXXXXXX..]  chr8_130214556_130358143_-                Gene: ASAP1
+    TOP 20 features by Stage 1 selection freq
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr16_85633914_85634132_+                 Gene: GSE1
+      2    9/9  [XXXXXXXXX]  freq=1.00  chr21_36247517_36248568_+                 Gene: DOP1B
+      3    9/9  [XXXXXXXXX]  freq=1.00  chr3_196058284_196060247_-                Gene: TFRC
+      4    9/9  [XXXXXXXXX]  freq=1.00  chr8_140585119_140605914_-                Gene: AGO2
+      5    9/9  [XXXXXXXXX]  freq=1.00  chr1_45640210_45642499_-                  Gene: GPBP1L1
+      6    9/9  [XXXXXXXXX]  freq=1.00  chr7_102227367_102227669_+                Gene: CUX1
+      7    9/9  [XXXXXXXXX]  freq=1.00  chr10_13659323_13663509_-                 Gene: FRMD4A
+      8    8/9  [XXXXXXXX.]  freq=0.89  chr11_16095996_16097688_-                 Gene: SOX6
+      9    8/9  [XXXXXXXX.]  freq=0.89  chr2_61482380_61490776_-                  Gene: XPO1
+      10   8/9  [XXXXXXXX.]  freq=0.89  chr16_11020193_11126146_-                 Gene: AC007014.1
+      11   8/9  [XXXXXXXX.]  freq=0.89  chr12_829062_829944_+                     Gene: WNK1
+      12   8/9  [XXXXXXXX.]  freq=0.89  chr5_73058433_73077493_+                  Gene: FCHO2
+      13   8/9  [XXXXXXXX.]  freq=0.89  chr17_67945409_67975958_-                 Gene: AC134407.1
+      14   8/9  [XXXXXXXX.]  freq=0.89  chr2_201344170_201351451_-                Gene: FLACC1
+      15   8/9  [XXXXXXXX.]  freq=0.89  chr2_8908621_8958642_-                    Gene: MBOAT2
+      16   8/9  [XXXXXXXX.]  freq=0.89  chr17_78086503_78087093_+                 Gene: TNRC6C
+      17   7/9  [XXXXXXX..]  freq=0.78  chr1_95143891_95173889_-                  Gene: AC092802.2
+      18   7/9  [XXXXXXX..]  freq=0.78  chr17_39419717_39423821_-                 Gene: MED1
+      19   7/9  [XXXXXXX..]  freq=0.78  chr16_1809238_1809833_-                   Gene: HAGH
+      20   7/9  [XXXXXXX..]  freq=0.78  chr3_170145423_170149244_-                Gene: PHC3
+
+============================================================================
+FEATURES  |  Target: Sex
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.586 +/- 0.185  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    5/9  [XXXXX....]  freq=0.56  chr2_44502689_44505730_+                  Gene: CAMKMT
+      2    4/9  [XXXX.....]  freq=0.44  chr17_18670867_18672302_+                 Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr6_13579451_13584225_-                  Gene: not_annotated
+      4    4/9  [XXXX.....]  freq=0.44  chr2_201760881_201761818_+                Gene: not_annotated
+      5    3/9  [XXX......]  freq=0.33  chr4_143437999_143440382_+                Gene: GAB1
+      6    3/9  [XXX......]  freq=0.33  chr7_93208580_93219451_+                  Gene: not_annotated
+      7    3/9  [XXX......]  freq=0.33  chr16_11020193_11052724_-                 Gene: not_annotated
+      8    3/9  [XXX......]  freq=0.33  chr3_123931102_123949132_+                Gene: not_annotated
+      9    3/9  [XXX......]  freq=0.33  chr3_170136419_170178938_+                Gene: RNU6-315P
+      10   3/9  [XXX......]  freq=0.33  chr15_63774694_63775649_+                 Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr2_135621494_135680324_-                Gene: RNU6-512P
+      12   3/9  [XXX......]  freq=0.33  chr10_5956379_5960567_+                   Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr11_16095996_16097688_+                 Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr10_84417771_84425893_-                 Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr10_13659323_13660553_-                 Gene: FRMD4A
+      16   3/9  [XXX......]  freq=0.33  chr15_64499293_64500166_+                 Gene: ZNF609
+      17   3/9  [XXX......]  freq=0.33  chr20_43702490_43705358_-                 Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr15_93000512_93009323_-                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr8_123077111_123142456_-                Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr8_123077111_123120188_-                Gene: not_annotated
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: nan +/- nan  (0/9 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    5/9  [XXXXX....]  freq=0.56  chr2_44502689_44505730_+                  Gene: CAMKMT
+      2    4/9  [XXXX.....]  freq=0.44  chr17_18670867_18672302_+                 Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr6_13579451_13584225_-                  Gene: not_annotated
+      4    4/9  [XXXX.....]  freq=0.44  chr2_201760881_201761818_+                Gene: not_annotated
+      5    3/9  [XXX......]  freq=0.33  chr4_143437999_143440382_+                Gene: GAB1
+      6    3/9  [XXX......]  freq=0.33  chr7_93208580_93219451_+                  Gene: not_annotated
+      7    3/9  [XXX......]  freq=0.33  chr16_11020193_11052724_-                 Gene: not_annotated
+      8    3/9  [XXX......]  freq=0.33  chr3_123931102_123949132_+                Gene: not_annotated
+      9    3/9  [XXX......]  freq=0.33  chr3_170136419_170178938_+                Gene: RNU6-315P
+      10   3/9  [XXX......]  freq=0.33  chr15_63774694_63775649_+                 Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr2_135621494_135680324_-                Gene: RNU6-512P
+      12   3/9  [XXX......]  freq=0.33  chr10_5956379_5960567_+                   Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr11_16095996_16097688_+                 Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr10_84417771_84425893_-                 Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr10_13659323_13660553_-                 Gene: FRMD4A
+      16   3/9  [XXX......]  freq=0.33  chr15_64499293_64500166_+                 Gene: ZNF609
+      17   3/9  [XXX......]  freq=0.33  chr20_43702490_43705358_-                 Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr15_93000512_93009323_-                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr8_123077111_123142456_-                Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr8_123077111_123120188_-                Gene: not_annotated
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.646 +/- 0.228  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr3_170136419_170178938_+                Gene: RNU6-315P
+      2    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr15_65715478_65756472_+                 Gene: RAB11A
+      3    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr8_123077111_123120188_-                Gene: not_annotated
+      4    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chrX_2211489_2221229_-                    Gene: DHRSX
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr17_18670867_18672302_+                 Gene: not_annotated
+      7    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr3_123931102_123949132_+                Gene: not_annotated
+      8    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr15_64499293_64500166_+                 Gene: ZNF609
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_13659323_13660553_-                 Gene: FRMD4A
+      10   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr5_36953618_36976402_-                  Gene: not_annotated
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chr17_42498924_42501304_+                 Gene: ATP6V0A1
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chrY_2953909_2961646_-                    Gene: not_annotated
+      13   8/36  [XXXXXXXX............................]  freq=0.22  chr3_47037666_47067118_+                  Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr20_43702490_43705358_-                 Gene: not_annotated
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr3_196067518_196077122_+                Gene: RNU7-18P
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr17_42498924_42501304_-                 Gene: not_annotated
+      17   7/36  [XXXXXXX.............................]  freq=0.19  chr16_71667178_71681905_+                 Gene: not_annotated
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr11_3768581_3776021_-                   Gene: NUP98
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr8_38114192_38119363_+                  Gene: ASH2L
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr9_37424845_37426654_-                  Gene: not_annotated
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: nan +/- nan  (0/36 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr3_170136419_170178938_+                Gene: RNU6-315P
+      2    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr15_65715478_65756472_+                 Gene: RAB11A
+      3    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr8_123077111_123120188_-                Gene: not_annotated
+      4    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chrX_2211489_2221229_-                    Gene: DHRSX
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr17_18670867_18672302_+                 Gene: not_annotated
+      7    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr3_123931102_123949132_+                Gene: not_annotated
+      8    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr15_64499293_64500166_+                 Gene: ZNF609
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_13659323_13660553_-                 Gene: FRMD4A
+      10   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr5_36953618_36976402_-                  Gene: not_annotated
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chr17_42498924_42501304_+                 Gene: ATP6V0A1
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chrY_2953909_2961646_-                    Gene: not_annotated
+      13   8/36  [XXXXXXXX............................]  freq=0.22  chr3_47037666_47067118_+                  Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr20_43702490_43705358_-                 Gene: not_annotated
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr3_196067518_196077122_+                Gene: RNU7-18P
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr17_42498924_42501304_-                 Gene: not_annotated
+      17   7/36  [XXXXXXX.............................]  freq=0.19  chr16_71667178_71681905_+                 Gene: not_annotated
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr11_3768581_3776021_-                   Gene: NUP98
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr8_38114192_38119363_+                  Gene: ASH2L
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr9_37424845_37426654_-                  Gene: not_annotated
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.719 +/- 0.226  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr2_202952559_202955758_-                Gene: WDR12
+      2    7/9  [XXXXXXX..]  freq=0.78  chr8_123077111_123142456_-                Gene: not_annotated
+      3    6/9  [XXXXXX...]  freq=0.67  chr8_668598_674047_+                      Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr11_77675036_77693611_-                 Gene: RSF1
+      5    4/9  [XXXX.....]  freq=0.44  chr8_140572812_140605914_-                Gene: AGO2
+      6    4/9  [XXXX.....]  freq=0.44  chr4_25127264_25159107_-                  Gene: SEPSECS
+      7    4/9  [XXXX.....]  freq=0.44  chr1_172555869_172557794_-                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr11_3768581_3776021_-                   Gene: NUP98
+      9    4/9  [XXXX.....]  freq=0.44  chr2_96359045_96367373_-                  Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr16_89758577_89762022_-                 Gene: FANCA
+      11   3/9  [XXX......]  freq=0.33  chr3_15030275_15034809_+                  Gene: NR2C2
+      12   2/9  [XX.......]  freq=0.22  chr3_51541589_51552063_+                  Gene: RAD54L2
+      13   2/9  [XX.......]  freq=0.22  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      14   2/9  [XX.......]  freq=0.22  chr14_96833467_96860735_-                 Gene: not_annotated
+      15   2/9  [XX.......]  freq=0.22  chr14_39276934_39279537_-                 Gene: not_annotated
+      16   2/9  [XX.......]  freq=0.22  chr19_4511511_4511906_+                   Gene: not_annotated
+      17   2/9  [XX.......]  freq=0.22  chr4_143433491_143466225_+                Gene: GAB1
+      18   2/9  [XX.......]  freq=0.22  chr20_35653528_35659014_+                 Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr1_35470863_35479212_-                  Gene: KIAA0319L
+      20   2/9  [XX.......]  freq=0.22  chr4_143433491_143440382_+                Gene: GAB1
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 1.000 +/- 0.000  (9/9 valid folds)
+
+  STABLE features (3 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  chr2_202952559_202955758_-                Gene: WDR12
+    2    7/9  [XXXXXXX..]  chr8_123077111_123142456_-                Gene: not_annotated
+    3    6/9  [XXXXXX...]  chr8_668598_674047_+                      Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr2_202952559_202955758_-                Gene: WDR12
+      2    7/9  [XXXXXXX..]  freq=0.78  chr8_123077111_123142456_-                Gene: not_annotated
+      3    6/9  [XXXXXX...]  freq=0.67  chr8_668598_674047_+                      Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr11_77675036_77693611_-                 Gene: RSF1
+      5    4/9  [XXXX.....]  freq=0.44  chr8_140572812_140605914_-                Gene: AGO2
+      6    4/9  [XXXX.....]  freq=0.44  chr4_25127264_25159107_-                  Gene: SEPSECS
+      7    4/9  [XXXX.....]  freq=0.44  chr1_172555869_172557794_-                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr11_3768581_3776021_-                   Gene: NUP98
+      9    4/9  [XXXX.....]  freq=0.44  chr2_96359045_96367373_-                  Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr16_89758577_89762022_-                 Gene: FANCA
+      11   3/9  [XXX......]  freq=0.33  chr3_15030275_15034809_+                  Gene: NR2C2
+      12   2/9  [XX.......]  freq=0.22  chr3_51541589_51552063_+                  Gene: RAD54L2
+      13   2/9  [XX.......]  freq=0.22  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      14   2/9  [XX.......]  freq=0.22  chr14_96833467_96860735_-                 Gene: not_annotated
+      15   2/9  [XX.......]  freq=0.22  chr14_39276934_39279537_-                 Gene: not_annotated
+      16   2/9  [XX.......]  freq=0.22  chr19_4511511_4511906_+                   Gene: not_annotated
+      17   2/9  [XX.......]  freq=0.22  chr4_143433491_143466225_+                Gene: GAB1
+      18   2/9  [XX.......]  freq=0.22  chr20_35653528_35659014_+                 Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr1_35470863_35479212_-                  Gene: KIAA0319L
+      20   2/9  [XX.......]  freq=0.22  chr4_143433491_143440382_+                Gene: GAB1
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.627 +/- 0.154  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr15_64499293_64500166_+                 Gene: ZNF609
+      2    7/9  [XXXXXXX..]  freq=0.78  chr3_170136419_170178938_+                Gene: RNU6-315P
+      3    6/9  [XXXXXX...]  freq=0.67  chr15_65715478_65756472_+                 Gene: RAB11A
+      4    5/9  [XXXXX....]  freq=0.56  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      5    5/9  [XXXXX....]  freq=0.56  chr8_38114192_38119363_+                  Gene: ASH2L
+      6    5/9  [XXXXX....]  freq=0.56  chr10_27165064_27165539_+                 Gene: MASTL
+      7    4/9  [XXXX.....]  freq=0.44  chr1_20969474_20981227_-                  Gene: EIF4G3
+      8    4/9  [XXXX.....]  freq=0.44  chr12_111509549_111510582_-               Gene: ATXN2
+      9    4/9  [XXXX.....]  freq=0.44  chr3_197866112_197871462_+                Gene: LRCH3
+      10   4/9  [XXXX.....]  freq=0.44  chr12_112207874_112219489_-               Gene: HECTD4
+      11   4/9  [XXXX.....]  freq=0.44  chr4_143433491_143466225_+                Gene: GAB1
+      12   4/9  [XXXX.....]  freq=0.44  chr22_46312141_46326654_+                 Gene: GTSE1
+      13   4/9  [XXXX.....]  freq=0.44  chr15_32522448_32533368_-                 Gene: AC135983.3
+      14   4/9  [XXXX.....]  freq=0.44  chr4_143437999_143440382_+                Gene: GAB1
+      15   4/9  [XXXX.....]  freq=0.44  chr4_76144149_76144473_-                  Gene: NUP54
+      16   4/9  [XXXX.....]  freq=0.44  chr10_13659323_13660553_-                 Gene: FRMD4A
+      17   4/9  [XXXX.....]  freq=0.44  chr17_47915312_47917130_-                 Gene: SP2-AS1
+      18   3/9  [XXX......]  freq=0.33  chr17_42498924_42501304_+                 Gene: ATP6V0A1
+      19   3/9  [XXX......]  freq=0.33  chr10_68459104_68470163_+                 Gene: RNA5SP319
+      20   3/9  [XXX......]  freq=0.33  chr11_77675036_77693611_-                 Gene: RSF1
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.668 +/- 0.100  (9/9 valid folds)
+
+  STABLE features (3 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr3_170136419_170178938_+                Gene: RNU6-315P
+    2    8/9  [XXXXXXXX.]  chr15_64499293_64500166_+                 Gene: ZNF609
+    3    6/9  [XXXXXX...]  chr15_65715478_65756472_+                 Gene: RAB11A
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr15_64499293_64500166_+                 Gene: ZNF609
+      2    7/9  [XXXXXXX..]  freq=0.78  chr3_170136419_170178938_+                Gene: RNU6-315P
+      3    6/9  [XXXXXX...]  freq=0.67  chr15_65715478_65756472_+                 Gene: RAB11A
+      4    5/9  [XXXXX....]  freq=0.56  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      5    5/9  [XXXXX....]  freq=0.56  chr8_38114192_38119363_+                  Gene: ASH2L
+      6    5/9  [XXXXX....]  freq=0.56  chr10_27165064_27165539_+                 Gene: MASTL
+      7    4/9  [XXXX.....]  freq=0.44  chr1_20969474_20981227_-                  Gene: EIF4G3
+      8    4/9  [XXXX.....]  freq=0.44  chr12_111509549_111510582_-               Gene: ATXN2
+      9    4/9  [XXXX.....]  freq=0.44  chr3_197866112_197871462_+                Gene: LRCH3
+      10   4/9  [XXXX.....]  freq=0.44  chr12_112207874_112219489_-               Gene: HECTD4
+      11   4/9  [XXXX.....]  freq=0.44  chr4_143433491_143466225_+                Gene: GAB1
+      12   4/9  [XXXX.....]  freq=0.44  chr22_46312141_46326654_+                 Gene: GTSE1
+      13   4/9  [XXXX.....]  freq=0.44  chr15_32522448_32533368_-                 Gene: AC135983.3
+      14   4/9  [XXXX.....]  freq=0.44  chr4_143437999_143440382_+                Gene: GAB1
+      15   4/9  [XXXX.....]  freq=0.44  chr4_76144149_76144473_-                  Gene: NUP54
+      16   4/9  [XXXX.....]  freq=0.44  chr10_13659323_13660553_-                 Gene: FRMD4A
+      17   4/9  [XXXX.....]  freq=0.44  chr17_47915312_47917130_-                 Gene: SP2-AS1
+      18   3/9  [XXX......]  freq=0.33  chr17_42498924_42501304_+                 Gene: ATP6V0A1
+      19   3/9  [XXX......]  freq=0.33  chr10_68459104_68470163_+                 Gene: RNA5SP319
+      20   3/9  [XXX......]  freq=0.33  chr11_77675036_77693611_-                 Gene: RSF1
+
+============================================================================
+FEATURES  |  Target: Age
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.641 +/- 0.268  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    7/9  [XXXXXXX..]  freq=0.78  chr1_44002313_44002985_+                  Gene: not_annotated
+      2    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      3    6/9  [XXXXXX...]  freq=0.67  chr2_201344170_201351451_+                Gene: not_annotated
+      4    6/9  [XXXXXX...]  freq=0.67  chr10_13659323_13663509_-                 Gene: FRMD4A
+      5    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      6    6/9  [XXXXXX...]  freq=0.67  chr7_102227367_102227669_-                Gene: not_annotated
+      7    5/9  [XXXXX....]  freq=0.56  chr1_158654811_158654951_-                Gene: SPTA1
+      8    5/9  [XXXXX....]  freq=0.56  chrX_135545423_135552146_-                Gene: not_annotated
+      9    5/9  [XXXXX....]  freq=0.56  chr9_98018289_98026451_+                  Gene: not_annotated
+      10   5/9  [XXXXX....]  freq=0.56  chr16_85633914_85634132_-                 Gene: not_annotated
+      11   5/9  [XXXXX....]  freq=0.56  chr8_140585119_140605914_-                Gene: AGO2
+      12   4/9  [XXXX.....]  freq=0.44  chr17_20204333_20205912_-                 Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr5_180549931_180553471_-                Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr2_40428473_40430304_+                  Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr8_41661430_41661941_+                  Gene: AC113133.1
+      16   3/9  [XXX......]  freq=0.33  chr12_82857010_82857580_-                 Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr1_155438327_155459898_+                Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr8_21974670_21980203_+                  Gene: XPO7
+      19   3/9  [XXX......]  freq=0.33  chr1_243545510_243843282_+                Gene: AL591721.1
+      20   3/9  [XXX......]  freq=0.33  chr17_2394043_2395454_+                   Gene: not_annotated
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: 0.623 +/- 0.233  (9/9 valid folds)
+
+  STABLE features (6 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr1_44002313_44002985_+                  Gene: not_annotated
+    2    6/9  [XXXXXX...]  chr2_201344170_201351451_+                Gene: not_annotated
+    3    6/9  [XXXXXX...]  chr10_13659323_13663509_-                 Gene: FRMD4A
+    4    7/9  [XXXXXXX..]  chr16_85633914_85634132_+                 Gene: GSE1
+    5    6/9  [XXXXXX...]  chr8_21974670_21980203_-                  Gene: not_annotated
+    6    6/9  [XXXXXX...]  chr7_102227367_102227669_-                Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    7/9  [XXXXXXX..]  freq=0.78  chr1_44002313_44002985_+                  Gene: not_annotated
+      2    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      3    6/9  [XXXXXX...]  freq=0.67  chr2_201344170_201351451_+                Gene: not_annotated
+      4    6/9  [XXXXXX...]  freq=0.67  chr10_13659323_13663509_-                 Gene: FRMD4A
+      5    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      6    6/9  [XXXXXX...]  freq=0.67  chr7_102227367_102227669_-                Gene: not_annotated
+      7    5/9  [XXXXX....]  freq=0.56  chr1_158654811_158654951_-                Gene: SPTA1
+      8    5/9  [XXXXX....]  freq=0.56  chrX_135545423_135552146_-                Gene: not_annotated
+      9    5/9  [XXXXX....]  freq=0.56  chr9_98018289_98026451_+                  Gene: not_annotated
+      10   5/9  [XXXXX....]  freq=0.56  chr16_85633914_85634132_-                 Gene: not_annotated
+      11   5/9  [XXXXX....]  freq=0.56  chr8_140585119_140605914_-                Gene: AGO2
+      12   4/9  [XXXX.....]  freq=0.44  chr17_20204333_20205912_-                 Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr5_180549931_180553471_-                Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr2_40428473_40430304_+                  Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr8_41661430_41661941_+                  Gene: AC113133.1
+      16   3/9  [XXX......]  freq=0.33  chr12_82857010_82857580_-                 Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr1_155438327_155459898_+                Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr8_21974670_21980203_+                  Gene: XPO7
+      19   3/9  [XXX......]  freq=0.33  chr1_243545510_243843282_+                Gene: AL591721.1
+      20   3/9  [XXX......]  freq=0.33  chr17_2394043_2395454_+                   Gene: not_annotated
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.731 +/- 0.213  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr1_44002313_44002985_+                  Gene: not_annotated
+      2    20/36  [XXXXXXXXXXXXXXXXXXXX................]  freq=0.56  chr2_201344170_201351451_+                Gene: not_annotated
+      3    16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr7_102227367_102227669_-                Gene: not_annotated
+      4    13/36  [XXXXXXXXXXXXX.......................]  freq=0.36  chr1_158654811_158654951_-                Gene: SPTA1
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr16_85633914_85634132_+                 Gene: GSE1
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr10_13659323_13663509_-                 Gene: FRMD4A
+      7    9/36  [XXXXXXXXX...........................]  freq=0.25  chr8_41661430_41661941_+                  Gene: AC113133.1
+      8    9/36  [XXXXXXXXX...........................]  freq=0.25  chr16_85633914_85634132_-                 Gene: not_annotated
+      9    9/36  [XXXXXXXXX...........................]  freq=0.25  chr2_58221942_58232112_+                  Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr17_2394043_2395454_+                   Gene: not_annotated
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chrX_17103718_17138961_+                  Gene: REPS2
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chr5_180549931_180553471_-                Gene: not_annotated
+      13   9/36  [XXXXXXXXX...........................]  freq=0.25  chr11_34090179_34092056_-                 Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr17_20204333_20205912_-                 Gene: not_annotated
+      15   8/36  [XXXXXXXX............................]  freq=0.22  chr2_201344170_201351451_-                Gene: FLACC1
+      16   8/36  [XXXXXXXX............................]  freq=0.22  chr12_32598497_32611283_-                 Gene: not_annotated
+      17   8/36  [XXXXXXXX............................]  freq=0.22  chr8_21974670_21980203_+                  Gene: XPO7
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr8_21974670_21980203_-                  Gene: not_annotated
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr8_140585119_140605914_-                Gene: AGO2
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr8_140572812_140585311_+                Gene: not_annotated
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: 0.820 +/- 0.168  (36/36 valid folds)
+
+  STABLE features (1 total, chosen in >= 22/36 folds):
+    1    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  chr1_44002313_44002985_+                  Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    23/36  [XXXXXXXXXXXXXXXXXXXXXXX.............]  freq=0.64  chr1_44002313_44002985_+                  Gene: not_annotated
+      2    20/36  [XXXXXXXXXXXXXXXXXXXX................]  freq=0.56  chr2_201344170_201351451_+                Gene: not_annotated
+      3    16/36  [XXXXXXXXXXXXXXXX....................]  freq=0.44  chr7_102227367_102227669_-                Gene: not_annotated
+      4    13/36  [XXXXXXXXXXXXX.......................]  freq=0.36  chr1_158654811_158654951_-                Gene: SPTA1
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr16_85633914_85634132_+                 Gene: GSE1
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr10_13659323_13663509_-                 Gene: FRMD4A
+      7    9/36  [XXXXXXXXX...........................]  freq=0.25  chr8_41661430_41661941_+                  Gene: AC113133.1
+      8    9/36  [XXXXXXXXX...........................]  freq=0.25  chr16_85633914_85634132_-                 Gene: not_annotated
+      9    9/36  [XXXXXXXXX...........................]  freq=0.25  chr2_58221942_58232112_+                  Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr17_2394043_2395454_+                   Gene: not_annotated
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chrX_17103718_17138961_+                  Gene: REPS2
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chr5_180549931_180553471_-                Gene: not_annotated
+      13   9/36  [XXXXXXXXX...........................]  freq=0.25  chr11_34090179_34092056_-                 Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr17_20204333_20205912_-                 Gene: not_annotated
+      15   8/36  [XXXXXXXX............................]  freq=0.22  chr2_201344170_201351451_-                Gene: FLACC1
+      16   8/36  [XXXXXXXX............................]  freq=0.22  chr12_32598497_32611283_-                 Gene: not_annotated
+      17   8/36  [XXXXXXXX............................]  freq=0.22  chr8_21974670_21980203_+                  Gene: XPO7
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr8_21974670_21980203_-                  Gene: not_annotated
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr8_140585119_140605914_-                Gene: AGO2
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr8_140572812_140585311_+                Gene: not_annotated
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.782 +/- 0.319  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    7/9  [XXXXXXX..]  freq=0.78  chr7_92294889_92327900_+                  Gene: ANKIB1
+      2    7/9  [XXXXXXX..]  freq=0.78  chr11_57488916_57489392_-                 Gene: SLC43A1
+      3    5/9  [XXXXX....]  freq=0.56  chr7_65979399_65980409_-                  Gene: GUSB
+      4    5/9  [XXXXX....]  freq=0.56  chr18_62072673_62095950_+                 Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr9_77214329_77227485_-                  Gene: not_annotated
+      6    4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chrX_17103718_17138961_-                  Gene: not_annotated
+      8    3/9  [XXX......]  freq=0.33  chr8_130236922_130358143_+                Gene: AC009682.1
+      9    3/9  [XXX......]  freq=0.33  chr12_111509549_111510582_+               Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr1_33294937_33295305_-                  Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr16_47497399_47515601_-                 Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr17_43378752_43379262_+                 Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr3_56660731_56673725_-                  Gene: TASOR
+      14   3/9  [XXX......]  freq=0.33  chr17_31940286_31940486_+                 Gene: SUZ12
+      15   3/9  [XXX......]  freq=0.33  chr12_123345258_123350441_+               Gene: not_annotated
+      16   3/9  [XXX......]  freq=0.33  chr3_128262128_128264781_-                Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr15_65737707_65738875_-                 Gene: DENND4A
+      18   2/9  [XX.......]  freq=0.22  chr12_82857010_82857580_-                 Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr8_130214556_130358143_-                Gene: ASAP1
+      20   2/9  [XX.......]  freq=0.22  chr18_76849526_76881512_-                 Gene: not_annotated
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 0.975 +/- 0.070  (9/9 valid folds)
+
+  STABLE features (2 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr7_92294889_92327900_+                  Gene: ANKIB1
+    2    7/9  [XXXXXXX..]  chr11_57488916_57489392_-                 Gene: SLC43A1
+    TOP 20 features by Stage 1 selection freq
+      1    7/9  [XXXXXXX..]  freq=0.78  chr7_92294889_92327900_+                  Gene: ANKIB1
+      2    7/9  [XXXXXXX..]  freq=0.78  chr11_57488916_57489392_-                 Gene: SLC43A1
+      3    5/9  [XXXXX....]  freq=0.56  chr7_65979399_65980409_-                  Gene: GUSB
+      4    5/9  [XXXXX....]  freq=0.56  chr18_62072673_62095950_+                 Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr9_77214329_77227485_-                  Gene: not_annotated
+      6    4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chrX_17103718_17138961_-                  Gene: not_annotated
+      8    3/9  [XXX......]  freq=0.33  chr8_130236922_130358143_+                Gene: AC009682.1
+      9    3/9  [XXX......]  freq=0.33  chr12_111509549_111510582_+               Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr1_33294937_33295305_-                  Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr16_47497399_47515601_-                 Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr17_43378752_43379262_+                 Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr3_56660731_56673725_-                  Gene: TASOR
+      14   3/9  [XXX......]  freq=0.33  chr17_31940286_31940486_+                 Gene: SUZ12
+      15   3/9  [XXX......]  freq=0.33  chr12_123345258_123350441_+               Gene: not_annotated
+      16   3/9  [XXX......]  freq=0.33  chr3_128262128_128264781_-                Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr15_65737707_65738875_-                 Gene: DENND4A
+      18   2/9  [XX.......]  freq=0.22  chr12_82857010_82857580_-                 Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr8_130214556_130358143_-                Gene: ASAP1
+      20   2/9  [XX.......]  freq=0.22  chr18_76849526_76881512_-                 Gene: not_annotated
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.650 +/- 0.197  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr8_21974670_21980203_+                  Gene: XPO7
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr8_140585119_140605914_-                Gene: AGO2
+      3    7/9  [XXXXXXX..]  freq=0.78  chr8_130214556_130358143_-                Gene: ASAP1
+      4    6/9  [XXXXXX...]  freq=0.67  chr4_177353308_177360677_+                Gene: NEIL3
+      5    6/9  [XXXXXX...]  freq=0.67  chr1_41070595_41075451_-                  Gene: SCMH1
+      6    5/9  [XXXXX....]  freq=0.56  chr8_41661430_41661941_+                  Gene: AC113133.1
+      7    5/9  [XXXXX....]  freq=0.56  chr16_85633914_85634132_+                 Gene: GSE1
+      8    5/9  [XXXXX....]  freq=0.56  chr10_13659323_13663509_-                 Gene: FRMD4A
+      9    5/9  [XXXXX....]  freq=0.56  chr3_56592970_56594028_+                  Gene: CCDC66
+      10   5/9  [XXXXX....]  freq=0.56  chr20_43702490_43705358_+                 Gene: MYBL2
+      11   5/9  [XXXXX....]  freq=0.56  chr12_829062_829944_+                     Gene: WNK1
+      12   5/9  [XXXXX....]  freq=0.56  chr1_243545510_243843282_+                Gene: AL591721.1
+      13   4/9  [XXXX.....]  freq=0.44  chr2_201344170_201351451_-                Gene: FLACC1
+      14   4/9  [XXXX.....]  freq=0.44  chr3_170122591_170129552_-                Gene: PHC3
+      15   4/9  [XXXX.....]  freq=0.44  chr1_95143891_95173889_-                  Gene: AC092802.2
+      16   4/9  [XXXX.....]  freq=0.44  chr8_140585119_140605914_+                Gene: AC067931.2
+      17   4/9  [XXXX.....]  freq=0.44  chr5_73058433_73077493_+                  Gene: FCHO2
+      18   4/9  [XXXX.....]  freq=0.44  chr1_205616478_205623891_-                Gene: ELK4
+      19   4/9  [XXXX.....]  freq=0.44  chr1_158654811_158654951_-                Gene: SPTA1
+      20   4/9  [XXXX.....]  freq=0.44  chr11_57488916_57489392_-                 Gene: SLC43A1
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.724 +/- 0.266  (9/9 valid folds)
+
+  STABLE features (5 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  chr8_21974670_21980203_+                  Gene: XPO7
+    2    6/9  [XXXXXX...]  chr4_177353308_177360677_+                Gene: NEIL3
+    3    7/9  [XXXXXXX..]  chr8_130214556_130358143_-                Gene: ASAP1
+    4    6/9  [XXXXXX...]  chr1_41070595_41075451_-                  Gene: SCMH1
+    5    8/9  [XXXXXXXX.]  chr8_140585119_140605914_-                Gene: AGO2
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr8_21974670_21980203_+                  Gene: XPO7
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr8_140585119_140605914_-                Gene: AGO2
+      3    7/9  [XXXXXXX..]  freq=0.78  chr8_130214556_130358143_-                Gene: ASAP1
+      4    6/9  [XXXXXX...]  freq=0.67  chr4_177353308_177360677_+                Gene: NEIL3
+      5    6/9  [XXXXXX...]  freq=0.67  chr1_41070595_41075451_-                  Gene: SCMH1
+      6    5/9  [XXXXX....]  freq=0.56  chr8_41661430_41661941_+                  Gene: AC113133.1
+      7    5/9  [XXXXX....]  freq=0.56  chr16_85633914_85634132_+                 Gene: GSE1
+      8    5/9  [XXXXX....]  freq=0.56  chr10_13659323_13663509_-                 Gene: FRMD4A
+      9    5/9  [XXXXX....]  freq=0.56  chr3_56592970_56594028_+                  Gene: CCDC66
+      10   5/9  [XXXXX....]  freq=0.56  chr20_43702490_43705358_+                 Gene: MYBL2
+      11   5/9  [XXXXX....]  freq=0.56  chr12_829062_829944_+                     Gene: WNK1
+      12   5/9  [XXXXX....]  freq=0.56  chr1_243545510_243843282_+                Gene: AL591721.1
+      13   4/9  [XXXX.....]  freq=0.44  chr2_201344170_201351451_-                Gene: FLACC1
+      14   4/9  [XXXX.....]  freq=0.44  chr3_170122591_170129552_-                Gene: PHC3
+      15   4/9  [XXXX.....]  freq=0.44  chr1_95143891_95173889_-                  Gene: AC092802.2
+      16   4/9  [XXXX.....]  freq=0.44  chr8_140585119_140605914_+                Gene: AC067931.2
+      17   4/9  [XXXX.....]  freq=0.44  chr5_73058433_73077493_+                  Gene: FCHO2
+      18   4/9  [XXXX.....]  freq=0.44  chr1_205616478_205623891_-                Gene: ELK4
+      19   4/9  [XXXX.....]  freq=0.44  chr1_158654811_158654951_-                Gene: SPTA1
+      20   4/9  [XXXX.....]  freq=0.44  chr11_57488916_57489392_-                 Gene: SLC43A1
+
+============================================================================
+FEATURES  |  Target: IDS-C
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.517 +/- 0.104  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    5/9  [XXXXX....]  freq=0.56  Age                                       Gene: N/A
+      2    5/9  [XXXXX....]  freq=0.56  chr17_45475100_45475726_+                 Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr3_119500695_119504021_-                Gene: not_annotated
+      4    4/9  [XXXX.....]  freq=0.44  chr10_13659323_13663509_+                 Gene: AL157392.3
+      5    4/9  [XXXX.....]  freq=0.44  chr14_31127785_31133675_+                 Gene: AP4S1
+      6    3/9  [XXX......]  freq=0.33  chrX_135545423_135556300_+                Gene: INTS6L
+      7    3/9  [XXX......]  freq=0.33  chr20_43702490_43705358_-                 Gene: not_annotated
+      8    2/9  [XX.......]  freq=0.22  chr13_99238427_99244624_-                 Gene: not_annotated
+      9    2/9  [XX.......]  freq=0.22  chr3_170171373_170178938_-                Gene: PHC3
+      10   2/9  [XX.......]  freq=0.22  chr8_21974670_21980203_+                  Gene: XPO7
+      11   2/9  [XX.......]  freq=0.22  chr8_21974670_21980203_-                  Gene: not_annotated
+      12   2/9  [XX.......]  freq=0.22  chr6_16326394_16328470_-                  Gene: ATXN1
+      13   2/9  [XX.......]  freq=0.22  chr11_16111803_16186955_+                 Gene: not_annotated
+      14   2/9  [XX.......]  freq=0.22  chr4_177353308_177360677_-                Gene: AC027627.1
+      15   2/9  [XX.......]  freq=0.22  chr2_201307519_201364173_-                Gene: FLACC1
+      16   2/9  [XX.......]  freq=0.22  chr8_102360071_102361626_+                Gene: not_annotated
+      17   2/9  [XX.......]  freq=0.22  chr12_829062_829944_+                     Gene: WNK1
+      18   2/9  [XX.......]  freq=0.22  chr3_196058284_196060247_+                Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr1_44002313_44002985_+                  Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chr14_30902536_30911162_-                 Gene: STRN3
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: nan +/- nan  (0/9 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    5/9  [XXXXX....]  freq=0.56  Age                                       Gene: N/A
+      2    5/9  [XXXXX....]  freq=0.56  chr17_45475100_45475726_+                 Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr3_119500695_119504021_-                Gene: not_annotated
+      4    4/9  [XXXX.....]  freq=0.44  chr10_13659323_13663509_+                 Gene: AL157392.3
+      5    4/9  [XXXX.....]  freq=0.44  chr14_31127785_31133675_+                 Gene: AP4S1
+      6    3/9  [XXX......]  freq=0.33  chrX_135545423_135556300_+                Gene: INTS6L
+      7    3/9  [XXX......]  freq=0.33  chr20_43702490_43705358_-                 Gene: not_annotated
+      8    2/9  [XX.......]  freq=0.22  chr13_99238427_99244624_-                 Gene: not_annotated
+      9    2/9  [XX.......]  freq=0.22  chr3_170171373_170178938_-                Gene: PHC3
+      10   2/9  [XX.......]  freq=0.22  chr8_21974670_21980203_+                  Gene: XPO7
+      11   2/9  [XX.......]  freq=0.22  chr8_21974670_21980203_-                  Gene: not_annotated
+      12   2/9  [XX.......]  freq=0.22  chr6_16326394_16328470_-                  Gene: ATXN1
+      13   2/9  [XX.......]  freq=0.22  chr11_16111803_16186955_+                 Gene: not_annotated
+      14   2/9  [XX.......]  freq=0.22  chr4_177353308_177360677_-                Gene: AC027627.1
+      15   2/9  [XX.......]  freq=0.22  chr2_201307519_201364173_-                Gene: FLACC1
+      16   2/9  [XX.......]  freq=0.22  chr8_102360071_102361626_+                Gene: not_annotated
+      17   2/9  [XX.......]  freq=0.22  chr12_829062_829944_+                     Gene: WNK1
+      18   2/9  [XX.......]  freq=0.22  chr3_196058284_196060247_+                Gene: not_annotated
+      19   2/9  [XX.......]  freq=0.22  chr1_44002313_44002985_+                  Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chr14_30902536_30911162_-                 Gene: STRN3
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.574 +/- 0.147  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  freq=0.67  Age                                       Gene: N/A
+      2    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr3_119500695_119504021_-                Gene: not_annotated
+      3    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  Sex                                       Gene: N/A
+      4    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr17_45475100_45475726_+                 Gene: not_annotated
+      5    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr20_43702490_43705358_-                 Gene: not_annotated
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr5_36953618_36976402_+                  Gene: NIPBL
+      7    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr20_47246008_47249439_+                 Gene: not_annotated
+      8    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_123380529_123380677_+                Gene: not_annotated
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr3_170171373_170178938_-                Gene: PHC3
+      10   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr6_16326394_16328470_-                  Gene: ATXN1
+      11   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr4_98574457_98574905_+                  Gene: not_annotated
+      12   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr12_829062_829944_-                     Gene: not_annotated
+      13   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_13659323_13663509_+                 Gene: AL157392.3
+      14   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr14_30902536_30911162_-                 Gene: STRN3
+      15   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr1_151166934_151167414_-                Gene: not_annotated
+      16   9/36  [XXXXXXXXX...........................]  freq=0.25  chr19_13993525_13993895_+                 Gene: not_annotated
+      17   9/36  [XXXXXXXXX...........................]  freq=0.25  chr9_125337018_125337591_-                Gene: not_annotated
+      18   8/36  [XXXXXXXX............................]  freq=0.22  chr3_53874211_53876080_+                  Gene: not_annotated
+      19   8/36  [XXXXXXXX............................]  freq=0.22  chr19_10904951_10909207_-                 Gene: not_annotated
+      20   8/36  [XXXXXXXX............................]  freq=0.22  chr16_85633914_85634132_+                 Gene: GSE1
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: 0.714 +/- 0.175  (36/36 valid folds)
+
+  STABLE features (1 total, chosen in >= 22/36 folds):
+    1    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  Age                                       Gene: N/A
+    TOP 20 features by Stage 1 selection freq
+      1    24/36  [XXXXXXXXXXXXXXXXXXXXXXXX............]  freq=0.67  Age                                       Gene: N/A
+      2    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  chr3_119500695_119504021_-                Gene: not_annotated
+      3    18/36  [XXXXXXXXXXXXXXXXXX..................]  freq=0.50  Sex                                       Gene: N/A
+      4    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr17_45475100_45475726_+                 Gene: not_annotated
+      5    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr20_43702490_43705358_-                 Gene: not_annotated
+      6    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr5_36953618_36976402_+                  Gene: NIPBL
+      7    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr20_47246008_47249439_+                 Gene: not_annotated
+      8    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_123380529_123380677_+                Gene: not_annotated
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr3_170171373_170178938_-                Gene: PHC3
+      10   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr6_16326394_16328470_-                  Gene: ATXN1
+      11   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr4_98574457_98574905_+                  Gene: not_annotated
+      12   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr12_829062_829944_-                     Gene: not_annotated
+      13   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_13659323_13663509_+                 Gene: AL157392.3
+      14   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr14_30902536_30911162_-                 Gene: STRN3
+      15   10/36  [XXXXXXXXXX..........................]  freq=0.28  chr1_151166934_151167414_-                Gene: not_annotated
+      16   9/36  [XXXXXXXXX...........................]  freq=0.25  chr19_13993525_13993895_+                 Gene: not_annotated
+      17   9/36  [XXXXXXXXX...........................]  freq=0.25  chr9_125337018_125337591_-                Gene: not_annotated
+      18   8/36  [XXXXXXXX............................]  freq=0.22  chr3_53874211_53876080_+                  Gene: not_annotated
+      19   8/36  [XXXXXXXX............................]  freq=0.22  chr19_10904951_10909207_-                 Gene: not_annotated
+      20   8/36  [XXXXXXXX............................]  freq=0.22  chr16_85633914_85634132_+                 Gene: GSE1
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.596 +/- 0.086  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr18_76849526_76881512_-                 Gene: not_annotated
+      2    5/9  [XXXXX....]  freq=0.56  chr11_16097609_16186955_-                 Gene: SOX6
+      3    5/9  [XXXXX....]  freq=0.56  chr9_77214329_77227485_-                  Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr1_151088190_151118139_+                Gene: GABPB2
+      5    5/9  [XXXXX....]  freq=0.56  chr15_49876278_49879459_+                 Gene: AC025040.1
+      6    4/9  [XXXX.....]  freq=0.44  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr5_134674615_134676125_+                Gene: SEC24A
+      9    4/9  [XXXX.....]  freq=0.44  chr7_65979399_65980409_-                  Gene: GUSB
+      10   4/9  [XXXX.....]  freq=0.44  chr1_233177802_233208689_+                Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr2_88801099_88804880_+                  Gene: ANKRD36BP2
+      12   4/9  [XXXX.....]  freq=0.44  chr3_196487399_196488683_+                Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr17_38361711_38377842_-                 Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr2_233388257_233390483_+                Gene: DGKD
+      15   4/9  [XXXX.....]  freq=0.44  chr6_166416042_166416236_+                Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr17_82763965_82781721_+                 Gene: TBCD
+      17   4/9  [XXXX.....]  freq=0.44  chr17_38361711_38377842_+                 Gene: SOCS7
+      18   3/9  [XXX......]  freq=0.33  chr7_48502126_48502552_-                  Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr11_74028287_74034278_+                 Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr8_94534839_94543942_-                  Gene: VIRMA
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 0.725 +/- 0.147  (9/9 valid folds)
+
+  STABLE features (1 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  chr18_76849526_76881512_-                 Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  chr18_76849526_76881512_-                 Gene: not_annotated
+      2    5/9  [XXXXX....]  freq=0.56  chr11_16097609_16186955_-                 Gene: SOX6
+      3    5/9  [XXXXX....]  freq=0.56  chr9_77214329_77227485_-                  Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr1_151088190_151118139_+                Gene: GABPB2
+      5    5/9  [XXXXX....]  freq=0.56  chr15_49876278_49879459_+                 Gene: AC025040.1
+      6    4/9  [XXXX.....]  freq=0.44  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr5_134674615_134676125_+                Gene: SEC24A
+      9    4/9  [XXXX.....]  freq=0.44  chr7_65979399_65980409_-                  Gene: GUSB
+      10   4/9  [XXXX.....]  freq=0.44  chr1_233177802_233208689_+                Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr2_88801099_88804880_+                  Gene: ANKRD36BP2
+      12   4/9  [XXXX.....]  freq=0.44  chr3_196487399_196488683_+                Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr17_38361711_38377842_-                 Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr2_233388257_233390483_+                Gene: DGKD
+      15   4/9  [XXXX.....]  freq=0.44  chr6_166416042_166416236_+                Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr17_82763965_82781721_+                 Gene: TBCD
+      17   4/9  [XXXX.....]  freq=0.44  chr17_38361711_38377842_+                 Gene: SOCS7
+      18   3/9  [XXX......]  freq=0.33  chr7_48502126_48502552_-                  Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr11_74028287_74034278_+                 Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr8_94534839_94543942_-                  Gene: VIRMA
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.518 +/- 0.112  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  Age                                       Gene: N/A
+      2    5/9  [XXXXX....]  freq=0.56  Sex                                       Gene: N/A
+      3    5/9  [XXXXX....]  freq=0.56  chr14_31127785_31133675_+                 Gene: AP4S1
+      4    4/9  [XXXX.....]  freq=0.44  chr2_201307519_201364173_-                Gene: FLACC1
+      5    4/9  [XXXX.....]  freq=0.44  chr6_16326394_16328470_-                  Gene: ATXN1
+      6    4/9  [XXXX.....]  freq=0.44  chr16_85633914_85634132_+                 Gene: GSE1
+      7    4/9  [XXXX.....]  freq=0.44  chr12_829062_829944_+                     Gene: WNK1
+      8    4/9  [XXXX.....]  freq=0.44  chr3_170136419_170149244_-                Gene: PHC3
+      9    4/9  [XXXX.....]  freq=0.44  chr5_79640851_79669028_+                  Gene: TENT2
+      10   3/9  [XXX......]  freq=0.33  chr11_120440129_120445464_+               Gene: ARHGEF12
+      11   3/9  [XXX......]  freq=0.33  chr16_71663899_71681905_-                 Gene: PHLPP2
+      12   3/9  [XXX......]  freq=0.33  chr14_30902536_30911162_-                 Gene: STRN3
+      13   3/9  [XXX......]  freq=0.33  chr9_4823548_4827033_+                    Gene: RCL1
+      14   3/9  [XXX......]  freq=0.33  chr15_41668828_41669958_+                 Gene: MGA
+      15   3/9  [XXX......]  freq=0.33  chr2_201344170_201351451_-                Gene: FLACC1
+      16   3/9  [XXX......]  freq=0.33  chr3_196053418_196077122_-                Gene: TFRC
+      17   3/9  [XXX......]  freq=0.33  chr13_112715381_112715418_+               Gene: ATP11A
+      18   3/9  [XXX......]  freq=0.33  chr16_1809238_1809833_-                   Gene: HAGH
+      19   3/9  [XXX......]  freq=0.33  chrX_135545423_135556300_+                Gene: INTS6L
+      20   3/9  [XXX......]  freq=0.33  chr3_119500695_119504021_+                Gene: TIMMDC1
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.688 +/- 0.130  (9/9 valid folds)
+
+  STABLE features (1 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  Age                                       Gene: N/A
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  Age                                       Gene: N/A
+      2    5/9  [XXXXX....]  freq=0.56  Sex                                       Gene: N/A
+      3    5/9  [XXXXX....]  freq=0.56  chr14_31127785_31133675_+                 Gene: AP4S1
+      4    4/9  [XXXX.....]  freq=0.44  chr2_201307519_201364173_-                Gene: FLACC1
+      5    4/9  [XXXX.....]  freq=0.44  chr6_16326394_16328470_-                  Gene: ATXN1
+      6    4/9  [XXXX.....]  freq=0.44  chr16_85633914_85634132_+                 Gene: GSE1
+      7    4/9  [XXXX.....]  freq=0.44  chr12_829062_829944_+                     Gene: WNK1
+      8    4/9  [XXXX.....]  freq=0.44  chr3_170136419_170149244_-                Gene: PHC3
+      9    4/9  [XXXX.....]  freq=0.44  chr5_79640851_79669028_+                  Gene: TENT2
+      10   3/9  [XXX......]  freq=0.33  chr11_120440129_120445464_+               Gene: ARHGEF12
+      11   3/9  [XXX......]  freq=0.33  chr16_71663899_71681905_-                 Gene: PHLPP2
+      12   3/9  [XXX......]  freq=0.33  chr14_30902536_30911162_-                 Gene: STRN3
+      13   3/9  [XXX......]  freq=0.33  chr9_4823548_4827033_+                    Gene: RCL1
+      14   3/9  [XXX......]  freq=0.33  chr15_41668828_41669958_+                 Gene: MGA
+      15   3/9  [XXX......]  freq=0.33  chr2_201344170_201351451_-                Gene: FLACC1
+      16   3/9  [XXX......]  freq=0.33  chr3_196053418_196077122_-                Gene: TFRC
+      17   3/9  [XXX......]  freq=0.33  chr13_112715381_112715418_+               Gene: ATP11A
+      18   3/9  [XXX......]  freq=0.33  chr16_1809238_1809833_-                   Gene: HAGH
+      19   3/9  [XXX......]  freq=0.33  chrX_135545423_135556300_+                Gene: INTS6L
+      20   3/9  [XXX......]  freq=0.33  chr3_119500695_119504021_+                Gene: TIMMDC1
+
+============================================================================
+FEATURES  |  Target: SHAPSC
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.484 +/- 0.074  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    6/9  [XXXXXX...]  freq=0.67  chr13_77719532_77753358_+                 Gene: SLAIN1
+      2    5/9  [XXXXX....]  freq=0.56  chr15_63696124_63716473_+                 Gene: AC073167.1
+      3    5/9  [XXXXX....]  freq=0.56  chr22_41866831_41871035_-                 Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr3_170145423_170178938_-                Gene: PHC3
+      5    5/9  [XXXXX....]  freq=0.56  chr7_99493040_99494631_+                  Gene: ZNF789
+      6    4/9  [XXXX.....]  freq=0.44  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chr2_30525587_30533314_+                  Gene: LCLAT1
+      8    3/9  [XXX......]  freq=0.33  chr4_128992167_129003876_+                Gene: not_annotated
+      9    3/9  [XXX......]  freq=0.33  chr10_32565558_32584304_+                 Gene: CCDC7
+      10   3/9  [XXX......]  freq=0.33  chr10_32565558_32584304_-                 Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr20_56386257_56388202_+                 Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr15_92996957_93002317_-                 Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr7_105062164_105081797_+                Gene: KMT2E
+      14   3/9  [XXX......]  freq=0.33  chr7_74356410_74357477_+                  Gene: CLIP2
+      15   3/9  [XXX......]  freq=0.33  chr18_57731414_57732023_+                 Gene: AC027097.2
+      16   3/9  [XXX......]  freq=0.33  chr18_44701175_44701832_-                 Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr14_99458279_99465813_+                 Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr12_82857010_82857580_-                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr3_119500695_119513719_-                Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chrY_2953909_2961646_-                    Gene: not_annotated
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: 0.543 +/- 0.216  (9/9 valid folds)
+
+  STABLE features (1 total, chosen in >= 6/9 folds):
+    1    6/9  [XXXXXX...]  chr13_77719532_77753358_+                 Gene: SLAIN1
+    TOP 20 features by Stage 1 selection freq
+      1    6/9  [XXXXXX...]  freq=0.67  chr13_77719532_77753358_+                 Gene: SLAIN1
+      2    5/9  [XXXXX....]  freq=0.56  chr15_63696124_63716473_+                 Gene: AC073167.1
+      3    5/9  [XXXXX....]  freq=0.56  chr22_41866831_41871035_-                 Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr3_170145423_170178938_-                Gene: PHC3
+      5    5/9  [XXXXX....]  freq=0.56  chr7_99493040_99494631_+                  Gene: ZNF789
+      6    4/9  [XXXX.....]  freq=0.44  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    4/9  [XXXX.....]  freq=0.44  chr2_30525587_30533314_+                  Gene: LCLAT1
+      8    3/9  [XXX......]  freq=0.33  chr4_128992167_129003876_+                Gene: not_annotated
+      9    3/9  [XXX......]  freq=0.33  chr10_32565558_32584304_+                 Gene: CCDC7
+      10   3/9  [XXX......]  freq=0.33  chr10_32565558_32584304_-                 Gene: not_annotated
+      11   3/9  [XXX......]  freq=0.33  chr20_56386257_56388202_+                 Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr15_92996957_93002317_-                 Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr7_105062164_105081797_+                Gene: KMT2E
+      14   3/9  [XXX......]  freq=0.33  chr7_74356410_74357477_+                  Gene: CLIP2
+      15   3/9  [XXX......]  freq=0.33  chr18_57731414_57732023_+                 Gene: AC027097.2
+      16   3/9  [XXX......]  freq=0.33  chr18_44701175_44701832_-                 Gene: not_annotated
+      17   3/9  [XXX......]  freq=0.33  chr14_99458279_99465813_+                 Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr12_82857010_82857580_-                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr3_119500695_119513719_-                Gene: not_annotated
+      20   2/9  [XX.......]  freq=0.22  chrY_2953909_2961646_-                    Gene: not_annotated
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.586 +/- 0.179  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    20/36  [XXXXXXXXXXXXXXXXXXXX................]  freq=0.56  chr3_170145423_170178938_-                Gene: PHC3
+      2    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr13_77719532_77753358_+                 Gene: SLAIN1
+      3    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr1_28473554_28476291_-                  Gene: not_annotated
+      4    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr15_92996957_93002317_-                 Gene: not_annotated
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr7_105062164_105081797_+                Gene: KMT2E
+      6    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr4_128992167_129003876_+                Gene: not_annotated
+      8    9/36  [XXXXXXXXX...........................]  freq=0.25  chr12_82857010_82857580_-                 Gene: not_annotated
+      9    9/36  [XXXXXXXXX...........................]  freq=0.25  chr14_99458279_99465813_+                 Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr12_82857010_82857580_+                 Gene: TMTC2
+      11   8/36  [XXXXXXXX............................]  freq=0.22  chr15_63696124_63716473_+                 Gene: AC073167.1
+      12   8/36  [XXXXXXXX............................]  freq=0.22  chr7_105062164_105081797_-                Gene: not_annotated
+      13   8/36  [XXXXXXXX............................]  freq=0.22  chr7_99493040_99494631_+                  Gene: ZNF789
+      14   7/36  [XXXXXXX.............................]  freq=0.19  chr19_19640085_19640571_+                 Gene: not_annotated
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr4_94573351_94586444_-                  Gene: not_annotated
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr2_37316237_37317179_-                  Gene: PRKD3
+      17   6/36  [XXXXXX..............................]  freq=0.17  chrX_135545423_135552146_-                Gene: not_annotated
+      18   6/36  [XXXXXX..............................]  freq=0.17  chr19_7184316_7184637_-                   Gene: INSR
+      19   6/36  [XXXXXX..............................]  freq=0.17  chrX_135545423_135552146_+                Gene: INTS6L
+      20   6/36  [XXXXXX..............................]  freq=0.17  chr2_40428473_40430304_+                  Gene: not_annotated
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: nan +/- nan  (0/36 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    20/36  [XXXXXXXXXXXXXXXXXXXX................]  freq=0.56  chr3_170145423_170178938_-                Gene: PHC3
+      2    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr13_77719532_77753358_+                 Gene: SLAIN1
+      3    17/36  [XXXXXXXXXXXXXXXXX...................]  freq=0.47  chr1_28473554_28476291_-                  Gene: not_annotated
+      4    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr15_92996957_93002317_-                 Gene: not_annotated
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr7_105062164_105081797_+                Gene: KMT2E
+      6    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr7_98190728_98194572_-                  Gene: not_annotated
+      7    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr4_128992167_129003876_+                Gene: not_annotated
+      8    9/36  [XXXXXXXXX...........................]  freq=0.25  chr12_82857010_82857580_-                 Gene: not_annotated
+      9    9/36  [XXXXXXXXX...........................]  freq=0.25  chr14_99458279_99465813_+                 Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr12_82857010_82857580_+                 Gene: TMTC2
+      11   8/36  [XXXXXXXX............................]  freq=0.22  chr15_63696124_63716473_+                 Gene: AC073167.1
+      12   8/36  [XXXXXXXX............................]  freq=0.22  chr7_105062164_105081797_-                Gene: not_annotated
+      13   8/36  [XXXXXXXX............................]  freq=0.22  chr7_99493040_99494631_+                  Gene: ZNF789
+      14   7/36  [XXXXXXX.............................]  freq=0.19  chr19_19640085_19640571_+                 Gene: not_annotated
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr4_94573351_94586444_-                  Gene: not_annotated
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr2_37316237_37317179_-                  Gene: PRKD3
+      17   6/36  [XXXXXX..............................]  freq=0.17  chrX_135545423_135552146_-                Gene: not_annotated
+      18   6/36  [XXXXXX..............................]  freq=0.17  chr19_7184316_7184637_-                   Gene: INSR
+      19   6/36  [XXXXXX..............................]  freq=0.17  chrX_135545423_135552146_+                Gene: INTS6L
+      20   6/36  [XXXXXX..............................]  freq=0.17  chr2_40428473_40430304_+                  Gene: not_annotated
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.842 +/- 0.180  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr10_32565558_32584304_+                 Gene: CCDC7
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr11_70354301_70356254_-                 Gene: AP002336.2
+      3    8/9  [XXXXXXXX.]  freq=0.89  chr17_36952886_36953907_-                 Gene: not_annotated
+      4    8/9  [XXXXXXXX.]  freq=0.89  chr1_204558641_204585583_-                Gene: RNA5SP74
+      5    6/9  [XXXXXX...]  freq=0.67  chr20_37066724_37068186_-                 Gene: RBL1
+      6    6/9  [XXXXXX...]  freq=0.67  chr10_32565558_32584304_-                 Gene: not_annotated
+      7    5/9  [XXXXX....]  freq=0.56  chr9_137811461_137818138_+                Gene: EHMT1
+      8    5/9  [XXXXX....]  freq=0.56  chr6_166416042_166416236_+                Gene: not_annotated
+      9    5/9  [XXXXX....]  freq=0.56  chr3_52204693_52206751_-                  Gene: not_annotated
+      10   5/9  [XXXXX....]  freq=0.56  chr10_15833630_15847943_-                 Gene: MINDY3
+      11   4/9  [XXXX.....]  freq=0.44  chr4_128992167_129003876_-                Gene: SCLT1
+      12   4/9  [XXXX.....]  freq=0.44  chr16_47497399_47515601_-                 Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr7_48502126_48502552_-                  Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      15   4/9  [XXXX.....]  freq=0.44  chr2_32174063_32184338_-                  Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr17_61744432_61780401_+                 Gene: not_annotated
+      17   4/9  [XXXX.....]  freq=0.44  chr5_133959494_133960020_+                Gene: not_annotated
+      18   4/9  [XXXX.....]  freq=0.44  chr6_118632453_118652808_+                Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr7_139237005_139284574_+                Gene: UBN2
+      20   3/9  [XXX......]  freq=0.33  chr5_168488602_168494650_-                Gene: not_annotated
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 1.000 +/- 0.000  (9/9 valid folds)
+
+  STABLE features (6 total, chosen in >= 6/9 folds):
+    1    8/9  [XXXXXXXX.]  chr11_70354301_70356254_-                 Gene: AP002336.2
+    2    8/9  [XXXXXXXX.]  chr17_36952886_36953907_-                 Gene: not_annotated
+    3    6/9  [XXXXXX...]  chr20_37066724_37068186_-                 Gene: RBL1
+    4    9/9  [XXXXXXXXX]  chr10_32565558_32584304_+                 Gene: CCDC7
+    5    8/9  [XXXXXXXX.]  chr1_204558641_204585583_-                Gene: RNA5SP74
+    6    6/9  [XXXXXX...]  chr10_32565558_32584304_-                 Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr10_32565558_32584304_+                 Gene: CCDC7
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr11_70354301_70356254_-                 Gene: AP002336.2
+      3    8/9  [XXXXXXXX.]  freq=0.89  chr17_36952886_36953907_-                 Gene: not_annotated
+      4    8/9  [XXXXXXXX.]  freq=0.89  chr1_204558641_204585583_-                Gene: RNA5SP74
+      5    6/9  [XXXXXX...]  freq=0.67  chr20_37066724_37068186_-                 Gene: RBL1
+      6    6/9  [XXXXXX...]  freq=0.67  chr10_32565558_32584304_-                 Gene: not_annotated
+      7    5/9  [XXXXX....]  freq=0.56  chr9_137811461_137818138_+                Gene: EHMT1
+      8    5/9  [XXXXX....]  freq=0.56  chr6_166416042_166416236_+                Gene: not_annotated
+      9    5/9  [XXXXX....]  freq=0.56  chr3_52204693_52206751_-                  Gene: not_annotated
+      10   5/9  [XXXXX....]  freq=0.56  chr10_15833630_15847943_-                 Gene: MINDY3
+      11   4/9  [XXXX.....]  freq=0.44  chr4_128992167_129003876_-                Gene: SCLT1
+      12   4/9  [XXXX.....]  freq=0.44  chr16_47497399_47515601_-                 Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr7_48502126_48502552_-                  Gene: not_annotated
+      14   4/9  [XXXX.....]  freq=0.44  chr9_33351560_33352719_-                  Gene: not_annotated
+      15   4/9  [XXXX.....]  freq=0.44  chr2_32174063_32184338_-                  Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr17_61744432_61780401_+                 Gene: not_annotated
+      17   4/9  [XXXX.....]  freq=0.44  chr5_133959494_133960020_+                Gene: not_annotated
+      18   4/9  [XXXX.....]  freq=0.44  chr6_118632453_118652808_+                Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr7_139237005_139284574_+                Gene: UBN2
+      20   3/9  [XXX......]  freq=0.33  chr5_168488602_168494650_-                Gene: not_annotated
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.504 +/- 0.080  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr3_170145423_170178938_-                Gene: PHC3
+      2    7/9  [XXXXXXX..]  freq=0.78  chr13_77719532_77753358_+                 Gene: SLAIN1
+      3    5/9  [XXXXX....]  freq=0.56  chr15_63696124_63716473_+                 Gene: AC073167.1
+      4    5/9  [XXXXX....]  freq=0.56  chr5_134674615_134676125_+                Gene: SEC24A
+      5    5/9  [XXXXX....]  freq=0.56  chr1_15638307_15643650_+                  Gene: DDI2
+      6    5/9  [XXXXX....]  freq=0.56  chr12_82857010_82857580_+                 Gene: TMTC2
+      7    5/9  [XXXXX....]  freq=0.56  chr11_32927157_32935435_+                 Gene: QSER1
+      8    5/9  [XXXXX....]  freq=0.56  chr2_37316237_37317179_-                  Gene: PRKD3
+      9    4/9  [XXXX.....]  freq=0.44  chr1_243545510_243843282_+                Gene: AL591721.1
+      10   4/9  [XXXX.....]  freq=0.44  chr2_30525587_30533314_+                  Gene: LCLAT1
+      11   4/9  [XXXX.....]  freq=0.44  chr15_65722848_65761438_-                 Gene: DENND4A
+      12   4/9  [XXXX.....]  freq=0.44  chr7_99493040_99494631_+                  Gene: ZNF789
+      13   4/9  [XXXX.....]  freq=0.44  Age                                       Gene: N/A
+      14   3/9  [XXX......]  freq=0.33  chr1_159050726_159051068_+                Gene: IFI16
+      15   3/9  [XXX......]  freq=0.33  chr2_8943187_8962618_-                    Gene: MBOAT2
+      16   3/9  [XXX......]  freq=0.33  chr11_120475340_120477526_+               Gene: ARHGEF12
+      17   3/9  [XXX......]  freq=0.33  chr15_50300789_50301368_-                 Gene: GABPB1
+      18   3/9  [XXX......]  freq=0.33  chr18_9583117_9595153_-                   Gene: PPP4R1
+      19   3/9  [XXX......]  freq=0.33  chr1_26729651_26732792_+                  Gene: ARID1A
+      20   3/9  [XXX......]  freq=0.33  chr19_7184316_7184637_-                   Gene: INSR
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.670 +/- 0.141  (9/9 valid folds)
+
+  STABLE features (2 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr13_77719532_77753358_+                 Gene: SLAIN1
+    2    9/9  [XXXXXXXXX]  chr3_170145423_170178938_-                Gene: PHC3
+    TOP 20 features by Stage 1 selection freq
+      1    9/9  [XXXXXXXXX]  freq=1.00  chr3_170145423_170178938_-                Gene: PHC3
+      2    7/9  [XXXXXXX..]  freq=0.78  chr13_77719532_77753358_+                 Gene: SLAIN1
+      3    5/9  [XXXXX....]  freq=0.56  chr15_63696124_63716473_+                 Gene: AC073167.1
+      4    5/9  [XXXXX....]  freq=0.56  chr5_134674615_134676125_+                Gene: SEC24A
+      5    5/9  [XXXXX....]  freq=0.56  chr1_15638307_15643650_+                  Gene: DDI2
+      6    5/9  [XXXXX....]  freq=0.56  chr12_82857010_82857580_+                 Gene: TMTC2
+      7    5/9  [XXXXX....]  freq=0.56  chr11_32927157_32935435_+                 Gene: QSER1
+      8    5/9  [XXXXX....]  freq=0.56  chr2_37316237_37317179_-                  Gene: PRKD3
+      9    4/9  [XXXX.....]  freq=0.44  chr1_243545510_243843282_+                Gene: AL591721.1
+      10   4/9  [XXXX.....]  freq=0.44  chr2_30525587_30533314_+                  Gene: LCLAT1
+      11   4/9  [XXXX.....]  freq=0.44  chr15_65722848_65761438_-                 Gene: DENND4A
+      12   4/9  [XXXX.....]  freq=0.44  chr7_99493040_99494631_+                  Gene: ZNF789
+      13   4/9  [XXXX.....]  freq=0.44  Age                                       Gene: N/A
+      14   3/9  [XXX......]  freq=0.33  chr1_159050726_159051068_+                Gene: IFI16
+      15   3/9  [XXX......]  freq=0.33  chr2_8943187_8962618_-                    Gene: MBOAT2
+      16   3/9  [XXX......]  freq=0.33  chr11_120475340_120477526_+               Gene: ARHGEF12
+      17   3/9  [XXX......]  freq=0.33  chr15_50300789_50301368_-                 Gene: GABPB1
+      18   3/9  [XXX......]  freq=0.33  chr18_9583117_9595153_-                   Gene: PPP4R1
+      19   3/9  [XXX......]  freq=0.33  chr1_26729651_26732792_+                  Gene: ARID1A
+      20   3/9  [XXX......]  freq=0.33  chr19_7184316_7184637_-                   Gene: INSR
+
+============================================================================
+FEATURES  |  Target: TEPS
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.739 +/- 0.230  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    9/9  [XXXXXXXXX]  freq=1.00  Age                                       Gene: N/A
+      2    7/9  [XXXXXXX..]  freq=0.78  chr1_44002313_44002985_+                  Gene: not_annotated
+      3    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr5_180549931_180553471_-                Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr2_201344170_201351451_+                Gene: not_annotated
+      6    4/9  [XXXX.....]  freq=0.44  chr1_158654811_158654951_-                Gene: SPTA1
+      7    4/9  [XXXX.....]  freq=0.44  chr7_135395634_135398226_+                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr8_130214556_130358143_-                Gene: ASAP1
+      9    4/9  [XXXX.....]  freq=0.44  chr9_98018289_98026451_+                  Gene: not_annotated
+      10   4/9  [XXXX.....]  freq=0.44  chr2_40428473_40430304_+                  Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr8_21974670_21980203_+                  Gene: XPO7
+      12   3/9  [XXX......]  freq=0.33  chr8_102360071_102361626_+                Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr19_13993525_13993895_+                 Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr5_36953618_36976402_-                  Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr16_85633914_85634132_-                 Gene: not_annotated
+      16   3/9  [XXX......]  freq=0.33  chr8_140585119_140605914_-                Gene: AGO2
+      17   3/9  [XXX......]  freq=0.33  chr17_2394043_2395454_+                   Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr16_71676447_71679535_+                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr11_119284969_119285566_+               Gene: CBL
+      20   3/9  [XXX......]  freq=0.33  chr2_58221942_58232112_+                  Gene: not_annotated
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: 0.981 +/- 0.030  (9/9 valid folds)
+
+  STABLE features (3 total, chosen in >= 6/9 folds):
+    1    9/9  [XXXXXXXXX]  Age                                       Gene: N/A
+    2    7/9  [XXXXXXX..]  chr1_44002313_44002985_+                  Gene: not_annotated
+    3    6/9  [XXXXXX...]  chr8_21974670_21980203_-                  Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    9/9  [XXXXXXXXX]  freq=1.00  Age                                       Gene: N/A
+      2    7/9  [XXXXXXX..]  freq=0.78  chr1_44002313_44002985_+                  Gene: not_annotated
+      3    6/9  [XXXXXX...]  freq=0.67  chr8_21974670_21980203_-                  Gene: not_annotated
+      4    5/9  [XXXXX....]  freq=0.56  chr5_180549931_180553471_-                Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr2_201344170_201351451_+                Gene: not_annotated
+      6    4/9  [XXXX.....]  freq=0.44  chr1_158654811_158654951_-                Gene: SPTA1
+      7    4/9  [XXXX.....]  freq=0.44  chr7_135395634_135398226_+                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr8_130214556_130358143_-                Gene: ASAP1
+      9    4/9  [XXXX.....]  freq=0.44  chr9_98018289_98026451_+                  Gene: not_annotated
+      10   4/9  [XXXX.....]  freq=0.44  chr2_40428473_40430304_+                  Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr8_21974670_21980203_+                  Gene: XPO7
+      12   3/9  [XXX......]  freq=0.33  chr8_102360071_102361626_+                Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr19_13993525_13993895_+                 Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr5_36953618_36976402_-                  Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr16_85633914_85634132_-                 Gene: not_annotated
+      16   3/9  [XXX......]  freq=0.33  chr8_140585119_140605914_-                Gene: AGO2
+      17   3/9  [XXX......]  freq=0.33  chr17_2394043_2395454_+                   Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr16_71676447_71679535_+                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr11_119284969_119285566_+               Gene: CBL
+      20   3/9  [XXX......]  freq=0.33  chr2_58221942_58232112_+                  Gene: not_annotated
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.745 +/- 0.190  (36/36 valid folds)
+    TOP 20 features by selection frequency
+      1    34/36  [XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..]  freq=0.94  Age                                       Gene: N/A
+      2    19/36  [XXXXXXXXXXXXXXXXXXX.................]  freq=0.53  chr1_44002313_44002985_+                  Gene: not_annotated
+      3    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr2_201344170_201351451_+                Gene: not_annotated
+      4    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr10_13659323_13663509_-                 Gene: FRMD4A
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr1_158654811_158654951_-                Gene: SPTA1
+      6    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_41661430_41661941_+                  Gene: AC113133.1
+      7    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr5_180549931_180553471_-                Gene: not_annotated
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr17_20204333_20205912_-                 Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr16_85633914_85634132_+                 Gene: GSE1
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chr8_140585119_140605914_-                Gene: AGO2
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chr3_196053418_196062645_+                Gene: not_annotated
+      13   9/36  [XXXXXXXXX...........................]  freq=0.25  chr2_40428473_40430304_+                  Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr16_85633914_85634132_-                 Gene: not_annotated
+      15   8/36  [XXXXXXXX............................]  freq=0.22  chr1_20770930_20773610_-                  Gene: HP1BP3
+      16   8/36  [XXXXXXXX............................]  freq=0.22  chr8_102360071_102361626_+                Gene: not_annotated
+      17   8/36  [XXXXXXXX............................]  freq=0.22  chrX_135545423_135552146_-                Gene: not_annotated
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr2_201344170_201351451_-                Gene: FLACC1
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr1_45640210_45642499_+                  Gene: not_annotated
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr1_243545510_243843282_+                Gene: AL591721.1
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: 0.947 +/- 0.141  (36/36 valid folds)
+
+  STABLE features (1 total, chosen in >= 22/36 folds):
+    1    34/36  [XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..]  Age                                       Gene: N/A
+    TOP 20 features by Stage 1 selection freq
+      1    34/36  [XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..]  freq=0.94  Age                                       Gene: N/A
+      2    19/36  [XXXXXXXXXXXXXXXXXXX.................]  freq=0.53  chr1_44002313_44002985_+                  Gene: not_annotated
+      3    15/36  [XXXXXXXXXXXXXXX.....................]  freq=0.42  chr2_201344170_201351451_+                Gene: not_annotated
+      4    14/36  [XXXXXXXXXXXXXX......................]  freq=0.39  chr10_13659323_13663509_-                 Gene: FRMD4A
+      5    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr1_158654811_158654951_-                Gene: SPTA1
+      6    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_41661430_41661941_+                  Gene: AC113133.1
+      7    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr8_21974670_21980203_-                  Gene: not_annotated
+      8    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr5_180549931_180553471_-                Gene: not_annotated
+      9    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr17_20204333_20205912_-                 Gene: not_annotated
+      10   9/36  [XXXXXXXXX...........................]  freq=0.25  chr16_85633914_85634132_+                 Gene: GSE1
+      11   9/36  [XXXXXXXXX...........................]  freq=0.25  chr8_140585119_140605914_-                Gene: AGO2
+      12   9/36  [XXXXXXXXX...........................]  freq=0.25  chr3_196053418_196062645_+                Gene: not_annotated
+      13   9/36  [XXXXXXXXX...........................]  freq=0.25  chr2_40428473_40430304_+                  Gene: not_annotated
+      14   8/36  [XXXXXXXX............................]  freq=0.22  chr16_85633914_85634132_-                 Gene: not_annotated
+      15   8/36  [XXXXXXXX............................]  freq=0.22  chr1_20770930_20773610_-                  Gene: HP1BP3
+      16   8/36  [XXXXXXXX............................]  freq=0.22  chr8_102360071_102361626_+                Gene: not_annotated
+      17   8/36  [XXXXXXXX............................]  freq=0.22  chrX_135545423_135552146_-                Gene: not_annotated
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr2_201344170_201351451_-                Gene: FLACC1
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr1_45640210_45642499_+                  Gene: not_annotated
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr1_243545510_243843282_+                Gene: AL591721.1
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.856 +/- 0.191  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    8/9  [XXXXXXXX.]  freq=0.89  Age                                       Gene: N/A
+      2    6/9  [XXXXXX...]  freq=0.67  chr10_113876521_113884380_+               Gene: NHLRC2
+      3    6/9  [XXXXXX...]  freq=0.67  chr19_40705096_40705447_-                 Gene: COQ8B
+      4    6/9  [XXXXXX...]  freq=0.67  chr11_16183886_16341252_+                 Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr7_65979399_65980409_-                  Gene: GUSB
+      6    5/9  [XXXXX....]  freq=0.56  chr7_92294889_92327900_+                  Gene: ANKIB1
+      7    4/9  [XXXX.....]  freq=0.44  chr6_166416042_166416236_+                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr7_105285009_105297533_-                Gene: SRPK2
+      9    4/9  [XXXX.....]  freq=0.44  chr9_77214329_77227485_-                  Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr8_130236922_130358143_+                Gene: AC009682.1
+      11   3/9  [XXX......]  freq=0.33  chr2_40428473_40430304_+                  Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr12_123345258_123350441_+               Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr2_20739971_20740205_+                  Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr2_233449982_233452060_+                Gene: DGKD
+      15   3/9  [XXX......]  freq=0.33  chr1_158654811_158654951_-                Gene: SPTA1
+      16   3/9  [XXX......]  freq=0.33  chr14_24266430_24268619_-                 Gene: RABGGTA
+      17   3/9  [XXX......]  freq=0.33  chr9_33351560_33352719_-                  Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr18_62072673_62095950_+                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr8_102360071_102361626_+                Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr7_92294889_92327900_-                  Gene: not_annotated
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 1.000 +/- 0.000  (9/9 valid folds)
+
+  STABLE features (4 total, chosen in >= 6/9 folds):
+    1    6/9  [XXXXXX...]  chr10_113876521_113884380_+               Gene: NHLRC2
+    2    8/9  [XXXXXXXX.]  Age                                       Gene: N/A
+    3    6/9  [XXXXXX...]  chr19_40705096_40705447_-                 Gene: COQ8B
+    4    6/9  [XXXXXX...]  chr11_16183886_16341252_+                 Gene: not_annotated
+    TOP 20 features by Stage 1 selection freq
+      1    8/9  [XXXXXXXX.]  freq=0.89  Age                                       Gene: N/A
+      2    6/9  [XXXXXX...]  freq=0.67  chr10_113876521_113884380_+               Gene: NHLRC2
+      3    6/9  [XXXXXX...]  freq=0.67  chr19_40705096_40705447_-                 Gene: COQ8B
+      4    6/9  [XXXXXX...]  freq=0.67  chr11_16183886_16341252_+                 Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr7_65979399_65980409_-                  Gene: GUSB
+      6    5/9  [XXXXX....]  freq=0.56  chr7_92294889_92327900_+                  Gene: ANKIB1
+      7    4/9  [XXXX.....]  freq=0.44  chr6_166416042_166416236_+                Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr7_105285009_105297533_-                Gene: SRPK2
+      9    4/9  [XXXX.....]  freq=0.44  chr9_77214329_77227485_-                  Gene: not_annotated
+      10   3/9  [XXX......]  freq=0.33  chr8_130236922_130358143_+                Gene: AC009682.1
+      11   3/9  [XXX......]  freq=0.33  chr2_40428473_40430304_+                  Gene: not_annotated
+      12   3/9  [XXX......]  freq=0.33  chr12_123345258_123350441_+               Gene: not_annotated
+      13   3/9  [XXX......]  freq=0.33  chr2_20739971_20740205_+                  Gene: not_annotated
+      14   3/9  [XXX......]  freq=0.33  chr2_233449982_233452060_+                Gene: DGKD
+      15   3/9  [XXX......]  freq=0.33  chr1_158654811_158654951_-                Gene: SPTA1
+      16   3/9  [XXX......]  freq=0.33  chr14_24266430_24268619_-                 Gene: RABGGTA
+      17   3/9  [XXX......]  freq=0.33  chr9_33351560_33352719_-                  Gene: not_annotated
+      18   3/9  [XXX......]  freq=0.33  chr18_62072673_62095950_+                 Gene: not_annotated
+      19   3/9  [XXX......]  freq=0.33  chr8_102360071_102361626_+                Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr7_92294889_92327900_-                  Gene: not_annotated
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.701 +/- 0.204  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    9/9  [XXXXXXXXX]  freq=1.00  Age                                       Gene: N/A
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr1_158654811_158654951_-                Gene: SPTA1
+      3    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      4    7/9  [XXXXXXX..]  freq=0.78  chr8_21974670_21980203_+                  Gene: XPO7
+      5    7/9  [XXXXXXX..]  freq=0.78  chr2_201344170_201351451_-                Gene: FLACC1
+      6    7/9  [XXXXXXX..]  freq=0.78  chr8_140585119_140605914_-                Gene: AGO2
+      7    6/9  [XXXXXX...]  freq=0.67  chr8_41661430_41661941_+                  Gene: AC113133.1
+      8    6/9  [XXXXXX...]  freq=0.67  chr10_13659323_13663509_-                 Gene: FRMD4A
+      9    6/9  [XXXXXX...]  freq=0.67  chrX_17103718_17138961_+                  Gene: REPS2
+      10   5/9  [XXXXX....]  freq=0.56  chr11_34957384_34980503_+                 Gene: PDHX
+      11   5/9  [XXXXX....]  freq=0.56  chr3_56592970_56594028_+                  Gene: CCDC66
+      12   5/9  [XXXXX....]  freq=0.56  chr20_43702490_43705358_+                 Gene: MYBL2
+      13   5/9  [XXXXX....]  freq=0.56  chr8_130214556_130358143_-                Gene: ASAP1
+      14   5/9  [XXXXX....]  freq=0.56  chr12_829062_829944_+                     Gene: WNK1
+      15   5/9  [XXXXX....]  freq=0.56  chr11_119284969_119285566_+               Gene: CBL
+      16   5/9  [XXXXX....]  freq=0.56  chr1_41070595_41075451_-                  Gene: SCMH1
+      17   4/9  [XXXX.....]  freq=0.44  chr3_119500695_119504021_+                Gene: TIMMDC1
+      18   4/9  [XXXX.....]  freq=0.44  chr1_20770930_20773610_-                  Gene: HP1BP3
+      19   4/9  [XXXX.....]  freq=0.44  chr4_177353308_177360677_+                Gene: NEIL3
+      20   4/9  [XXXX.....]  freq=0.44  chr1_205616478_205623891_-                Gene: ELK4
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.864 +/- 0.252  (9/9 valid folds)
+
+  STABLE features (9 total, chosen in >= 6/9 folds):
+    1    9/9  [XXXXXXXXX]  Age                                       Gene: N/A
+    2    8/9  [XXXXXXXX.]  chr1_158654811_158654951_-                Gene: SPTA1
+    3    6/9  [XXXXXX...]  chr8_41661430_41661941_+                  Gene: AC113133.1
+    4    6/9  [XXXXXX...]  chr10_13659323_13663509_-                 Gene: FRMD4A
+    5    7/9  [XXXXXXX..]  chr16_85633914_85634132_+                 Gene: GSE1
+    6    7/9  [XXXXXXX..]  chr8_21974670_21980203_+                  Gene: XPO7
+    7    7/9  [XXXXXXX..]  chr2_201344170_201351451_-                Gene: FLACC1
+    8    6/9  [XXXXXX...]  chrX_17103718_17138961_+                  Gene: REPS2
+    9    7/9  [XXXXXXX..]  chr8_140585119_140605914_-                Gene: AGO2
+    TOP 20 features by Stage 1 selection freq
+      1    9/9  [XXXXXXXXX]  freq=1.00  Age                                       Gene: N/A
+      2    8/9  [XXXXXXXX.]  freq=0.89  chr1_158654811_158654951_-                Gene: SPTA1
+      3    7/9  [XXXXXXX..]  freq=0.78  chr16_85633914_85634132_+                 Gene: GSE1
+      4    7/9  [XXXXXXX..]  freq=0.78  chr8_21974670_21980203_+                  Gene: XPO7
+      5    7/9  [XXXXXXX..]  freq=0.78  chr2_201344170_201351451_-                Gene: FLACC1
+      6    7/9  [XXXXXXX..]  freq=0.78  chr8_140585119_140605914_-                Gene: AGO2
+      7    6/9  [XXXXXX...]  freq=0.67  chr8_41661430_41661941_+                  Gene: AC113133.1
+      8    6/9  [XXXXXX...]  freq=0.67  chr10_13659323_13663509_-                 Gene: FRMD4A
+      9    6/9  [XXXXXX...]  freq=0.67  chrX_17103718_17138961_+                  Gene: REPS2
+      10   5/9  [XXXXX....]  freq=0.56  chr11_34957384_34980503_+                 Gene: PDHX
+      11   5/9  [XXXXX....]  freq=0.56  chr3_56592970_56594028_+                  Gene: CCDC66
+      12   5/9  [XXXXX....]  freq=0.56  chr20_43702490_43705358_+                 Gene: MYBL2
+      13   5/9  [XXXXX....]  freq=0.56  chr8_130214556_130358143_-                Gene: ASAP1
+      14   5/9  [XXXXX....]  freq=0.56  chr12_829062_829944_+                     Gene: WNK1
+      15   5/9  [XXXXX....]  freq=0.56  chr11_119284969_119285566_+               Gene: CBL
+      16   5/9  [XXXXX....]  freq=0.56  chr1_41070595_41075451_-                  Gene: SCMH1
+      17   4/9  [XXXX.....]  freq=0.44  chr3_119500695_119504021_+                Gene: TIMMDC1
+      18   4/9  [XXXX.....]  freq=0.44  chr1_20770930_20773610_-                  Gene: HP1BP3
+      19   4/9  [XXXX.....]  freq=0.44  chr4_177353308_177360677_+                Gene: NEIL3
+      20   4/9  [XXXX.....]  freq=0.44  chr1_205616478_205623891_-                Gene: ELK4
+
+============================================================================
+FEATURES  |  Target: YMRS
+============================================================================
+
+  -- LOPO_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.508 +/- 0.054  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    5/9  [XXXXX....]  freq=0.56  chr5_57246300_57247215_+                  Gene: GPBP1
+      2    5/9  [XXXXX....]  freq=0.56  chr2_226864604_226867688_-                Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr18_62539681_62550460_+                 Gene: ZCCHC2
+      4    4/9  [XXXX.....]  freq=0.44  chr1_10149184_10151561_-                  Gene: not_annotated
+      5    4/9  [XXXX.....]  freq=0.44  chr1_155438327_155439068_-                Gene: ASH1L
+      6    4/9  [XXXX.....]  freq=0.44  chr1_205268950_205269884_+                Gene: TMCC2
+      7    4/9  [XXXX.....]  freq=0.44  chr17_39423327_39427790_+                 Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr16_30664215_30666541_-                 Gene: not_annotated
+      9    4/9  [XXXX.....]  freq=0.44  chr15_93000512_93009323_+                 Gene: CHD2
+      10   4/9  [XXXX.....]  freq=0.44  chr1_203707009_203708104_-                Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr12_112178931_112179397_+               Gene: not_annotated
+      12   4/9  [XXXX.....]  freq=0.44  chr11_121045674_121060085_-               Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr4_177353308_177360677_+                Gene: NEIL3
+      14   4/9  [XXXX.....]  freq=0.44  chr1_117402186_117442325_+                Gene: MAN1A2
+      15   4/9  [XXXX.....]  freq=0.44  chr15_92996957_93002317_-                 Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr7_30550636_30574881_+                  Gene: AC005154.3
+      17   4/9  [XXXX.....]  freq=0.44  chr1_100906852_100921841_+                Gene: SLC30A7
+      18   4/9  [XXXX.....]  freq=0.44  chr3_170145423_170178938_-                Gene: PHC3
+      19   4/9  [XXXX.....]  freq=0.44  chr10_7797047_7802854_-                   Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr4_38790070_38791231_+                  Gene: not_annotated
+
+  -- LOPO_Stable --  (9 outer folds)
+  Inner CV AUC: nan +/- nan  (0/9 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    5/9  [XXXXX....]  freq=0.56  chr5_57246300_57247215_+                  Gene: GPBP1
+      2    5/9  [XXXXX....]  freq=0.56  chr2_226864604_226867688_-                Gene: not_annotated
+      3    4/9  [XXXX.....]  freq=0.44  chr18_62539681_62550460_+                 Gene: ZCCHC2
+      4    4/9  [XXXX.....]  freq=0.44  chr1_10149184_10151561_-                  Gene: not_annotated
+      5    4/9  [XXXX.....]  freq=0.44  chr1_155438327_155439068_-                Gene: ASH1L
+      6    4/9  [XXXX.....]  freq=0.44  chr1_205268950_205269884_+                Gene: TMCC2
+      7    4/9  [XXXX.....]  freq=0.44  chr17_39423327_39427790_+                 Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr16_30664215_30666541_-                 Gene: not_annotated
+      9    4/9  [XXXX.....]  freq=0.44  chr15_93000512_93009323_+                 Gene: CHD2
+      10   4/9  [XXXX.....]  freq=0.44  chr1_203707009_203708104_-                Gene: not_annotated
+      11   4/9  [XXXX.....]  freq=0.44  chr12_112178931_112179397_+               Gene: not_annotated
+      12   4/9  [XXXX.....]  freq=0.44  chr11_121045674_121060085_-               Gene: not_annotated
+      13   4/9  [XXXX.....]  freq=0.44  chr4_177353308_177360677_+                Gene: NEIL3
+      14   4/9  [XXXX.....]  freq=0.44  chr1_117402186_117442325_+                Gene: MAN1A2
+      15   4/9  [XXXX.....]  freq=0.44  chr15_92996957_93002317_-                 Gene: not_annotated
+      16   4/9  [XXXX.....]  freq=0.44  chr7_30550636_30574881_+                  Gene: AC005154.3
+      17   4/9  [XXXX.....]  freq=0.44  chr1_100906852_100921841_+                Gene: SLC30A7
+      18   4/9  [XXXX.....]  freq=0.44  chr3_170145423_170178938_-                Gene: PHC3
+      19   4/9  [XXXX.....]  freq=0.44  chr10_7797047_7802854_-                   Gene: not_annotated
+      20   3/9  [XXX......]  freq=0.33  chr4_38790070_38791231_+                  Gene: not_annotated
+
+  -- TwoPerson_Unstable --  (36 outer folds)
+  Inner CV AUC: 0.510 +/- 0.041  (35/36 valid folds)
+    TOP 20 features by selection frequency
+      1    21/36  [XXXXXXXXXXXXXXXXXXXXX...............]  freq=0.58  chr2_226864604_226867688_-                Gene: not_annotated
+      2    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr3_170145423_170178938_-                Gene: PHC3
+      3    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr4_53399730_53428183_-                  Gene: not_annotated
+      4    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr5_57246300_57247215_+                  Gene: GPBP1
+      5    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr1_155438327_155439068_-                Gene: ASH1L
+      6    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_7797047_7802854_-                   Gene: not_annotated
+      7    8/36  [XXXXXXXX............................]  freq=0.22  Age                                       Gene: N/A
+      8    8/36  [XXXXXXXX............................]  freq=0.22  chr1_8541214_8614686_+                    Gene: not_annotated
+      9    8/36  [XXXXXXXX............................]  freq=0.22  chr1_10149184_10151561_-                  Gene: not_annotated
+      10   8/36  [XXXXXXXX............................]  freq=0.22  chr12_112178931_112179397_+               Gene: not_annotated
+      11   8/36  [XXXXXXXX............................]  freq=0.22  chrX_148661908_148662768_+                Gene: AFF2
+      12   8/36  [XXXXXXXX............................]  freq=0.22  chr16_28487456_28489386_+                 Gene: not_annotated
+      13   7/36  [XXXXXXX.............................]  freq=0.19  chr2_175111568_175121540_+                Gene: not_annotated
+      14   7/36  [XXXXXXX.............................]  freq=0.19  chr2_175111568_175121540_-                Gene: ATF2
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr4_39075965_39086727_-                  Gene: AC079921.1
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr1_1223244_1223968_+                    Gene: not_annotated
+      17   7/36  [XXXXXXX.............................]  freq=0.19  chr1_1223244_1223968_-                    Gene: SDF4
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8541214_8614686_-                    Gene: RERE
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8655973_8656441_+                    Gene: not_annotated
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8655973_8656441_-                    Gene: RERE
+
+  -- TwoPerson_Stable --  (36 outer folds)
+  Inner CV AUC: nan +/- nan  (0/36 valid folds)
+  STABLE features: (none — no circRNA reached threshold)
+    TOP 20 features by Stage 1 selection freq
+      1    21/36  [XXXXXXXXXXXXXXXXXXXXX...............]  freq=0.58  chr2_226864604_226867688_-                Gene: not_annotated
+      2    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr3_170145423_170178938_-                Gene: PHC3
+      3    12/36  [XXXXXXXXXXXX........................]  freq=0.33  chr4_53399730_53428183_-                  Gene: not_annotated
+      4    11/36  [XXXXXXXXXXX.........................]  freq=0.31  chr5_57246300_57247215_+                  Gene: GPBP1
+      5    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr1_155438327_155439068_-                Gene: ASH1L
+      6    10/36  [XXXXXXXXXX..........................]  freq=0.28  chr10_7797047_7802854_-                   Gene: not_annotated
+      7    8/36  [XXXXXXXX............................]  freq=0.22  Age                                       Gene: N/A
+      8    8/36  [XXXXXXXX............................]  freq=0.22  chr1_8541214_8614686_+                    Gene: not_annotated
+      9    8/36  [XXXXXXXX............................]  freq=0.22  chr1_10149184_10151561_-                  Gene: not_annotated
+      10   8/36  [XXXXXXXX............................]  freq=0.22  chr12_112178931_112179397_+               Gene: not_annotated
+      11   8/36  [XXXXXXXX............................]  freq=0.22  chrX_148661908_148662768_+                Gene: AFF2
+      12   8/36  [XXXXXXXX............................]  freq=0.22  chr16_28487456_28489386_+                 Gene: not_annotated
+      13   7/36  [XXXXXXX.............................]  freq=0.19  chr2_175111568_175121540_+                Gene: not_annotated
+      14   7/36  [XXXXXXX.............................]  freq=0.19  chr2_175111568_175121540_-                Gene: ATF2
+      15   7/36  [XXXXXXX.............................]  freq=0.19  chr4_39075965_39086727_-                  Gene: AC079921.1
+      16   7/36  [XXXXXXX.............................]  freq=0.19  chr1_1223244_1223968_+                    Gene: not_annotated
+      17   7/36  [XXXXXXX.............................]  freq=0.19  chr1_1223244_1223968_-                    Gene: SDF4
+      18   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8541214_8614686_-                    Gene: RERE
+      19   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8655973_8656441_+                    Gene: not_annotated
+      20   7/36  [XXXXXXX.............................]  freq=0.19  chr1_8655973_8656441_-                    Gene: RERE
+
+  -- PersonVec_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.500 +/- 0.000  (8/9 valid folds)
+    TOP 20 features by selection frequency
+      1    6/9  [XXXXXX...]  freq=0.67  chr3_143985543_143989837_-                Gene: not_annotated
+      2    6/9  [XXXXXX...]  freq=0.67  chr3_148446266_148455531_-                Gene: AC069410.1
+      3    6/9  [XXXXXX...]  freq=0.67  chr3_148446266_148498970_-                Gene: AC069410.1
+      4    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148455531_+                Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148667102_+                Gene: not_annotated
+      6    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148667102_-                Gene: AC069410.1
+      7    4/9  [XXXX.....]  freq=0.44  chr3_53874211_53876080_+                  Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr5_168488602_168494650_-                Gene: not_annotated
+      9    4/9  [XXXX.....]  freq=0.44  chr4_127921524_127939997_-                Gene: MFSD8
+      10   4/9  [XXXX.....]  freq=0.44  Sex                                       Gene: N/A
+      11   3/9  [XXX......]  freq=0.33  chr10_12081472_12120267_+                 Gene: DHTKD1
+      12   3/9  [XXX......]  freq=0.33  chr3_143985543_143989837_+                Gene: DIPK2A
+      13   3/9  [XXX......]  freq=0.33  chr10_96944113_96952196_+                 Gene: LCOR
+      14   3/9  [XXX......]  freq=0.33  chr8_123077111_123084340_-                Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr3_195878253_195888606_+                Gene: not_annotated
+      16   2/9  [XX.......]  freq=0.22  chr7_7234303_7243750_+                    Gene: C1GALT1
+      17   2/9  [XX.......]  freq=0.22  chr18_56923922_56939393_+                 Gene: WDR7
+      18   2/9  [XX.......]  freq=0.22  chr3_148586122_148593369_-                Gene: AC069410.1
+      19   2/9  [XX.......]  freq=0.22  chr12_122568261_122577029_+               Gene: KNTC1
+      20   1/9  [X........]  freq=0.11  chr3_142425222_142426841_+                Gene: not_annotated
+
+  -- PersonVec_Stable --  (9 outer folds)
+  Inner CV AUC: 0.500 +/- 0.000  (8/9 valid folds)
+
+  STABLE features (3 total, chosen in >= 6/9 folds):
+    1    6/9  [XXXXXX...]  chr3_143985543_143989837_-                Gene: not_annotated
+    2    6/9  [XXXXXX...]  chr3_148446266_148455531_-                Gene: AC069410.1
+    3    6/9  [XXXXXX...]  chr3_148446266_148498970_-                Gene: AC069410.1
+    TOP 20 features by Stage 1 selection freq
+      1    6/9  [XXXXXX...]  freq=0.67  chr3_143985543_143989837_-                Gene: not_annotated
+      2    6/9  [XXXXXX...]  freq=0.67  chr3_148446266_148455531_-                Gene: AC069410.1
+      3    6/9  [XXXXXX...]  freq=0.67  chr3_148446266_148498970_-                Gene: AC069410.1
+      4    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148455531_+                Gene: not_annotated
+      5    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148667102_+                Gene: not_annotated
+      6    5/9  [XXXXX....]  freq=0.56  chr3_148446266_148667102_-                Gene: AC069410.1
+      7    4/9  [XXXX.....]  freq=0.44  chr3_53874211_53876080_+                  Gene: not_annotated
+      8    4/9  [XXXX.....]  freq=0.44  chr5_168488602_168494650_-                Gene: not_annotated
+      9    4/9  [XXXX.....]  freq=0.44  chr4_127921524_127939997_-                Gene: MFSD8
+      10   4/9  [XXXX.....]  freq=0.44  Sex                                       Gene: N/A
+      11   3/9  [XXX......]  freq=0.33  chr10_12081472_12120267_+                 Gene: DHTKD1
+      12   3/9  [XXX......]  freq=0.33  chr3_143985543_143989837_+                Gene: DIPK2A
+      13   3/9  [XXX......]  freq=0.33  chr10_96944113_96952196_+                 Gene: LCOR
+      14   3/9  [XXX......]  freq=0.33  chr8_123077111_123084340_-                Gene: not_annotated
+      15   3/9  [XXX......]  freq=0.33  chr3_195878253_195888606_+                Gene: not_annotated
+      16   2/9  [XX.......]  freq=0.22  chr7_7234303_7243750_+                    Gene: C1GALT1
+      17   2/9  [XX.......]  freq=0.22  chr18_56923922_56939393_+                 Gene: WDR7
+      18   2/9  [XX.......]  freq=0.22  chr3_148586122_148593369_-                Gene: AC069410.1
+      19   2/9  [XX.......]  freq=0.22  chr12_122568261_122577029_+               Gene: KNTC1
+      20   1/9  [X........]  freq=0.11  chr3_142425222_142426841_+                Gene: not_annotated
+
+  -- Annot_Unstable --  (9 outer folds)
+  Inner CV AUC: 0.496 +/- 0.142  (9/9 valid folds)
+    TOP 20 features by selection frequency
+      1    7/9  [XXXXXXX..]  freq=0.78  chr3_170145423_170178938_-                Gene: PHC3
+      2    6/9  [XXXXXX...]  freq=0.67  chr2_144208603_144211579_-                Gene: GTDC1
+      3    5/9  [XXXXX....]  freq=0.56  chrX_148661908_148662768_+                Gene: AFF2
+      4    5/9  [XXXXX....]  freq=0.56  chr4_177353308_177360677_+                Gene: NEIL3
+      5    5/9  [XXXXX....]  freq=0.56  chr5_57246300_57247215_+                  Gene: GPBP1
+      6    5/9  [XXXXX....]  freq=0.56  chr1_117402186_117442325_+                Gene: MAN1A2
+      7    4/9  [XXXX.....]  freq=0.44  chr1_157680702_157696327_+                Gene: AL356276.1
+      8    4/9  [XXXX.....]  freq=0.44  chr6_98899268_98934879_-                  Gene: FBXL4
+      9    4/9  [XXXX.....]  freq=0.44  chr10_13659323_13660553_+                 Gene: AL157392.3
+      10   4/9  [XXXX.....]  freq=0.44  chr10_7243558_7285954_-                   Gene: SFMBT2
+      11   4/9  [XXXX.....]  freq=0.44  chr4_17814853_17815358_+                  Gene: NCAPG
+      12   4/9  [XXXX.....]  freq=0.44  chr1_205268950_205269884_+                Gene: TMCC2
+      13   4/9  [XXXX.....]  freq=0.44  chr1_155438327_155439068_-                Gene: ASH1L
+      14   4/9  [XXXX.....]  freq=0.44  chr1_100906852_100921841_+                Gene: SLC30A7
+      15   3/9  [XXX......]  freq=0.33  chr8_73673107_73688813_+                  Gene: AC027018.1
+      16   3/9  [XXX......]  freq=0.33  chr18_62539681_62550460_+                 Gene: ZCCHC2
+      17   3/9  [XXX......]  freq=0.33  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      18   3/9  [XXX......]  freq=0.33  chr16_71663899_71681905_-                 Gene: PHLPP2
+      19   3/9  [XXX......]  freq=0.33  chr16_16007816_16007992_+                 Gene: ABCC1
+      20   3/9  [XXX......]  freq=0.33  chr14_49663315_49674427_-                 Gene: POLE2
+
+  -- Annot_Stable --  (9 outer folds)
+  Inner CV AUC: 0.751 +/- 0.225  (9/9 valid folds)
+
+  STABLE features (2 total, chosen in >= 6/9 folds):
+    1    7/9  [XXXXXXX..]  chr3_170145423_170178938_-                Gene: PHC3
+    2    6/9  [XXXXXX...]  chr2_144208603_144211579_-                Gene: GTDC1
+    TOP 20 features by Stage 1 selection freq
+      1    7/9  [XXXXXXX..]  freq=0.78  chr3_170145423_170178938_-                Gene: PHC3
+      2    6/9  [XXXXXX...]  freq=0.67  chr2_144208603_144211579_-                Gene: GTDC1
+      3    5/9  [XXXXX....]  freq=0.56  chrX_148661908_148662768_+                Gene: AFF2
+      4    5/9  [XXXXX....]  freq=0.56  chr4_177353308_177360677_+                Gene: NEIL3
+      5    5/9  [XXXXX....]  freq=0.56  chr5_57246300_57247215_+                  Gene: GPBP1
+      6    5/9  [XXXXX....]  freq=0.56  chr1_117402186_117442325_+                Gene: MAN1A2
+      7    4/9  [XXXX.....]  freq=0.44  chr1_157680702_157696327_+                Gene: AL356276.1
+      8    4/9  [XXXX.....]  freq=0.44  chr6_98899268_98934879_-                  Gene: FBXL4
+      9    4/9  [XXXX.....]  freq=0.44  chr10_13659323_13660553_+                 Gene: AL157392.3
+      10   4/9  [XXXX.....]  freq=0.44  chr10_7243558_7285954_-                   Gene: SFMBT2
+      11   4/9  [XXXX.....]  freq=0.44  chr4_17814853_17815358_+                  Gene: NCAPG
+      12   4/9  [XXXX.....]  freq=0.44  chr1_205268950_205269884_+                Gene: TMCC2
+      13   4/9  [XXXX.....]  freq=0.44  chr1_155438327_155439068_-                Gene: ASH1L
+      14   4/9  [XXXX.....]  freq=0.44  chr1_100906852_100921841_+                Gene: SLC30A7
+      15   3/9  [XXX......]  freq=0.33  chr8_73673107_73688813_+                  Gene: AC027018.1
+      16   3/9  [XXX......]  freq=0.33  chr18_62539681_62550460_+                 Gene: ZCCHC2
+      17   3/9  [XXX......]  freq=0.33  chr5_95755396_95763620_+                  Gene: RHOBTB3
+      18   3/9  [XXX......]  freq=0.33  chr16_71663899_71681905_-                 Gene: PHLPP2
+      19   3/9  [XXX......]  freq=0.33  chr16_16007816_16007992_+                 Gene: ABCC1
+      20   3/9  [XXX......]  freq=0.33  chr14_49663315_49674427_-                 Gene: POLE2
