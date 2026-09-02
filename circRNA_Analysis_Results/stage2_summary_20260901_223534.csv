@@ -1,0 +1,28 @@
+Target,BestMethod,N_stable_feats,N_people,Classifier,Test_AUC,CI_Lo,CI_Hi
+GAD-7,mi,65,9,MLP,0.7643,0.4791,0.9861
+GAD-7,mi,65,9,KNN,0.9857,0.9407,1.0
+GAD-7,mi,65,9,SVM,0.9429,0.8074,1.0
+GAD-7,mi,65,9,Linear SVM,0.9786,0.9111,1.0
+GAD-7,mi,65,9,Decision Tree,0.7643,0.5786,0.9232
+GAD-7,mi,65,9,Random Forest,0.9714,0.8889,1.0
+GAD-7,mi,65,9,Logistic Reg.,0.9857,0.9333,1.0
+GAD-7,mi,65,9,Naive Bayes,0.8214,0.6944,0.9375
+GAD-7,mi,65,9,Voting,0.9857,0.9333,1.0
+Age,mi,23,9,MLP,0.8472,0.6434,0.993
+Age,mi,23,9,KNN,0.875,0.7132,0.9792
+Age,mi,23,9,SVM,0.8958,0.7108,1.0
+Age,mi,23,9,Linear SVM,0.8403,0.6433,0.9852
+Age,mi,23,9,Decision Tree,0.75,0.5832,0.9
+Age,mi,23,9,Random Forest,0.9687,0.8889,1.0
+Age,mi,23,9,Logistic Reg.,0.9028,0.7143,1.0
+Age,mi,23,9,Naive Bayes,0.8924,0.7333,1.0
+Age,mi,23,9,Voting,0.9444,0.8322,1.0
+TEPS,mi,21,9,MLP,0.3819,0.1484,0.6297
+TEPS,mi,21,9,KNN,0.9688,0.9107,1.0
+TEPS,mi,21,9,SVM,0.9097,0.7714,1.0
+TEPS,mi,21,9,Linear SVM,0.7639,0.521,0.9852
+TEPS,mi,21,9,Decision Tree,0.875,0.75,1.0
+TEPS,mi,21,9,Random Forest,0.9931,0.958,1.0
+TEPS,mi,21,9,Logistic Reg.,0.9306,0.7917,1.0
+TEPS,mi,21,9,Naive Bayes,0.9062,0.7643,1.0
+TEPS,mi,21,9,Voting,0.9306,0.7714,1.0
