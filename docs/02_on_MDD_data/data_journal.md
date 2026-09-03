@@ -191,6 +191,11 @@ The same ICA run is stored in three forms:
 * **Two variants (the 2 file types)**:
   * `fALFF_FunVoluWC/` — nuisance-regressed, **without** global-signal regression
   * `fALFF_FunVoluWglobalC/` — same, **with** global-signal regression
+* **Tool**: processed with **DPABI / DPARSF** (Yan et al. 2016; fALFF metric: Zou et al. 2008); exact parameters live in the archive's `Results/Cfg_Processing.mat`.
+* **Name decoding** (DPARSF convention):
+  * `Fun` = functional · `Volu` = volume / `Surf` = surface (LH/RH)
+  * `W` = warped to MNI · `C` = nuisance covariates regressed · `global` = + global-signal regression · `F` = band-pass filtered
+  * fALFF folders omit `F` — it is computed on the **full** (unfiltered) spectrum
 * Extract just what you need, e.g.: `7z x DIRECT_II_Results.zip "Results/Results/FunVolu/fALFF_FunVoluWC/*" -o<dest>`.
 * Not to be confused with `MDD_preproc/results/falff/` — that is *component-level* fALFF (one value per Neuromark component), see §3.1.
 
