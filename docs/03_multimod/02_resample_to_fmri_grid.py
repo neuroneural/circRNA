@@ -49,10 +49,16 @@ cohort with different geometry, or compare voxelwise maps to atlas coordinates.
 
 Requires nibabel and scipy.
 
+--chunk K selects rows [K*chunk_size, (K+1)*chunk_size) so the cohort can be
+split across a SLURM array. Each chunk writes its own log
+(resample_log_chunk000.csv) -- parallel jobs sharing one log would clobber it.
+A chunk index past the end of the CSV exits 0 with a message, so an oversized
+array range is harmless.
+
 Usage:
     python3 02_resample_to_fmri_grid.py
     python3 02_resample_to_fmri_grid.py --limit 5 --overwrite
-    python3 02_resample_to_fmri_grid.py --prefilter 3.0
+    python3 02_resample_to_fmri_grid.py --chunk 3 --chunk-size 100
 """
 
 import argparse
@@ -66,6 +72,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CSV = os.path.join(HERE, "data", "mdd_direct_volume_paths.csv")
 DEFAULT_OUT = "/data/users2/ppopov1/datasets/MDD_DIRECT_proc"
 LOG_NAME = "resample_log.csv"
+CHUNK_LOG = "resample_log_chunk{:03d}.csv"
 
 TARGET_COL = "fmri_np_path"
 MASK_THRESH = 0.5          # keep an fALFF voxel if >50% of its weight was valid
@@ -99,7 +106,13 @@ def main():
     ap.add_argument("--out", default=DEFAULT_OUT, help=f"default: {DEFAULT_OUT}")
     ap.add_argument("--prefilter", type=float, default=0.0, metavar="FWHM",
                     help="Gaussian anti-alias FWHM in mm before sampling (0 = off)")
-    ap.add_argument("--limit", type=int, help="process only the first N subjects")
+    ap.add_argument("--chunk", type=int, metavar="K",
+                    help="process rows [K*chunk_size, (K+1)*chunk_size) "
+                         "(for SLURM arrays); writes its own per-chunk log")
+    ap.add_argument("--chunk-size", type=int, default=100,
+                    help="subjects per chunk (default 100)")
+    ap.add_argument("--limit", type=int,
+                    help="process only the first N of the selected subjects")
     ap.add_argument("--overwrite", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
@@ -110,7 +123,24 @@ def main():
     except ImportError as exc:
         sys.exit(f"needs nibabel and scipy: {exc}")
 
-    rows = list(csv.DictReader(open(args.csv)))
+    all_rows = list(csv.DictReader(open(args.csv)))
+    log_name = LOG_NAME
+    if args.chunk is not None:
+        if args.chunk < 0:
+            sys.exit("--chunk must be >= 0")
+        n_chunks = -(-len(all_rows) // args.chunk_size)      # ceil
+        start = args.chunk * args.chunk_size
+        if start >= len(all_rows):
+            print(f"chunk {args.chunk} starts at row {start} but the CSV has only "
+                  f"{len(all_rows)} rows ({n_chunks} chunks of {args.chunk_size}, "
+                  f"i.e. 0..{n_chunks - 1}). Nothing to do.")
+            sys.exit(0)
+        rows = all_rows[start:start + args.chunk_size]
+        log_name = CHUNK_LOG.format(args.chunk)
+        print(f"chunk    : {args.chunk} of 0..{n_chunks - 1}  "
+              f"(rows {start}..{start + len(rows) - 1} of {len(all_rows)})")
+    else:
+        rows = all_rows
     if args.limit:
         rows = rows[:args.limit]
     print(f"{len(rows)} subjects from {args.csv}")
@@ -224,7 +254,7 @@ def main():
                   flush=True)
 
     if not args.dry_run:
-        log_path = os.path.join(args.out, LOG_NAME)
+        log_path = os.path.join(args.out, log_name)
         with open(log_path, "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=LOG_FIELDS)
             w.writeheader()

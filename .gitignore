@@ -1,8 +1,10 @@
 archives/
 imaging_data/
 RNAseq
-docs/01_on_data/data
-docs/02_on_MDD_data/data
+docs/01_on_data/data/
+docs/02_on_MDD_data/data/
+docs/03_multimod/data/
+docs/*/data/
 
 # Editors / IDEs
 .vscode/
