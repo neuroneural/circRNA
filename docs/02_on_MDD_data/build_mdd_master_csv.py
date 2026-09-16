@@ -10,8 +10,9 @@ keyed by the consortium subject ID (e.g. ``IS001-1-0192``), joining:
   * acquisition parameters              (Data_Info/TRInfo.tsv)
   * diagnostic group decoded from the ID
   * QC-tier membership flags            (Subjlist_clean.txt / Subjlist_super_clean.txt)
+  * head-motion pass flag               (ExcludeSubjectsAccordingToMaxHeadMotion.txt)
   * file paths for every modality       (volume fMRI, ICA timecourses, ICA spatial maps)
-  * sFNC/spectra location               (postprocess .mat + row index)
+  * sFNC/spectra location               (postprocess .mat)
 
 Paths are HARDCODED to the cluster layout in the CONFIG block below — just edit
 those constants if needed and run:
@@ -29,7 +30,16 @@ IMPORTANT — ICA file numbering (verified against the data):
     * results/ica/neuromark105_super_clean/  -> Subjlist_super_clean.txt  (2,426)
   The same positions index the sFNC/spectra arrays inside each postprocess .mat
   (fnc_corrs_all (S,N,N), spectra_tc_all (S,F,N)): columns `clean_row` (53) and
-  `super_clean_row` (105), both 0-based.
+  `super_clean_row` (105), both 0-based. Those .mat files are NOT unpacked per
+  subject, so these columns are the only way to pull a subject's sFNC/spectra
+  from the master CSV alone — keep them.
+
+QC FLAGS — the three are independent, do not assume they nest:
+  * `in_clean`       run length >= 230 timepoints (that is the whole rule)
+  * `in_super_clean` in_clean AND TR == 2.0 s exactly (then cropped to 230)
+  * `in_still`       passed DIRECT's max-head-motion criterion (3.0 mm / 3.0 deg)
+  `in_still` was NEVER used to build the other two: 1,384 subjects that fail it
+  are in `clean`. It is provided so you can impose motion QC yourself.
 
 Needs only pandas. Building paths does not read imaging data; CHECK just stat()s them.
 """
@@ -51,6 +61,10 @@ DEMO_CSV = f"{PREPROC_ROOT}/data/MDDD/FULL_sites.csv"
 TRINFO = f"{RAW_ROOT}/Data_Info/TRInfo.tsv"
 CLEAN_LIST = f"{PREPROC_ROOT}/data/MDDD/Subjlist_clean.txt"          # -> neuromark53_clean
 SUPER_LIST = f"{PREPROC_ROOT}/data/MDDD/Subjlist_super_clean.txt"    # -> neuromark105_super_clean
+# DIRECT's own head-motion blacklist (3.0 mm / 3.0 deg max head motion). Listed
+# subjects FAIL the criterion -> in_still = False.
+MOTION_EXCLUDE_LIST = (f"{RAW_ROOT}/Data_BIDS/RealignParameter/"
+                       "ExcludeSubjectsAccordingToMaxHeadMotion.txt")
 ICA53_DIR = f"{PREPROC_ROOT}/neuromark53_clean"
 ICA105_DIR = f"{PREPROC_ROOT}/results/ica/neuromark105_super_clean"
 
@@ -132,6 +146,13 @@ def build():
     super_pos = {sid: i for i, sid in enumerate(super_ids)}    # -> neuromark105_super_clean
     clean_set, super_set = set(clean_ids), set(super_ids)
 
+    # ── Head motion: DIRECT's blacklist (listed = FAILS 3.0 mm / 3.0 deg) ──────
+    motion_fail = set(load_subjlist(MOTION_EXCLUDE_LIST))
+    have_motion = bool(motion_fail)
+    if not have_motion:
+        print(f"WARNING: no IDs parsed from {MOTION_EXCLUDE_LIST}"
+              f" — 'in_still' will be left blank.")
+
     # ── Choose subject set (rows) ──────────────────────────────────────────────
     if SUBSET == "super_clean":
         subject_ids = super_ids
@@ -167,6 +188,8 @@ def build():
     df["group_label"] = dec.map(lambda t: t[2])
     df["in_clean"] = df["id"].isin(clean_set)
     df["in_super_clean"] = df["id"].isin(super_set)
+    # in_still: True = passed DIRECT's 3.0 mm / 3.0 deg max-head-motion criterion
+    df["in_still"] = (~df["id"].isin(motion_fail)) if have_motion else pd.NA
     df["clean_row"] = df["id"].map(clean_pos)          # 0-based, indexes 53 postproc
     df["super_clean_row"] = df["id"].map(super_pos)    # 0-based, indexes 105 postproc
     df["matlab_index"] = (pd.to_numeric(df["MATLABIndex"], errors="coerce")
@@ -201,7 +224,7 @@ def build():
         "id", "site", "group_code", "group_label", "matlab_index",
         "Diagnosis", "Sex", "Age", "Education", "HAMDTotal17", "HAMATotal", "HAMD3",
         "TR", "n_slices", "n_timepoints", "voxel_size",
-        "in_clean", "in_super_clean", "clean_row", "super_clean_row",
+        "in_clean", "in_super_clean", "in_still", "clean_row", "super_clean_row",
         "vol_np_3mm", "vol_smnp_3mm",
         "ica53_tc", "ica53_sm", "ica105_tc", "ica105_sm",
         "sfnc_spectra_mat_53", "sfnc_spectra_mat_105",
@@ -224,6 +247,14 @@ def build():
     missing_from_clean = df.loc[df["in_super_clean"] & ~df["in_clean"], "id"].tolist()
     if missing_from_clean:
         print(f"  WARNING: {len(missing_from_clean)} super_clean IDs not in clean list")
+    print(f"  tiers: in_clean={int(df['in_clean'].sum())} "
+          f"in_super_clean={int(df['in_super_clean'].sum())}")
+    if have_motion:
+        still = df["in_still"].astype(bool)
+        print(f"  in_still={int(still.sum())}/{len(df)} passed 3.0mm/3.0deg "
+              f"({int((~still).sum())} failed) — motion QC is INDEPENDENT of the tiers: "
+              f"{int((~still & df['in_clean']).sum())} motion-failing subjects are in clean, "
+              f"{int((~still & df['in_super_clean']).sum())} in super_clean")
     if CHECK:
         for c in ("vol_smnp_3mm", "ica53_tc", "ica105_tc"):
             print(f"  {c:14s} resolved: {(df[c] != '').sum()}/{len(df)}")
