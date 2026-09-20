@@ -6,8 +6,10 @@ the three volumetric BOLD series plus the acquisition parameters.
 Output columns, in order:
     subject_id, TR, n_timepoints,
     fmri_np_path, fmri_smnp_path, fmri_native_path,
-    falff_c_path, falff_globalc_path,
-    gm_probseg_path, wm_probseg_path, csf_probseg_path
+    falff_c_path, falff_globalc_path,                    <- 2 mm, as DIRECT shipped
+    gm_probseg_path, wm_probseg_path, csf_probseg_path,  <- 1 mm, as DIRECT shipped
+    falff_3mm_path, falff_globalc_3mm_path,              <- resampled onto the Np grid
+    gm_probseg_3mm_path, wm_probseg_3mm_path, csf_probseg_3mm_path
 
 Series prefixes, from Data_BIDS/Code_Prep/Step2_prep_SPM.m:
     <bare>  fMRIPrep output, MNI152NLin2009cAsym, 97x115x97 @ 2 mm
@@ -40,9 +42,16 @@ directory with these names:
     <ID>_space-MNI152NLin2009cAsym[_res-2]_label-WM_probseg.nii.gz
     <ID>_space-MNI152NLin2009cAsym[_res-2]_label-CSF_probseg.nii.gz
 
-Point --derivatives-dir at that directory. Missing derivatives are not an
-error; the columns are just left blank, so the manifest can be built before
-extraction has run.
+Point --derivatives-dir at that directory, and --proc-dir at where
+02_resample_to_fmri_grid.py wrote its 3 mm outputs:
+
+    <ID>_fALFF_3mm.nii.gz            <ID>_GM_probseg_3mm.nii.gz
+    <ID>_fALFF_globalC_3mm.nii.gz    <ID>_WM_probseg_3mm.nii.gz
+                                     <ID>_CSF_probseg_3mm.nii.gz
+
+Only the _3mm_ columns share the fMRI grid; the others are in DIRECT's native
+2 mm and 1 mm sampling. Missing directories are not an error -- those columns
+are left blank, so the manifest can be built at any stage of the pipeline.
 
 Grid warning: DIRECT's fALFF is 97x115x97 @ 2 mm with a FLIPPED x axis, and
 the probsegs are template-native 1 mm. Neither matches the 3 mm Np grid the
@@ -62,9 +71,12 @@ BOLD_SUFFIX = "_desc-preproc_bold.nii"
 FIELDS = ["subject_id", "TR", "n_timepoints",
           "fmri_np_path", "fmri_smnp_path", "fmri_native_path",
           "falff_c_path", "falff_globalc_path",
-          "gm_probseg_path", "wm_probseg_path", "csf_probseg_path"]
+          "gm_probseg_path", "wm_probseg_path", "csf_probseg_path",
+          "falff_3mm_path", "falff_globalc_3mm_path",
+          "gm_probseg_3mm_path", "wm_probseg_3mm_path", "csf_probseg_3mm_path"]
 
 DEFAULT_DERIVATIVES = "/data/users2/ppopov1/datasets/MDD_DIRECT"
+DEFAULT_PROC = "/data/users2/ppopov1/datasets/MDD_DIRECT_proc"
 MANIFEST = "extraction_manifest.csv"
 
 # column -> filename suffix written by 00_extract_probseg.sh. Order matters:
@@ -76,6 +88,15 @@ DERIV_SUFFIXES = [
     ("gm_probseg_path",    "_label-GM_probseg.nii.gz"),
     ("wm_probseg_path",    "_label-WM_probseg.nii.gz"),
     ("csf_probseg_path",   "_label-CSF_probseg.nii.gz"),
+]
+
+# same, for the 3 mm outputs of 02_resample_to_fmri_grid.py
+PROC_SUFFIXES = [
+    ("falff_globalc_3mm_path", "_fALFF_globalC_3mm.nii.gz"),
+    ("falff_3mm_path",         "_fALFF_3mm.nii.gz"),
+    ("gm_probseg_3mm_path",    "_GM_probseg_3mm.nii.gz"),
+    ("wm_probseg_3mm_path",    "_WM_probseg_3mm.nii.gz"),
+    ("csf_probseg_3mm_path",   "_CSF_probseg_3mm.nii.gz"),
 ]
 
 # consecutive empty subject dirs that mean "the mount died", not "no data"
@@ -122,46 +143,47 @@ def classify(names, sid):
     return found
 
 
-def index_derivatives(deriv):
-    """{column: {subject_id: abspath}} from a single scandir of the flat dir.
+def index_derivatives(dirpath, suffixes, manifest=None, label="derivatives"):
+    """{column: {subject_id: abspath}} from a single scandir of a flat dir.
 
     Subject IDs contain no underscore (IS001-1-0001), so the leading
-    underscore-delimited token is the ID for every name 00 writes.
+    underscore-delimited token is the ID for every name 00 and 02 write.
     """
-    idx = {col: {} for col, _ in DERIV_SUFFIXES}
-    if not deriv:
+    idx = {col: {} for col, _ in suffixes}
+    if not dirpath:
         return idx
-    if not os.path.isdir(deriv):
-        print(f"warn: derivatives dir not found: {deriv}\n"
-              f"      derivative columns will be blank", file=sys.stderr)
+    if not os.path.isdir(dirpath):
+        print(f"warn: {label} dir not found: {dirpath}\n"
+              f"      those columns will be blank", file=sys.stderr)
         return idx
 
     n_seen = 0
-    for e in os.scandir(deriv):
+    for e in os.scandir(dirpath):
         if not e.is_file() or not e.name.endswith(".nii.gz"):
             continue
         n_seen += 1
-        for col, suffix in DERIV_SUFFIXES:
+        for col, suffix in suffixes:
             if e.name.endswith(suffix):
-                idx[col][e.name.split("_", 1)[0]] = os.path.join(deriv, e.name)
+                idx[col][e.name.split("_", 1)[0]] = os.path.join(dirpath, e.name)
                 break
 
-    print(f"indexed {n_seen} .nii.gz in {deriv}", file=sys.stderr)
-    for col, _ in DERIV_SUFFIXES:
-        print(f"    {col:20s} {len(idx[col])}", file=sys.stderr)
+    print(f"indexed {n_seen} .nii.gz in {dirpath}", file=sys.stderr)
+    for col, _ in suffixes:
+        print(f"    {col:24s} {len(idx[col])}", file=sys.stderr)
 
-    # Cross-check against 00's manifest, which lists what SHOULD be there.
-    man = os.path.join(deriv, MANIFEST)
-    if os.path.exists(man):
-        with open(man, newline="") as fh:
-            expected = sum(1 for ln in fh
-                           if ln.strip() and not ln.startswith("#")) - 1
-        if expected != n_seen:
-            print(f"warn: {MANIFEST} lists {expected} outputs but {n_seen} are "
-                  f"on disk -- extraction may be incomplete", file=sys.stderr)
-    else:
-        print(f"note: no {MANIFEST} in {deriv}, skipping the completeness check",
-              file=sys.stderr)
+    # cross-check against the manifest of what should be there
+    if manifest:
+        man = os.path.join(dirpath, manifest)
+        if os.path.exists(man):
+            with open(man, newline="") as fh:
+                expected = sum(1 for ln in fh
+                               if ln.strip() and not ln.startswith("#")) - 1
+            if expected != n_seen:
+                print(f"warn: {manifest} lists {expected} outputs but {n_seen} are "
+                      f"on disk -- extraction may be incomplete", file=sys.stderr)
+        else:
+            print(f"note: no {manifest} in {dirpath}, skipping the completeness check",
+                  file=sys.stderr)
     return idx
 
 
@@ -175,6 +197,9 @@ def main():
     ap.add_argument("--derivatives-dir", default=DEFAULT_DERIVATIVES,
                     help="where 00_extract_probseg.sh wrote the fALFF and probseg "
                          f"files (default: {DEFAULT_DERIVATIVES})")
+    ap.add_argument("--proc-dir", default=DEFAULT_PROC,
+                    help="where 02_resample_to_fmri_grid.py wrote the 3 mm volumes "
+                         f"(default: {DEFAULT_PROC})")
     ap.add_argument("--relative", action="store_true",
                     help="store paths relative to --root instead of absolute; "
                          "derivative paths stay absolute, they live outside --root")
@@ -186,7 +211,9 @@ def main():
         sys.exit(f"not found: {funvolu}")
 
     tr = read_trinfo(os.path.join(root, "Data_Info", "TRInfo.tsv"))
-    deriv = index_derivatives(args.derivatives_dir)
+    deriv = index_derivatives(args.derivatives_dir, DERIV_SUFFIXES,
+                              manifest=MANIFEST, label="extracted 1 mm/2 mm")
+    proc = index_derivatives(args.proc_dir, PROC_SUFFIXES, label="resampled 3 mm")
 
     subjects = sorted(e.name for e in os.scandir(funvolu)
                       if e.name.startswith("IS") and e.is_dir())
@@ -194,7 +221,7 @@ def main():
 
     os.makedirs(os.path.dirname(os.path.abspath(args.out)) or ".", exist_ok=True)
     n_complete = n_no_tr = 0
-    n_deriv = {col: 0 for col, _ in DERIV_SUFFIXES}
+    n_deriv = {col: 0 for col, _ in DERIV_SUFFIXES + PROC_SUFFIXES}
     incomplete = []
 
     # A dropped sshfs mount makes os.scandir return an EMPTY LIST rather than
@@ -242,10 +269,11 @@ def main():
 
             # Derivatives live outside --root, so these stay absolute even
             # with --relative; os.path.relpath would emit ../../.. chains.
-            for col, _ in DERIV_SUFFIXES:
-                if sid in deriv[col]:
-                    row[col] = deriv[col][sid]
-                    n_deriv[col] += 1
+            for src, suffixes in ((deriv, DERIV_SUFFIXES), (proc, PROC_SUFFIXES)):
+                for col, _ in suffixes:
+                    if sid in src[col]:
+                        row[col] = src[col][sid]
+                        n_deriv[col] += 1
 
             if all(found.values()):
                 n_complete += 1
@@ -261,7 +289,7 @@ def main():
     print(f"  all three series present : {n_complete}", file=sys.stderr)
     print(f"  missing a series         : {len(incomplete)}", file=sys.stderr)
     print(f"  no TRInfo row            : {n_no_tr}", file=sys.stderr)
-    for col, _ in DERIV_SUFFIXES:
+    for col, _ in DERIV_SUFFIXES + PROC_SUFFIXES:
         print(f"  {col:24s} : {n_deriv[col]}", file=sys.stderr)
     for sid, miss in incomplete[:10]:
         print(f"    {sid}: missing {', '.join(miss)}", file=sys.stderr)
