@@ -57,14 +57,19 @@ Grid warning: DIRECT's fALFF is 97x115x97 @ 2 mm with a FLIPPED x axis, and
 the probsegs are template-native 1 mm. Neither matches the 3 mm Np grid the
 BOLD columns point at. Resample deliberately before combining them.
 
+Paths are chosen from the hostname: a node whose name contains "arctrd" gets
+the cluster layout, anything else gets the Mac's sshfs mount points. Any of the
+three can still be overridden individually.
+
 Usage:
-    python3 01_scan_mdd_direct.py --root /path/to/MDD_DIRECT
-    python3 01_scan_mdd_direct.py --root ... --derivatives-dir /path/to/extracted
+    python3 01_scan_mdd_direct.py                      # paths from the hostname
+    python3 01_scan_mdd_direct.py --proc-dir /elsewhere
 """
 
 import argparse
 import csv
 import os
+import socket
 import sys
 
 BOLD_SUFFIX = "_desc-preproc_bold.nii"
@@ -75,9 +80,25 @@ FIELDS = ["subject_id", "TR", "n_timepoints",
           "falff_3mm_path", "falff_globalc_3mm_path",
           "gm_probseg_3mm_path", "wm_probseg_3mm_path", "csf_probseg_3mm_path"]
 
-DEFAULT_DERIVATIVES = "/data/users2/ppopov1/datasets/MDD_DIRECT"
-DEFAULT_PROC = "/data/users2/ppopov1/datasets/MDD_DIRECT_proc"
 MANIFEST = "extraction_manifest.csv"
+
+# Paths differ between the cluster and the Mac's sshfs mounts, so pick a
+# profile from the hostname rather than making the caller retype them.
+HOST_TOKEN = "arctrd"
+REMOTE_PATHS = dict(
+    root="/data/qneuromark/Data/Depression/MDD_DIRECT",
+    deriv="/data/users2/ppopov1/datasets/MDD_DIRECT",
+    proc="/data/users2/ppopov1/datasets/MDD_DIRECT_proc")
+LOCAL_PATHS = dict(
+    root="/Users/ppopov1/_remote_data/MDD_DIRECT",
+    deriv="/Users/ppopov1/_remote_data/MDD_extract",
+    proc="/Users/ppopov1/_remote_data/MDD_DIRECT_proc")
+
+
+def on_compute_node():
+    names = [socket.gethostname(), os.environ.get("SLURMD_NODENAME", ""),
+             os.environ.get("HOSTNAME", "")]
+    return any(HOST_TOKEN in n.lower() for n in names if n)
 
 # column -> filename suffix written by 00_extract_probseg.sh. Order matters:
 # "_fALFF_globalC.nii.gz" must be tested before "_fALFF.nii.gz" would be, but
@@ -190,20 +211,35 @@ def index_derivatives(dirpath, suffixes, manifest=None, label="derivatives"):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--root", required=True,
+    compute = on_compute_node()
+    d = REMOTE_PATHS if compute else LOCAL_PATHS
+
+    ap.add_argument("--root", default=d["root"],
                     help="MDD_DIRECT root (contains Data_BIDS/ and Data_Info/)")
     ap.add_argument("--out", default=DEFAULT_OUT,
                     help=f"output CSV (default: {os.path.relpath(DEFAULT_OUT, HERE)})")
-    ap.add_argument("--derivatives-dir", default=DEFAULT_DERIVATIVES,
-                    help="where 00_extract_probseg.sh wrote the fALFF and probseg "
-                         f"files (default: {DEFAULT_DERIVATIVES})")
-    ap.add_argument("--proc-dir", default=DEFAULT_PROC,
-                    help="where 02_resample_to_fmri_grid.py wrote the 3 mm volumes "
-                         f"(default: {DEFAULT_PROC})")
+    ap.add_argument("--derivatives-dir", default=d["deriv"],
+                    help="where 00_extract_probseg.sh wrote the fALFF and probseg files")
+    ap.add_argument("--proc-dir", default=d["proc"],
+                    help="where 02_resample_to_fmri_grid.py wrote the 3 mm volumes")
     ap.add_argument("--relative", action="store_true",
                     help="store paths relative to --root instead of absolute; "
                          "derivative paths stay absolute, they live outside --root")
     args = ap.parse_args()
+
+    host = socket.gethostname()
+    print(f"host        : {host} "
+          f"({'compute node' if compute else 'not a compute node'})", file=sys.stderr)
+    print(f"profile     : {'remote' if compute else 'local sshfs mounts'}", file=sys.stderr)
+    print(f"root        : {args.root}", file=sys.stderr)
+    print(f"derivatives : {args.derivatives_dir}", file=sys.stderr)
+    print(f"proc        : {args.proc_dir}", file=sys.stderr)
+    print(f"out         : {args.out}", file=sys.stderr)
+    if not compute:
+        print("\nnote: off the cluster this scans 3525 subject directories over sshfs,\n"
+              "      which is slow and prone to dropping. Prefer running it on a node.",
+              file=sys.stderr)
+    print(file=sys.stderr)
 
     root = os.path.abspath(args.root)
     funvolu = os.path.join(root, "Data_BIDS", "FunVoluW")
