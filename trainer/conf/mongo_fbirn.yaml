@@ -1,0 +1,24 @@
+# python train.py --config-name=mongo_fbirn
+# Config for running an experiment using mongoDB datasets
+
+defaults:
+  - config
+  - _self_
+
+data:
+  name: mongo
+  params:
+    host: 10.245.12.58              # mongod address off the cluster
+    host_slurm: arctrdcn018.rs.gsu.edu   # used instead when SLURM_JOB_ID is set
+    port: 27017
+    database: multimodalSubnetworks
+    collection: fbirn               # reads <collection>.bin and <collection>.meta
+    # Channels, in this order. `kind`s in .bin: smri, falff, dwi. .meta lists each
+    # subject's own `modalities`; only subjects carrying all of these are kept.
+    modalities: [smri]
+    label_field: gender_encoded     # one scalar field in .meta; its values must be 0..K-1
+    id_field: id                    # the subject key both collections join on
+
+experiment:
+  name: fbirn_smri_gender
+  batch_size: 8

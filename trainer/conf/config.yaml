@@ -1,0 +1,61 @@
+# Every key here is read by train.py. If you add one, wire it up or drop it.
+
+data:
+  name: dummy            # a module in src/datasets/; its default_HPs() holds the default params
+  params: {}             # override any default_HPs() key, e.g. +data.params.n_samples=500
+
+experiment:
+  name: test             # logs land in ${paths.logdir}/${experiment.name}/fold_N
+  epochs: 60
+  batch_size: 8          # samples per step, PER RANK
+  cv_folds: 10
+  cv_seed: 42            # fold assignment, i.e. which samples are the test set
+  train_val_seed: ${experiment.cv_seed}   # train/valid slice inside a fold
+  sampler_seed: 1234     # data order within an epoch
+  target_folds: null     # which folds THIS job runs, e.g. [0,1]; null = all of them
+  valid_ratio: 0.2       # of the training part of each fold
+  resume: False          # skip finished folds, continue an interrupted one from its last epoch
+  cudnn_benchmark: False
+  selection:             # which valid metric marks the best epoch
+    metric: loss         # loss, accuracy, auc (macro) or auc_weighted
+    minimize: True
+
+model:
+  name: resnet3d         # a module in src/models/; its default_HPs() holds the defaults
+  init_seed: 1997        # identical model init across folds and ranks (null = random)
+  params: {}             # override any default_HPs() key, e.g. +model.params.dropout=0.2
+
+optimizer:
+  base_lr: 0.008
+  scale_lr: True         # max_lr = base_lr * sqrt(world_size), Adam's scaling rule
+
+loader:
+  train:
+    num_workers: 12
+    prefetch_factor: 4
+    persistent_workers: True
+    prefetches: 2        # BatchPrefetchLoaderWrapper depth; 0 disables it (needed on CPU)
+  eval:
+    num_workers: 12
+    prefetch_factor: 4
+    persistent_workers: True
+    prefetches: 2
+
+wandb:                   # needs `pip install wandb`; one run per fold
+  project: null          # wandb project; null keeps wandb off entirely
+  entity: null           # team or user; null = your wandb default
+  name: null             # run name; null = experiment.name, matching the log folder
+
+paths:
+  logdir: ./logs
+  init_weights: null     # checkpoint to initialise the model from (not a run resume)
+
+runtime:                 # filled in by train.py at startup; not for hand editing
+  fold_idx: null
+  world_size: null
+  n_channels: null       # read off the dataset; the model's in_channels defaults to it
+  n_classes: null        # distinct labels in the dataset; the model's n_classes defaults to it
+  max_lr: null           # base_lr after scale_lr
+  resume_runner: null    # checkpoint an interrupted fold is continuing from
+
+stream_log: True         # tee stdout into <experiment>/run.log

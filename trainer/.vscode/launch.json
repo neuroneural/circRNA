@@ -1,0 +1,67 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug train_resnet3d.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/train_resnet3d.py",
+            "args": [
+                "--config-name", "resnet3d_gender_bn_64base_2.2.2.2_exp01",
+                "--config-dir", "conf/"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "HYDRA_FULL_ERROR": "1"
+            },
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }, 
+        {
+            "name": "Debug train_script_rev (mmsn env)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/train_script_rev.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "python": "/data/users2/jwardell1/miniconda3/envs/mmsn/bin/python",
+            "args": [
+                "--config-name", "test_conf",
+                "--config-dir", "conf",
+                "experiment.experiment_name=test",
+                "experiment.collections=ukb",
+                "experiment.dbfields=[falff, smri, dwi]",
+                "experiment.metafields=[gender_encoded]"
+            ],
+            "env": {
+                "HYDRA_FULL_ERROR": "1",
+                "CUDA_VISIBLE_DEVICES": "0"
+            }
+        },
+        {
+            "name": "Debug FBIRN Smart Init",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/train_script_rev.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "python": "/data/users2/jwardell1/miniconda3/envs/mmsn/bin/python",
+            "args": [
+                "--config-name", "fbirn_smart_init",
+                "--config-dir", "conf"
+            ],
+            "env": {
+                "HYDRA_FULL_ERROR": "1",
+                "CUDA_VISIBLE_DEVICES": "0"
+            }
+        }
+    ]
+}

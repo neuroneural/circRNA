@@ -1,0 +1,49 @@
+# python train.py --config-name=mdd_direct
+
+defaults:
+  - config
+  - _self_
+
+data:
+  name: mdd
+  params:
+    master_csv: ../docs/02_on_MDD_data/data/mdd_master.csv
+    paths_csv: ../docs/03_multimod/data/mdd_direct_volume_paths.csv
+
+    # Channels, in this order. 3mm set: gm wm csf falff falff_global -- one grid, stackable.
+    # Native set (*_native) keeps its own grid, so only one at a time.
+    modalities: [gm, wm, csf]
+
+    # Rows kept: every listed csv flag must be True. in_clean (2526), in_super_clean (2426),
+    # in_still (1740, motion QC; in_super_clean & in_still leaves 1077).
+    filters: [in_super_clean]
+
+    # Numeric columns confined to an inclusive [min, max], or to a single exact value;
+    # a blank drops the row. TR is 2.0 for 3239 subjects, 2.5 for 189, 4.4/6.6 for the rest.
+    ranges: {TR: 2.0}          # e.g. {TR: [1.5, 2.5], n_timepoints: [150, 500]}
+
+    # Columns that must hold a number, else the row is dropped. Diagnosis+Sex+Age is the
+    # `full` mask the ICA notebook used.
+    require: [Diagnosis, Sex, Age]
+
+    # Label: the value list a row's label_column falls in becomes its class index.
+    #   MDD vs HC     label_column: Diagnosis  classes: [[0], [1]]
+    #   suicidality   label_column: HAMD3      classes: [[0, 1], [3, 4]]   (0-1 vs 3-4)
+    #   multiclass    label_column: HAMD3      classes: [[0], [1], [2], [3], [4]]
+    # Rows whose label lands in no list are dropped.
+    label_column: Diagnosis
+    classes: [[0], [1]]
+
+    # Many samples miss certain label information. E.g., HAMD3 exists for patients
+    # only, so {Diagnosis: 0} is a way to add non-MDD subjects to the 0 class.
+    fill_missing: {}
+
+    # normalization options: falff (only falff channel, not gm/wm/csf),
+    # per_channel (every channel), volume (once after stacking), or none.
+    normalize: falff
+
+    check_files: True   # drop subjects whose volume files are missing
+
+experiment:
+  name: mdd_gm_wm_csf
+  batch_size: 8

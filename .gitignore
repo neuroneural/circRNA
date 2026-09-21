@@ -49,3 +49,5 @@ dist/
 .venv/
 venv/
 ENV/
+
+sync_docs_data.sh
