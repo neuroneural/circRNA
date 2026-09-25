@@ -1,10 +1,8 @@
 #!/bin/bash
 # fbirn volumes from MongoDB, 2x A100, all folds in one job.
 #
-# Resources are 2/8 of an A100 node. The nodes differ: arctrddgxa001 has 256
-# cores and 40GB A100s, arctrddgxa002-003 have 192 cores and 80GB ones, so ask
-# for the smaller share -- 192*2/8 = 48 cores, 1TB*2/8 = 256G -- and it fits
-# either. Nothing pins GPU memory, so assume 40GB when sizing the batch.
+# Resources are 2/8 of an A100 node: 192*2/8 = 48 cores, 1TB*2/8 = 256G.
+# arctrddgxa001 is excluded: its A100s are 40GB, the rest are 80GB.
 # For one fold per task instead, see train_mdd.sh.
 #SBATCH -N 1
 #SBATCH -n 1
@@ -12,9 +10,10 @@
 #SBATCH --mem=256g
 #SBATCH -p qTRDGPUH
 #SBATCH -t 48:00:00
+#SBATCH --exclude=arctrddgxa001
 #SBATCH --gres=gpu:A100:2
 #SBATCH -J mongo_fbirn
-#SBATCH -D /data/users2/ppopov1/_circRNA/trainer   # submit from anywhere
+#SBATCH -D /data/users2/ppopov1/circRNA/trainer   # submit from anywhere
 #SBATCH --output=/data/users2/ppopov1/_out/%x_%j.out
 #SBATCH -A psy53c17
 

@@ -1,10 +1,8 @@
 #!/bin/bash
 # MDD DIRECT volumes, 2x A100, one CV fold per array task.
 #
-# Resources are 2/8 of an A100 node. The nodes differ: arctrddgxa001 has 256
-# cores and 40GB A100s, arctrddgxa002-003 have 192 cores and 80GB ones, so ask
-# for the smaller share -- 192*2/8 = 48 cores, 1TB*2/8 = 256G -- and it fits
-# either. Nothing pins GPU memory, so assume 40GB when sizing the batch.
+# Resources are 2/8 of an A100 node: 192*2/8 = 48 cores, 1TB*2/8 = 256G.
+# arctrddgxa001 is excluded: its A100s are 40GB, the rest are 80GB.
 # %4 throttles to 8 concurrent GPUs, the qTRDGPUH per-user cap.
 #SBATCH -N 1
 #SBATCH -n 1
@@ -12,10 +10,11 @@
 #SBATCH --mem=256g
 #SBATCH -p qTRDGPUH
 #SBATCH -t 48:00:00
+#SBATCH --exclude=arctrddgxa001
 #SBATCH --gres=gpu:A100:2
 #SBATCH -J mdd_direct
-#SBATCH -D /data/users2/ppopov1/_circRNA/trainer   # submit from anywhere
-#SBATCH --output=/data/users2/ppopov1/_out/%x_%j_%a.out
+#SBATCH -D /data/users2/ppopov1/circRNA/trainer   # submit from anywhere
+#SBATCH --output=/data/users2/ppopov1/_out/%x_%A_%a.out
 #SBATCH -A psy53c17
 #SBATCH --array=0-9%4
 
