@@ -259,7 +259,7 @@ class CustomRunner(dl.Runner):
                 loader_key="valid",
                 minimize=selection.minimize,
                 load_best_on_end=False,  # on_experiment_end loads the best epoch itself
-                resume_model=self.cfg.paths.init_weights or None,
+                resume_model=self.cfg.experiment.paths.init_weights or None,
             ),
             # rolling full-state checkpoint for mid-fold resume
             "state": dl.CheckpointCallback(
@@ -460,7 +460,7 @@ class CustomRunner(dl.Runner):
 def main(cfg: DictConfig):
     """ Configure experiment, run the CV folds and roll them up."""
     # ===== Initial setup =====
-    logdir = os.path.join(cfg.paths.logdir, cfg.experiment.name)
+    logdir = os.path.join(cfg.experiment.paths.logdir, cfg.experiment.name)
     os.makedirs(logdir, exist_ok=True)
     if cfg.stream_log:
         tee_stdout(os.path.join(logdir, "run.log"))
@@ -533,7 +533,7 @@ def main(cfg: DictConfig):
                 raise ValueError(
                     f"resume: {key} was {was}, now {OmegaConf.select(cfg, key)}; "
                     "this will mess with OneCycleLR's schedule; to continue from "
-                    "this model instead, point paths.init_weights at its checkpoint"
+                    "this model instead, point experiment.paths.init_weights at its checkpoint"
                 )
 
     # pre-flight maintenance: save the config

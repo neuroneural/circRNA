@@ -35,11 +35,10 @@ src/datasets/             datasets, and their own README
 | section | what it sets |
 |---|---|
 | `data` | `name` (a module in `src/datasets/`) and `params` |
-| `experiment` | `name`, `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`, the seeds below, `resume`, `cudnn_benchmark` |
+| `experiment` | `name`, `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`, the seeds below, `resume`, `cudnn_benchmark`, `paths` (`logdir`, `init_weights`: a checkpoint to start the model from) |
 | `model` | `name` (a module in `src/models/`), `init_seed`, `params` |
 | `optimizer` | `base_lr` (per rank), and `scale_lr` for `base_lr * sqrt(world_size)` |
 | `loader` | `num_workers`, `prefetch_factor`, `persistent_workers`, `prefetches` for `train` and `eval` |
-| `paths` | `logdir`, `init_weights` (a checkpoint to start the model from) |
 | `wandb` | `project` / `entity` / `name`; off unless you uncomment the logger |
 | `runtime` | filled in by `train.py` at startup — fold index, world size, the scaled lr, the resume checkpoint, and the dataset's channel and class counts. Not for hand editing; it is there so the logged config says what ran |
 | `stream_log` | config for stdout logger that fills `run.log` |
