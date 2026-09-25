@@ -29,10 +29,14 @@ export PYTORCH_ALLOC_CONF=expandable_segments:True
 source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
-# dummy volumes, fp32 then bf16
-BATCHES="8 16 32 64 128 256 512"
+# eager vs compile, fp32 vs bf16, layout; full 8..512 sweep in results_*.csv
+BATCHES="32 64 128"
 python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES
 python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --amp
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --amp --channels-last
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --compile
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --amp --compile
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --amp --compile --channels-last
 
 sleep 5s
 echo "Job $SLURM_JOB_ID completed"
