@@ -15,7 +15,7 @@
 #SBATCH --gres=gpu:A100:2
 #SBATCH -J mdd_direct
 #SBATCH -D /data/users2/ppopov1/_circRNA/trainer   # submit from anywhere
-#SBATCH --output=./_out/%x_%j_%a.out
+#SBATCH --output=/data/users2/ppopov1/_out/%x_%j_%a.out
 #SBATCH -A psy53c17
 #SBATCH --array=0-9%4
 
@@ -29,7 +29,7 @@ export HYDRA_FULL_ERROR=1
 export PYTHONFAULTHANDLER=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
 
-source /data/users2/ppopov1/miniconda/bin/activate catalyst12
+source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
 # 2 ranks, each with a train and a valid worker pool: 2*(1+10+10) = 42 of 48.

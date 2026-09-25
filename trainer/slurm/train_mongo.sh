@@ -15,7 +15,7 @@
 #SBATCH --gres=gpu:A100:2
 #SBATCH -J mongo_fbirn
 #SBATCH -D /data/users2/ppopov1/_circRNA/trainer   # submit from anywhere
-#SBATCH --output=./_out/%x_%j.out
+#SBATCH --output=/data/users2/ppopov1/_out/%x_%j.out
 #SBATCH -A psy53c17
 
 set -e
@@ -28,7 +28,7 @@ export HYDRA_FULL_ERROR=1
 export PYTHONFAULTHANDLER=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
 
-source /data/users2/ppopov1/miniconda/bin/activate catalyst12
+source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
 # host_slurm in the config points at the mongod reachable from compute nodes.
