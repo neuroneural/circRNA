@@ -1,13 +1,18 @@
 #!/bin/bash
+# Throughput sweep with tools/bench_gpu.py, 1x A100.
+#
+# Resources are 1/8 of an A100 node: 192/8 = 24 cores, 1TB/8 = 128G.
+# arctrddgxa001 is excluded: its A100s are 40GB, the rest are 80GB.
+# Results append to logs/bench_gpu/results.csv, beside the experiments.
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -c 24
 #SBATCH --mem=128g
 #SBATCH -p qTRDGPUH
-#SBATCH -t 24:00:00
+#SBATCH -t 01:00:00
 #SBATCH --exclude=arctrddgxa001
 #SBATCH --gres=gpu:A100:1
-#SBATCH -J resnet3d
+#SBATCH -J bench_gpu
 #SBATCH -D /data/users2/ppopov1/circRNA/trainer   # submit from anywhere
 #SBATCH --output=/data/users2/ppopov1/_out/%x_%j.out
 #SBATCH -A psy53c17
@@ -18,27 +23,16 @@ echo "Running on host: $HOSTNAME" >&2
 echo "Job ID: $SLURM_JOB_ID" >&2
 
 export TMPDIR=/tmp
-export HYDRA_FULL_ERROR=1
 export PYTHONFAULTHANDLER=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
 
 source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
-# Multi-GPU: raise --gres=gpu:A100:N above; SLURM_GPUS_ON_NODE drives the
-# world size, nothing here needs to change.
-# One fold per array task: see train_mdd.sh.
-# Dummy data, so this runs anywhere. For a real one:
-#   --config-name=mdd_direct  or  --config-name=mongo_fbirn
-# batch_size: tune with slurm/bench_gpu.sh
-python train.py \
-    data.name=dummy \
-    +data.params.signal=3 \
-    +data.params.n_samples=2000 \
-    experiment.name=resnet3d_run1 \
-    experiment.epochs=60 \
-    experiment.batch_size=8 \
-    experiment.cudnn_benchmark=True
+# dummy volumes, fp32 then bf16
+BATCHES="8 16 32 64 128 256 512"
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES
+python -m tools.bench_gpu --shape 64 64 64 --batches $BATCHES --amp
 
 sleep 5s
 echo "Job $SLURM_JOB_ID completed"
