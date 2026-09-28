@@ -225,6 +225,10 @@ class CustomRunner(dl.Runner):
             torch.manual_seed(self.cfg.model.init_seed)
 
         model = build_model(self.cfg)
+        if self.cfg.experiment.channels_last:  # before DDP wraps it
+            model = model.to(memory_format=torch.channels_last_3d)
+        if self.cfg.experiment.compile:  # in place, keeps state_dict keys
+            model.compile()
 
         if self.cfg.model.init_seed is not None:
             torch.set_rng_state(rng_state)
@@ -419,18 +423,25 @@ class CustomRunner(dl.Runner):
 
     def handle_batch(self, batch):
         sample, target, index = batch   # target is [B] class indices, index is the dataset row
+        if self.cfg.experiment.channels_last:
+            sample = sample.contiguous(memory_format=torch.channels_last_3d)
+        autocast = torch.autocast(
+            self.engine.device.type, dtype=torch.bfloat16, enabled=self.cfg.experiment.bf16
+        )
 
         if self.model.training:
-            y_hat = self.model.forward(sample)
-            loss = self.criterion(y_hat, target)
+            with autocast:
+                y_hat = self.model(sample)  # .forward() would bypass compile
+                loss = self.criterion(y_hat, target)
             loss.backward()
             self.optimizer.step()
             self.scheduler.step()
             self.optimizer.zero_grad()
         else:
-            with torch.no_grad():
-                y_hat = self.model.forward(sample)
+            with torch.no_grad(), autocast:
+                y_hat = self.model(sample)
                 loss = self.criterion(y_hat, target)
+        y_hat = y_hat.float()  # bf16 logits would coarsen metrics and preds
 
         with torch.no_grad():
             probs = torch.softmax(y_hat, dim=1)
