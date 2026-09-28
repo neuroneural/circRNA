@@ -21,6 +21,7 @@ export TMPDIR=/tmp
 export HYDRA_FULL_ERROR=1
 export PYTHONFAULTHANDLER=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
+export MKL_THREADING_LAYER=GNU   # conda MKL vs torch's OpenMP
 
 source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"

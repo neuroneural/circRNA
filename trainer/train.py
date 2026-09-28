@@ -313,7 +313,8 @@ class CustomRunner(dl.Runner):
         if self.engine.is_ddp:
             # Catalyst's own on_loader_end reduces nothing, so the additive meters are
             # still per-rank here and need reduction.
-            for key in self.loader_metrics.keys() - {"auc", "auc_weighted"}:  # AUC all-gathers
+            # AUC all-gathers; sorted: same order per rank
+            for key in sorted(self.loader_metrics.keys() - {"auc", "auc_weighted"}):
                 value = torch.tensor([self.loader_metrics[key]], device=self.engine.device)
                 self.loader_metrics[key] = utils.distributed.mean_reduce(
                     value, self.engine.num_processes
