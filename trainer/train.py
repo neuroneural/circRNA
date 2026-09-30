@@ -254,28 +254,33 @@ class CustomRunner(dl.Runner):
 
     def get_callbacks(self):
         selection = self.cfg.experiment.selection
-        return {
+        callbacks = {
             # model checkpoint configured according to config
             "checkpoint": dl.CheckpointCallback(
                 self._logdir,
-                save_best=True,
+                save_best=False,  # train.py writes the true best
+                save_last=False,  # nothing reads model.last.pth
                 metric_key=selection.metric,
                 loader_key="valid",
                 minimize=selection.minimize,
                 load_best_on_end=False,  # on_experiment_end loads the best epoch itself
                 resume_model=self.cfg.experiment.paths.init_weights or None,
             ),
+            "tqdm": dl.TqdmCallback(),
+        }
+
+        if self.cfg.experiment.save_state:
             # rolling full-state checkpoint for mid-fold resume
-            "state": dl.CheckpointCallback(
+            callbacks["state"] = dl.CheckpointCallback(
                 self._logdir,
                 topk=1,
                 mode="runner",
                 save_best=False,
                 save_last=False,
                 resume_runner=self.cfg.runtime.resume_runner or None,
-            ),
-            "tqdm": dl.TqdmCallback(),
-        }
+            )
+
+        return callbacks
 
     def on_loader_start(self, runner):
         # key juggling: catalyst asserts the key starts with train/valid/infer
@@ -566,6 +571,8 @@ def main(cfg: DictConfig):
 
             # decide if (and how to) resume
             runner_checkpoints = sorted(glob.glob(os.path.join(rundir, "runner.*.pth")))
+            if not cfg.experiment.save_state:  # no state callback to load them
+                runner_checkpoints = []
             resume_runner = runner_checkpoints[-1] if (resume and runner_checkpoints) else ""
             if resume_runner:  # pick an interrupted fold up where it stopped
                 print(f"[Resume] continuing fold {fold_idx} from {os.path.basename(resume_runner)}")

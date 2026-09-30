@@ -34,9 +34,9 @@ src/datasets/             datasets, and their own README
 
 | section | what it sets |
 |---|---|
-| `data` | `name` (a module in `src/datasets/`) and `params` |
-| `experiment` | `name`, `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`, the seeds below, `resume`, `cudnn_benchmark`, `bf16`, `channels_last`, `compile`, `paths` (`logdir`, `init_weights`: a checkpoint to start the model from) |
-| `model` | `name` (a module in `src/models/`), `init_seed`, `params` |
+| `data` | dataset `name` (a module in `src/datasets/`) and `params` |
+| `experiment` | experiment `name`; experiment params like `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`; random seeds; utility params like `resume`, `save_state`, `cudnn_benchmark`, `bf16`, `channels_last`, `compile`; `paths` (`logdir`, `init_weights`: a checkpoint to start the model from) |
+| `model` | model `name` (a module in `src/models/`), `init_seed`, `params` |
 | `optimizer` | `base_lr` (per rank), and `scale_lr` for `base_lr * sqrt(world_size)` |
 | `loader` | `num_workers`, `prefetch_factor`, `persistent_workers`, `prefetches` for `train` and `eval` |
 | `wandb` | `project` / `entity` / `name`; off unless you uncomment the logger |
@@ -81,7 +81,7 @@ and the detail, in `fold_<i>/more/`:
 | `best_so_far.jsonl` | best epoch log |
 
 Rerunning an experiment name clears the fold directory first — nothing is deleted, the
-old artefacts move to `backup_<timestamp>/`. With `experiment.resume=true` it instead continues from an interrupted fold.
+old artefacts move to `backup_<timestamp>/`. With `experiment.resume=true` it instead continues from an interrupted fold, or restarts it if `experiment.save_state=false`.
 
 ## Seeds
 

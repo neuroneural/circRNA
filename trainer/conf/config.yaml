@@ -24,6 +24,7 @@ experiment:
     init_weights: null   # checkpoint to initialise the model from (not a run resume)
 
   resume: False          # skip finished folds, continue an interrupted one from its last epoch
+  save_state: True       # per-epoch runner checkpoint, for mid-fold resume
   cudnn_benchmark: True  # autotune conv kernels; volumes are fixed-size
   bf16: True             # bf16 autocast; weights and optimizer stay fp32
   channels_last: True    # channels_last_3d memory layout for the convs
