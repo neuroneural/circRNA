@@ -33,13 +33,15 @@ source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
 # 2 ranks, each with a train and a valid worker pool: 2*(1+10+10) = 42 of 48.
+# stream_log=False: parallel tasks would interleave run.log
 python train.py --config-name=mdd_direct \
-    experiment.name=mdd_gm_wm_csf \
+    experiment.name=mdd_gm_wm_csf_falff \
     "experiment.target_folds=[$SLURM_ARRAY_TASK_ID]" \
     experiment.epochs=60 \
     experiment.batch_size=8 \
     loader.train.num_workers=10 \
-    loader.eval.num_workers=10
+    loader.eval.num_workers=10 \
+    stream_log=False
 
 sleep 5s
 echo "Job $SLURM_JOB_ID completed"

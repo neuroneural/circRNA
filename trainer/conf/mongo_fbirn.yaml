@@ -15,10 +15,10 @@ data:
     collection: fbirn               # reads <collection>.bin and <collection>.meta
     # Channels, in this order. `kind`s in .bin: smri, falff, dwi. .meta lists each
     # subject's own `modalities`; only subjects carrying all of these are kept.
-    modalities: [smri]
+    modalities: [smri, dwi, falff]
     label_field: gender_encoded     # one scalar field in .meta; its values must be 0..K-1
     id_field: id                    # the subject key both collections join on
 
 experiment:
-  name: fbirn_smri_gender
+  name: fbirn_smri_dwi_falff_gender
   batch_size: 8

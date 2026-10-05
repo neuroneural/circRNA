@@ -12,7 +12,7 @@ data:
 
     # Channels, in this order. 3mm set: gm wm csf falff falff_global -- one grid, stackable.
     # Native set (*_native) keeps its own grid, so only one at a time.
-    modalities: [gm, wm, csf]
+    modalities: [gm, wm, csf, falff]
 
     # Rows kept: every listed csv flag must be True. in_clean (2526), in_super_clean (2426),
     # in_still (1740, motion QC; in_super_clean & in_still leaves 1077).
@@ -45,5 +45,5 @@ data:
     check_files: True   # drop subjects whose volume files are missing
 
 experiment:
-  name: mdd_gm_wm_csf
+  name: mdd_gm_wm_csf_falff
   batch_size: 8

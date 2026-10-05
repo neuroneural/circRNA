@@ -31,10 +31,10 @@ echo "Using python from: $(which python)"
 # One fold per array task: see train_mdd.sh.
 # Dummy data, so this runs anywhere. For a real one:
 #   --config-name=mdd_direct  or  --config-name=mongo_fbirn
-# batch_size from bench_gpu.sh
+# batch_size from bench_gpu.sh; signal 0.05: hard, learnable
 python train.py \
     data.name=dummy \
-    +data.params.signal=3 \
+    +data.params.signal=0.05 \
     +data.params.n_samples=2000 \
     experiment.name=resnet3d_run1 \
     experiment.epochs=60 \
