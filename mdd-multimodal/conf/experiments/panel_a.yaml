@@ -1,0 +1,28 @@
+# PANEL A — Unified Transparent Representation (pre_empt.pdf p.5, Figure 4A).
+#
+# One shared transparent graph over 53 Neuromark nodes. Every modality projects
+# onto it; modality is kept as a channel block on each node, so an edge between a
+# GM-led node and a fALFF-led node is the cross-modal statement.
+#
+#   sbatch scripts/run_train.sh conf/experiments/panel_a.yaml
+#   python -m src.readout --config conf/experiments/panel_a.yaml   # read the graph
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+model:
+  fusion:
+    mode: unified
+  transparent:
+    n_nodes: 53
+    recon_weight: 0.1       # the decoder is what makes A decomposition-like
+    sparsity: 1.0e-4
+    node_labels: /data/qneuromark/Network_templates/NeuroMark1/Neuromark_fMRI_1.0.txt
+                            # Neuromark's own domain file. Gives verified DOMAIN
+                            # labels (SC_01 ... CB_53), cross-checked against the
+                            # sibling _indexall.txt. Not anatomical names.
+    projection: null        # set this for FIXED node meaning (prep/build_projection.py)

@@ -1,0 +1,12 @@
+# Diagnostic run: predict SITE from the features. If this is near-perfect and
+# diagnosis tracks site, every other result needs harmonisation first.
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: site
+site:
+  mode: ignore
+train:
+  n_repeats: 1

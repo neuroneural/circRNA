@@ -1,0 +1,9 @@
+# MDD vs Schizophrenia (314) — clinically harder, and newly possible with Phase 2.
+data:
+  cohort: sfnc
+  groups: [MDD, Schizophrenia]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect

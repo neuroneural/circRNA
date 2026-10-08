@@ -1,0 +1,26 @@
+# cvbench's meanMLP, on OUR cohort and OUR folds.
+#
+# It won the lab's 13-model sweep at 0.741 (median 0.722) on 1,944 subjects of
+# ICA-53 timecourses. Here it sees our 2,055 subjects and our modalities, so the
+# comparison to baseline_blend and panel_a is like-for-like -- same people, same
+# splits, same features.
+#
+# EARLY fusion: the modalities are concatenated into one vector and a single
+# Linear(D,128) ReLU Dropout(.3) Linear(128,64) ReLU Linear(64,1) runs on it.
+# That is what their meanMLP is. `baseline_blend` is the LATE-fusion counterpart
+# -- one encoder per modality, embeddings averaged -- so the pair measures
+# early vs late fusion on identical data.
+#
+#   sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml
+#   sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml data.modalities=[sFNC]
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+model:
+  fusion:
+    mode: meanmlp

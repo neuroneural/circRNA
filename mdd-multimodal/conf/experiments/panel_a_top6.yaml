@@ -1,0 +1,32 @@
+# PANEL A, SIX LARGEST SITES — more subjects, site confound still present.
+#
+# IS001, IS002, IS011, IS006, IS005, IS010 = 1,417 of 2,055 (69%), dropping the
+# nine sites with 54-97 subjects each. The point is NOT to reduce the confound --
+# six scanners still differ -- but to make leave-one-site-out meaningful: six
+# folds of 155-533 instead of fifteen folds where the smallest is 54 and a plain
+# average weights it equally with a fold ten times its size.
+#
+# Class balance still varies a lot here (IS005 75% MDD, IS006 39%), so site
+# remains predictive of diagnosis. Keep the correction on and read LOSO.
+#
+#   sbatch scripts/run_train.sh conf/experiments/panel_a_top6.yaml train.cv=loso
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  sites: [IS001, IS002, IS011, IS006, IS005, IS010]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: combat            # six sites, structural features at eta^2 ~0.9:
+                          # a random intercept adjusts means only, ComBat also
+                          # adjusts scale, which is where most of it lives
+model:
+  fusion:
+    mode: unified
+  transparent:
+    n_nodes: 53
+    recon_weight: 0.1
+    sparsity: 1.0e-4
+    node_labels: /data/qneuromark/Network_templates/NeuroMark1/Neuromark_fMRI_1.0.txt
+    projection: null

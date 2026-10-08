@@ -1,0 +1,13 @@
+# Symptom severity with only ~660 labelled subjects. Encoders pretrain on
+# diagnosis using every available subject, then the head fine-tunes on HAMD.
+data:
+  cohort: sfnc
+  groups: [MDD]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: hamd17
+  hamd_mode: transfer
+model:
+  smart_init: true
+site:
+  mode: random_effect

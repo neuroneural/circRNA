@@ -1,0 +1,15 @@
+# core
+numpy
+pandas
+scipy
+pyyaml
+scikit-learn
+torch
+
+# feature extraction
+nibabel
+nilearn
+h5py            # GIFT MAT v7.3 is HDF5; scipy.io cannot read it
+
+# evaluation
+statsmodels     # linear mixed effects on fold results (proposal pp. 16, 24, 32)

@@ -1,0 +1,20 @@
+# PANEL B — Modality-Specific Transparent Layers (pre_empt.pdf p.5, Figure 4B).
+#
+# One graph per modality over its OWN nodes: parcels for the structural streams,
+# the 53 components for sFNC. No shared node set, so no projection to justify.
+# The proposal calls B "the most permissive to missing modalities" and notes its
+# layers can be pretrained independently.
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+model:
+  fusion:
+    mode: modality_specific
+  transparent:
+    recon_weight: 0.1
+    sparsity: 1.0e-4

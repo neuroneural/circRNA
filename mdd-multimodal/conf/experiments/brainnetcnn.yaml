@@ -1,0 +1,24 @@
+# BrainNetCNN, on OUR cohort and OUR folds. 0.704 in the lab's cvbench sweep.
+#
+# Its edge-to-edge convolutions are defined over the ROWS and COLUMNS of a
+# connectivity matrix, so sFNC's 1,378 edges are rebuilt into the (53, 53)
+# symmetric matrix they came from before the filters are applied. A parcel-mean
+# modality has no such structure, so GM/CSF/fALFF keep the ordinary MLP encoder
+# and the streams fuse as in baseline_blend.
+#
+# With data.modalities=[sFNC] this is pure BrainNetCNN -- the closest thing in
+# this repo to the model as published.
+#
+#   sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml
+#   sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml data.modalities=[sFNC]
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+model:
+  fusion:
+    mode: brainnetcnn
