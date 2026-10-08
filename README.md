@@ -17,7 +17,7 @@ export MASTER=$PWD/data/mdd_master_full.csv
 export SFNC_MAT=/data/users3/bbaker/projects/MDD_preproc/neuromark53_clean/MDD_DIRECT_postprocess_results.mat
 sbatch scripts/run_prep.sh
 ##
-# 3. training
+3. training
 Training examples here:
 #
 # Train on all four modalities
