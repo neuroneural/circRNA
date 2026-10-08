@@ -10,11 +10,14 @@ cd ~/...../mdd-multimodal
 #
 # 1. build the subject index  (~1 min)
 sbatch scripts/run_build_master.sh
+##
 cp data/mdd_master_full.csv data/mdd_master.csv     # the path conf/base.yaml expects
 #
 # 2. extract all features  (~1h 40m)
 export MASTER=$PWD/data/mdd_master_full.csv
+##
 export SFNC_MAT=/data/users3/bbaker/projects/MDD_preproc/neuromark53_clean/MDD_DIRECT_postprocess_results.mat
+##
 sbatch scripts/run_prep.sh
 #
 # 3. training
