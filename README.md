@@ -2,13 +2,13 @@
 
 This repository contains the analysis pipelines and exploratory logs for MDD data.
 
-Currently, fold_data.py is a library of auc data for separate runs and a figure can be made by running figures/make_figs.p, which calls the fold data library.
+Currently, fold_data.py is a library of auc data for separate runs and a figure can be made by running figures/make_figs.py, which calls the fold data library. This folder also contains resulting figures, such as fig2_multimodal_vs_sfnc.png.
 
-To recreate the aucs contained in fold_data.py  you would run this
+To recreate the aucs contained in fold_data.py you would run this
 
 cd ~/...../mdd-multimodal
 #
-# --- all four modalities (blue boxes)
+# --- all four modalities
 #
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml
 #
@@ -19,7 +19,7 @@ sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml
 sbatch scripts/run_train.sh conf/experiments/panel_a.yaml
 #
 #
-# --- sFNC only (orange boxes)
+# --- sFNC only
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml data.modalities=[sFNC]
 #
 sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml         data.modalities=[sFNC]
