@@ -9,15 +9,22 @@ To recreate the aucs contained in fold_data.py  you would run this
 cd ~/...../mdd-multimodal
 
 # --- all four modalities (blue boxes)
+
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml
+
 sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml
+
 sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml
+
 sbatch scripts/run_train.sh conf/experiments/panel_a.yaml
 
 # --- sFNC only (orange boxes)
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml data.modalities=[sFNC]
+
 sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml         data.modalities=[sFNC]
+
 sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml     data.modalities=[sFNC]
+
 sbatch scripts/run_train.sh conf/experiments/panel_a.yaml         data.modalities=[sFNC]
 
 
