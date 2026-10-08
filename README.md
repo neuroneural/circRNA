@@ -32,8 +32,7 @@ sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml
 sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml
 ##
 sbatch scripts/run_train.sh conf/experiments/panel_a.yaml
-##
-#
+###
 # Train on sFNC only
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml data.modalities=[sFNC]
 ##
