@@ -7,40 +7,40 @@ Currently, fold_data.py is a library of auc data for separate runs and a figure 
 To recreate the aucs contained in fold_data.py you would run this
 #
 cd ~/...../mdd-multimodal
-##
+#
 # 1. build the subject index  (~1 min)
 sbatch scripts/run_build_master.sh
 cp data/mdd_master_full.csv data/mdd_master.csv     # the path conf/base.yaml expects
-##
+#
 # 2. extract all features  (~1h 40m)
 export MASTER=$PWD/data/mdd_master_full.csv
 export SFNC_MAT=/data/users3/bbaker/projects/MDD_preproc/neuromark53_clean/MDD_DIRECT_postprocess_results.mat
 sbatch scripts/run_prep.sh
-##
-3. training
+#
+# 3. training
 Training examples here:
-#
+##
 # Train on all four modalities
-#
+##
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml
-#
+##
 sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml
-#
+##
 sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml
-#
+##
 sbatch scripts/run_train.sh conf/experiments/panel_a.yaml
-#
+##
 #
 # Train on sFNC only
 sbatch scripts/run_train.sh conf/experiments/baseline_blend.yaml data.modalities=[sFNC]
-#
-sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml         data.modalities=[sFNC]
-#
-sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml     data.modalities=[sFNC]
-#
-sbatch scripts/run_train.sh conf/experiments/panel_a.yaml         data.modalities=[sFNC]
-#
 ##
+sbatch scripts/run_train.sh conf/experiments/meanmlp.yaml         data.modalities=[sFNC]
+##
+sbatch scripts/run_train.sh conf/experiments/brainnetcnn.yaml     data.modalities=[sFNC]
+##
+sbatch scripts/run_train.sh conf/experiments/panel_a.yaml         data.modalities=[sFNC]
+##
+#
 
 
 The four architectures:
