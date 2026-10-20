@@ -24,8 +24,9 @@ One row per subject. Blank = not available for that subject.
 | `n_slices` | Slices per volume | |
 | `n_timepoints` | Volumes in the scan | e.g. `232` |
 | `voxel_size` | Acquisition voxel size (mm) | e.g. `2 2 2` |
-| `in_clean` | In the `clean` QC tier (2,526) | `True`/`False` |
-| `in_super_clean` | In the `super_clean` tier (2,426, TR=2 s) | `True`/`False` |
+| `in_clean` | In the `clean` tier (2,526) — run length ≥ 230 timepoints | `True`/`False` |
+| `in_super_clean` | In the `super_clean` tier (2,426) — `in_clean` ∩ TR = 2.0 s | `True`/`False` |
+| `in_still` | Passed DIRECT's max-head-motion criterion (3.0 mm / 3.0°) | `True`/`False`. **Independent of the tiers** — see note |
 | `clean_row` | 0-based row into the **53-comp** postproc sFNC/spectra arrays | blank if not in `clean` |
 | `super_clean_row` | 0-based row into the **105-comp** postproc sFNC/spectra arrays | blank if not in `super_clean` |
 | `vol_np_3mm` | Path: 3 mm volume, resampled, **un-smoothed** | Neuromark grid 53×63×52 |
@@ -38,3 +39,13 @@ One row per subject. Blank = not available for that subject.
 | `sfnc_spectra_mat_105` | Path: 105-comp postproc `.mat` (sFNC + spectra) | index rows with `super_clean_row` |
 
 *Notes:* HAMD/HAMA scores exist for MDD patients only (no HC/SZ/BP). ICA files are numbered by subject-list position, not `matlab_index` — join everything on `id`.
+
+**Why `*_row` exists:** the ICA timecourses and spatial maps are already resolved to per-subject paths, but sFNC and spectra are **not** unpacked per subject — one `.mat` holds every subject (`fnc_corrs_all` `(S,N,N)`, `spectra_tc_all` `(S,F,N)`). These columns are the row index into those arrays, so `sfnc_spectra_mat_*` is unusable without them:
+
+```python
+import scipy.io as sio
+m = sio.loadmat(row["sfnc_spectra_mat_53"])
+fnc = m["fnc_corrs_all"][int(row["clean_row"])]      # (53, 53) for this subject
+```
+
+**On `in_still`:** motion parameters were estimated for all 3,525 subjects, but DIRECT's blacklist was never applied when the tiers were built. Only 1,740 of 3,525 subjects pass it, and **1,384 motion-failing subjects sit inside `clean`** (1,349 inside `super_clean`). Intersecting gives `in_super_clean & in_still` = **1,077** subjects — a steep cut, so decide deliberately rather than filtering by reflex. For a softer threshold use the continuous metrics in `MDD_DIRECT/Data_BIDS/RealignParameter/HeadMotion.tsv` (mean FD_Power etc.) instead of this flag.

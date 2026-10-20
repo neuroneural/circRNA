@@ -34,12 +34,24 @@ it (labels + timeseries) in a separate analysis.
 | Tier | List file (`data/MDDD/`) | n | Selection |
 | :--- | :--- | :---: | :--- |
 | full | `Subjects.txt` | 3,525 | all DIRECT subjects |
-| clean | `Subjlist_clean.txt` | 2,526 | QC-passed (usable ICA) |
-| **super_clean** | `Subjlist_super_clean.txt` | **2,426** | clean **∩ TR = 2.0 s, cropped to 230 timepoints** — this is the `TR2.0_crop230` working set used everywhere downstream |
+| clean | `Subjlist_clean.txt` | 2,526 | **run length ≥ 230 timepoints** — nothing else |
+| **super_clean** | `Subjlist_super_clean.txt` | **2,426** | clean **∩ TR = 2.0 s exactly**, then cropped to the first 230 timepoints — this is the `TR2.0_crop230` working set used everywhere downstream |
 
 * The subject-list files point at the **raw preprocessed BOLD** (fMRIPrep-style, MNI152NLin2009cAsym): `/data/qneuromark/Data/Depression/MDD_DIRECT/Data_BIDS/FunVoluW/{ID}/SmNp{ID}_task-rest_..._desc-preproc_bold.nii`. Per-subject TR is listed in `Subjlist_super_clean_TR.txt` (all `2.0` for super_clean).
 * **`data/MDDD/FULL_sites.csv`** = the same clinical table as `MDD_DIRECT_FULL.csv` **plus a `Site` column** (drives their ComBat / leave-one-site-out harmonization). Keyed by `ID` (= `Subject`) + `MATLABIndex`.
-* Caveat: exact motion/quality thresholds for "clean" are **not** spelled out in the Python; the selection is baked into the `Subjlist_*.txt` lists and `TR2.0_crop230_indices.mat`.
+
+#### What actually defines `clean` and `super_clean` (derived empirically)
+
+* **`clean` = runs with ≥ 230 timepoints.** 
+* **`super_clean` = `clean` ∩ TR = 2.0 s.**
+* **`TR2.0_crop230_indices.mat`** (`selectedRuns`, 1×2426) indexes into the **full 3,525-subject `Subjects.txt` order**, not into `Subjlist_clean.txt`.
+
+**Motion was corrected but never used to exclude.** Realignment ran on all 3,525 subjects upstream (`Data_BIDS/RealignParameter/`), but no motion-based subject exclusion went into `clean`:
+
+* DIRECT ships `RealignParameter/ExcludeSubjectsAccordingToMaxHeadMotion.txt` (criterion: **3.0 mm / 3.0°**, 1,785 subjects). It was **not** applied — 1,384 of those subjects are *in* `clean`, and only 401 of the 999 subjects dropped at the `clean` stage appear on it.
+
+Preprocessing itself is identical across all three tiers — fMRIPrep → MNI152NLin2009cAsym, SPM resample to 3×3×3 mm, 6 mm FWHM smoothing (the `SmNp` prefix the subject lists point at).
+
 
 ### 1.2 The `MDD_DIRECT` raw-data root (data dictionary + processed volumes)
 
