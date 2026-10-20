@@ -1,0 +1,11 @@
+# Train on subjects WITHOUT HAMD, predict on those WITH. Tests whether a
+# diagnosis-trained representation carries symptom information it never saw.
+data:
+  cohort: sfnc
+  groups: [MDD]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: hamd17
+  hamd_mode: holdout
+site:
+  mode: random_effect

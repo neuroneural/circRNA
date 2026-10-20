@@ -1,0 +1,17 @@
+# Leave-one-site-out. The honest generalisation test: can a model trained on 22
+# scanners say anything about a scanner it has never seen?
+#
+# Compare against hc_vs_mdd_sfnc.yaml (random k-fold) on identical data. A large
+# drop means the k-fold number was partly site recognition. Read both against the
+# site-only baseline from `python -m src.diagnose`.
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+train:
+  cv: loso
+  n_repeats: 1        # the splits are fixed by site; repeats only vary init

@@ -1,0 +1,11 @@
+# Volumes only, so the full 3,525 are usable — no sFNC, no QC gate.
+# Answers: is the 999 subjects gained worth the strongest modality lost?
+data:
+  cohort: all
+  groups: [MDD, HC]
+  modalities: [GM, WM, CSF, FALFF, FALFF_globalC]
+  allow_missing_modalities: false     # everyone has all volumes anyway
+label:
+  target: diagnosis
+site:
+  mode: random_effect

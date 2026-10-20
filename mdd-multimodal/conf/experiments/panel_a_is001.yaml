@@ -1,0 +1,37 @@
+# PANEL A, SINGLE SITE — the clean test.
+#
+# IS001 only: 533 subjects, 282 MDD / 251 HC (53% MDD, the most balanced of the
+# large sites). One scanner, so there is NO between-site variance for the model
+# to exploit. The site-only baseline here is 0.50 by construction, not by
+# measurement -- there is nothing to predict site from.
+#
+# This is the experiment that answers "is there real multimodal signal", because
+# the 2,055-subject version cannot separate signal from scanner while GM/CSF/
+# fALFF sit at median site eta^2 of 0.77-0.91.
+#
+# What it does NOT show: generalisation to a new scanner. Say so when reporting.
+# Also note IS001 contributes ZERO HAMD subjects, so this cohort is diagnosis-only.
+#
+#   sbatch scripts/run_train.sh conf/experiments/panel_a_is001.yaml
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  sites: [IS001]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: ignore            # one site: nothing to correct, and a random effect
+                          # with a single level is degenerate
+model:
+  fusion:
+    mode: unified
+  transparent:
+    n_nodes: 53
+    recon_weight: 0.1       # now a PER-FEATURE mean (fixed 2026-09-23). It used
+                            # to be a per-subject sum over features, making this
+                            # behave like ~200 and turning Panel A into an
+                            # autoencoder. Sweep 0 / 0.01 / 0.1 / 1.0.
+    sparsity: 1.0e-4
+    node_labels: /data/qneuromark/Network_templates/NeuroMark1/Neuromark_fMRI_1.0.txt
+    projection: null

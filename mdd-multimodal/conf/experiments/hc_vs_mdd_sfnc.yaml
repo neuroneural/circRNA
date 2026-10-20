@@ -1,0 +1,10 @@
+# HC vs MDD on the sFNC-complete cohort. The closest comparison to the previous
+# benchmark, where sFNC:SVM-RBF reached 0.807 and fusion 0.812 — that is the bar.
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect

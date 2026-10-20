@@ -1,0 +1,6 @@
+data/*.npz
+data/*.csv
+runs/
+logs/
+__pycache__/
+*.pyc

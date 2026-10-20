@@ -1,0 +1,14 @@
+# The BASELINE the transparent panels have to beat: no transparent layer, the
+# masked mean of per-modality embeddings. This is the "blended probability"
+# objection — keep it so A and B are measured against something, not against 0.5.
+data:
+  cohort: sfnc
+  groups: [MDD, HC]
+  modalities: [GM, CSF, FALFF, sFNC]
+label:
+  target: diagnosis
+site:
+  mode: random_effect
+model:
+  fusion:
+    mode: joint

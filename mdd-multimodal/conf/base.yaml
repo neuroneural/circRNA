@@ -1,0 +1,137 @@
+# Defaults for every run. Experiment files in conf/experiments/ override these,
+# and `key=value` on the command line overrides both.
+
+paths:
+  master:   data/mdd_master.csv                # 3,525 rows, the subject index
+  struct:   data/struct_features.npz           # GM/WM/CSF/FALFF parcellated + TIV
+  sfnc:     data/sfnc_features.npz             # from the GIFT postprocess MATs
+  dfnc:     data/dfnc_features.npz             # sliding-window, proposal p.4
+  out_dir:  runs
+
+# DECIDED 2026-09-21: keep only subjects with sFNC, and no dynamic fMRI for now.
+# Both are recorded here rather than left to memory. To revisit, change cohort
+# back to `all` (and set allow_missing_modalities) or add `dfnc` to modalities.
+
+data:
+  cohort: sfnc                    # DECIDED. 2526 of 3525.
+                                  #   dropped: 490 MDD, 459 HC, 50 BD, 0 SCZ
+                                  #   remaining MDD 1170, HC 885, BD 157, SCZ 314
+                                  # all (3525) | sfnc (2526) | super_clean (2426)
+  groups: [MDD, HC]               # -> 2055 subjects at this tier
+  sites: null                     # null = every site. A list restricts to those
+                                  # sites, e.g. [IS001] (533) or the six largest
+                                  # [IS001, IS002, IS011, IS006, IS005, IS010]
+                                  # (1417). One site removes the scanner confound
+                                  # by construction; see src/data.py step 2b.
+  modalities: [GM, CSF, FALFF, sFNC]
+                                  # WM omitted deliberately: r = -0.91 with GM on
+                                  # this data, so it adds dimensions not information.
+                                  # CSF kept: r = -0.04 with GM, genuinely independent.
+                                  # `dfnc` and the dynamic encoder are OUT for now.
+  allow_missing_modalities: true  # moot at cohort=sfnc -- every subject in this
+                                  # tier has all four streams. Kept true so that
+                                  # switching back to cohort=all still works.
+  representation: parcellated     # parcellated | voxelwise
+  covariates: [TIV]               # appended to every stream, not a stream itself
+
+site:
+  mode: random_effect             # ignore | feature | combat | random_effect | adversarial
+  adversarial_weight: 0.1         # only for mode=adversarial
+
+label:
+  target: diagnosis               # diagnosis | hamd17 | hamd3
+                                  # labelled subjects AT cohort=sfnc:
+                                  #   diagnosis  2055  (MDD 1170 vs HC 885)
+                                  #   hamd17      984
+                                  #   hamd3       660   <- item 3 is the SUICIDE item;
+                                  #     3 sites recorded HAMD17 but never item 3
+                                  #     (IS001 254, IS008 47, IS018 34), so this
+                                  #     target loses whole sites, not just subjects
+  hamd17_thresh: 22
+  hamd3_split: "0-2|3-4"
+  hamd_mode: transfer             # direct | transfer | holdout
+                                  # CAUTION on holdout: HAMD availability is a
+                                  # property of the SITE here (3 sites have no HAMD
+                                  # at all, 3 more have no item 3), so training on
+                                  # the unlabelled and testing on the labelled is
+                                  # close to a site-transfer experiment. Check
+                                  # src/diagnose.py section 2 before using it.
+
+model:
+  encoder_dim: 64                 # per-modality latent size
+  hidden: 128
+  dropout: 0.3
+  head: mlp                       # mlp    = Linear(in,128) ReLU Drop Linear(128,n)
+                                  # linear = Linear(in,n)  -- meanMLP's readout.
+                                  # Our Encoder already IS meanMLP's trunk
+                                  # (Linear(d,128) ReLU Drop(.3) Linear(128,64)
+                                  # ReLU); the head is the only difference, and
+                                  # on cvbench smaller models won.
+  fusion:
+    mode: unified                 # PANEL A (pre_empt.pdf p.5, Figure 4)
+                                  #   unified           A: one shared transparent
+                                  #                     graph; needs a shared node
+                                  #                     set; gives cross-modal edges
+                                  #   modality_specific B: one graph per modality
+                                  #                     over its OWN nodes; no
+                                  #                     projection needed; cheaper
+                                  #   joint|late|stack  BASELINES, no transparent
+                                  #                     layer. `joint` is the masked
+                                  #                     mean — the "blended
+                                  #                     probability" A and B replace.
+
+  transparent:
+    n_nodes: 53                   # panel A only: the SHARED node set. 53 = Neuromark
+                                  # 1.0. Edges grow quadratically — 53 nodes is 1378
+                                  # edges against ~2055 subjects; 105 would be 5460.
+    channels: 8                   # features per modality per node. Modality stays a
+                                  # separate channel block, which is what lets an
+                                  # edge be attributed across modalities.
+    node_labels: null             # Neuromark's own domain file (the parser reads
+                                  # "SC, 1, 2, ..." natively and cross-checks the
+                                  # sibling _indexall.txt), or txt/csv.
+                                  #   /data/qneuromark/Network_templates/
+                                  #     NeuroMark1/Neuromark_fMRI_1.0.txt
+                                  # Without it, names are placeholders and the
+                                  # readout says so rather than implying anatomy.
+    projection: null              # panel A: npz of per-modality (d, n_nodes) overlap
+                                  # matrices from prep/build_projection.py. Absent
+                                  # -> a LEARNED projection, which still shares the
+                                  # node set but makes node names a weaker claim.
+                                  # sFNC never needs one (already component-indexed).
+    recon_weight: 0.1             # panel A's decoder. 0 = discriminative only, which
+                                  # is a fair ablation but no longer decomposition-like.
+    sparsity: 1.0e-4              # L1 on the adjacency; a dense graph is unreadable
+    self_loops: true              # drawn in Figure 4; keeps a node's own
+                                  # contribution readable apart from its edges
+  smart_init: true                # pretrain each encoder unimodally first
+
+train:
+  cv: kfold                       # kfold | loso (leave-one-site-out)
+                                  #   kfold cannot detect site leakage — the same
+                                  #   scanner appears in train and test. loso holds
+                                  #   out a whole site. Run both; the gap is the
+                                  #   size of the confound. See src/diagnose.py.
+  loso_min_test: 10               # skip sites smaller than this
+  n_folds: 10
+  n_repeats: 3                    # a previous pair of runs moved a fusion AUC by
+                                  # 0.023 on identical data; repeats make that visible
+  trace: true                     # record per-epoch losses for ONE fold and print
+                                  # a convergence report. Diagnostic only: it is
+                                  # never used to pick epochs or a model, which
+                                  # would make the reported AUC optimistic.
+  early_stopping: false           # true = hold out val_ratio of the TRAINING
+                                  # data, stop after `patience` epochs with no
+                                  # improvement, restore the best weights.
+                                  # Matches the lab's cvbench protocol.
+                                  # NEVER uses the test fold.
+  val_ratio: 0.2
+  patience: 30
+  val_seed: 42
+  epochs: 60
+  pretrain_epochs: 30
+  batch_size: 64
+  lr: 0.001
+  weight_decay: 0.0001
+  seed: 42
+  device: auto
