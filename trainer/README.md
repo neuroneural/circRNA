@@ -7,6 +7,9 @@ Catalyst runner, Hydra config, single- or multi-GPU on SLURM.
 
 ```bash
 pip install -r requirements.txt
+# pip keeps an installed catalyst when only the pinned commit changes (same version), so force it
+pip install --force-reinstall --no-deps "$(grep '^catalyst' requirements.txt)"
+
 python train.py                                        # random dummy data, no setup
 python train.py --config-name=mdd_direct experiment.name=my_run   # a real dataset
 python train.py experiment.name=my_run experiment.resume=true   # continue where it stopped
@@ -59,7 +62,7 @@ Everything lands under `logs/<experiment.name>/`.
 | `summary.json` | mean, std, median and a 95% t interval across folds |
 | `config.yaml` | the resolved config that actually ran |
 | `run.log` | everything printed, including from spawned DDP ranks |
-| `curves.png` | every fold's curves in one figure, one line per fold |
+| `curves.png` | every fold's training curves in one figure, one line per fold |
 
 And per fold, in `fold_<i>/`:
 

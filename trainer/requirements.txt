@@ -13,7 +13,7 @@ matplotlib>=3.8          # curves.png per fold
 
 # in-house fork with PR #2: DDP-averaged loader metrics, any loader key, true best checkpoint
 catalyst @ git+https://github.com/neuroneural/catalyst.git@7fdc25ca8769619f7c2dc0ad2f68c42408c3bf77
-accelerate>=0.20       # catalyst shards the DataLoaders through it; catalyst
+accelerate>=0.20,<1.0       # catalyst shards the DataLoaders through it; catalyst
                             # still reads DistributedType.TPU, which 1.0 removed
 tensorboardX>=2.6           # imported by catalyst.loggers regardless of use
 
