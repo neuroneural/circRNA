@@ -9,7 +9,7 @@
 #SBATCH --gres=gpu:A100:1
 #SBATCH -J resnet3d
 #SBATCH -D /data/users2/ppopov1/circRNA/trainer   # submit from anywhere
-#SBATCH --output=/data/users2/ppopov1/_out/%x_%j.out
+#SBATCH --output=slurm/logs/%x_%j.out
 #SBATCH -A psy53c17
 
 set -e

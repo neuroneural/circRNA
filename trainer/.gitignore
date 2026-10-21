@@ -4,7 +4,7 @@ groupedData/
 wandb/
 REST_V1.8_130615/
 FBIRN_PANSS_Details.xlsx*
-logs/
+/logs/
 __pycache__
 outputs/
 outputs.bak/
@@ -166,6 +166,9 @@ _out
 
 _error
 _out
+# sbatch output; .gitkeep keeps the folder, which sbatch won't create
+slurm/logs/*
+!slurm/logs/.gitkeep
 jupyter_node*
 jnode-*
 env.yml

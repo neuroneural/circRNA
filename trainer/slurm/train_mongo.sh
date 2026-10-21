@@ -14,7 +14,7 @@
 #SBATCH --gres=gpu:A100:2
 #SBATCH -J mongo_fbirn
 #SBATCH -D /data/users2/ppopov1/circRNA/trainer   # submit from anywhere
-#SBATCH --output=/data/users2/ppopov1/_out/%x_%A_%a.out
+#SBATCH --output=slurm/logs/%x_%A_%a.out
 #SBATCH -A psy53c17
 #SBATCH --array=0-9%4
 
