@@ -14,7 +14,7 @@ import hydra
 import numpy as np
 import torch
 import yaml
-from catalyst import dl, metrics, utils
+from catalyst import dl, metrics
 from catalyst.data import BatchPrefetchLoaderWrapper
 from catalyst.utils import get_optimizer_momentum, load_checkpoint
 from omegaconf import DictConfig, OmegaConf
@@ -27,6 +27,7 @@ from src.datasets.base import SeededBatchSampler, collate_volumes
 from src.registry import build_dataset, build_model, resolve_params
 from src.utils import (
     clear_rundir,
+    plot_curves,
     setup_distributed_port,
     tee_stdout,
     world_size_from_env,
@@ -283,19 +284,13 @@ class CustomRunner(dl.Runner):
         return callbacks
 
     def on_loader_start(self, runner):
-        # key juggling: catalyst asserts the key starts with train/valid/infer
-        loader_key_buffer = self.loader_key
-        self.loader_key = (
-            loader_key_buffer if loader_key_buffer.startswith(("train", "valid")) else "infer"
-        )
         super().on_loader_start(runner)
-        self.loader_key = loader_key_buffer
 
         # initialize metrics
         self.meters = {
-            "loss": metrics.AdditiveValueMetric(compute_on_call=False),
-            "accuracy": metrics.AdditiveValueMetric(compute_on_call=False),
-            "auc": metrics.AUCMetric(compute_on_call=False),
+            "loss": metrics.AdditiveMetric(),
+            "accuracy": metrics.AdditiveMetric(),
+            "auc": metrics.AUCMetric(),
         }
 
         # per-sample predictions logs: rawest logs possible, useful for recovering arbitrary metrics
@@ -309,21 +304,12 @@ class CustomRunner(dl.Runner):
             self.raw_preds_writer.writerow(self._pred_columns)
 
     def on_loader_end(self, runner):
+        # compute the loader's metrics
         self.loader_metrics["loss"] = self.meters["loss"].compute()[0]
         self.loader_metrics["accuracy"] = self.meters["accuracy"].compute()[0]
         # compute() gives per_class, micro, macro, weighted
         _, _, macro, weighted = self.meters["auc"].compute()
         self.loader_metrics["auc"], self.loader_metrics["auc_weighted"] = macro, weighted
-
-        if self.engine.is_ddp:
-            # Catalyst's own on_loader_end reduces nothing, so the additive meters are
-            # still per-rank here and need reduction.
-            # AUC all-gathers; sorted: same order per rank
-            for key in sorted(self.loader_metrics.keys() - {"auc", "auc_weighted"}):
-                value = torch.tensor([self.loader_metrics[key]], device=self.engine.device)
-                self.loader_metrics[key] = utils.distributed.mean_reduce(
-                    value, self.engine.num_processes
-                ).item()
 
         self.raw_preds_file.close()
         super().on_loader_end(runner)
@@ -377,8 +363,8 @@ class CustomRunner(dl.Runner):
 
         # final logging and cleanup
         if self.engine.is_main_process:
-            # overwrite model.best.pth with the best epoch's weights,
-            # vanilla Catalyst gets this wrong
+            # publish the best epoch as model.best.pth; catalyst's own
+            # ranking restarts on resume, so the true best is tracked here
             src = os.path.join(self._logdir, best_ckpt)
             dst = os.path.join(self._logdir, "model.best.pth")
             shutil.copyfile(src, dst + ".tmp")
@@ -396,31 +382,31 @@ class CustomRunner(dl.Runner):
 
             # save fold summary
             selection = self.cfg.experiment.selection
+            summary = {
+                "fold_idx": self.cfg.runtime.fold_idx,
+                "selected_on": f"{'min' if selection.minimize else 'max'} "
+                               f"valid/{selection.metric}",
+                "best_epoch": self._best["epoch"],
+                "best_checkpoint": best_ckpt,
+                "epochs_run": int(self.epoch_step),
+                "split_sizes": self._split_sizes,
+                "metrics": self._best["metrics"],
+                "seeds": {
+                    "cv_seed": self.cfg.experiment.cv_seed,
+                    "train_val_seed": self.cfg.experiment.train_val_seed,
+                    "sampler_seed": self.cfg.experiment.sampler_seed,
+                    "model_init_seed": self.cfg.model.init_seed,
+                },
+                "world_size": self.engine.num_processes,
+                "batch_size_per_rank": self.cfg.experiment.batch_size,
+                "max_lr": self.cfg.runtime.max_lr,
+                "minutes": round((time.time() - self._started) / 60, 2),
+            }
             with open(os.path.join(self._logdir, "fold_summary.json"), "w") as handle:
-                json.dump(
-                    {
-                        "fold_idx": self.cfg.runtime.fold_idx,
-                        "selected_on": f"{'min' if selection.minimize else 'max'} "
-                                       f"valid/{selection.metric}",
-                        "best_epoch": self._best["epoch"],
-                        "best_checkpoint": best_ckpt,
-                        "epochs_run": int(self.epoch_step),
-                        "split_sizes": self._split_sizes,
-                        "metrics": self._best["metrics"],
-                        "seeds": {
-                            "cv_seed": self.cfg.experiment.cv_seed,
-                            "train_val_seed": self.cfg.experiment.train_val_seed,
-                            "sampler_seed": self.cfg.experiment.sampler_seed,
-                            "model_init_seed": self.cfg.model.init_seed,
-                        },
-                        "world_size": self.engine.num_processes,
-                        "batch_size_per_rank": self.cfg.experiment.batch_size,
-                        "max_lr": self.cfg.runtime.max_lr,
-                        "minutes": round((time.time() - self._started) / 60, 2),
-                    },
-                    handle,
-                    indent=4,
-                )
+                json.dump(summary, handle, indent=4)
+
+            # training curves and run info
+            plot_curves([self._logdir], self._hparams, os.path.join(self._logdir, "curves.png"))
             print(
                 f"[Fold {self.cfg.runtime.fold_idx}] best epoch {self._best['epoch']} "
                 f"(valid/{selection.metric}={self._best['score']:.4f})"
@@ -652,6 +638,11 @@ def main(cfg: DictConfig):
                 print(f"[CV] {key}: {summary[key]['mean']:.4f} +/- {summary[key]['std']:.4f}")
         with open(os.path.join(logdir, "summary.json"), "w") as handle:
             json.dump(summary, handle, indent=4)
+
+        # every fold's curves in one figure
+        rundirs = [os.path.join(logdir, f"fold_{row['fold']}") for row in rows]
+        plot_curves(rundirs, OmegaConf.to_container(cfg, resolve=True),
+                    os.path.join(logdir, "curves.png"))
 
 
 if __name__ == "__main__":

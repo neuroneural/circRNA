@@ -34,11 +34,14 @@ echo "Using python from: $(which python)"
 
 # 2 ranks, each with a train and a valid worker pool: 2*(1+10+10) = 42 of 48.
 # stream_log=False: parallel tasks would interleave run.log
+# the lr in the name gives each run its own folder; 8e-4 is 10x below the 0.008 default
+LR=8e-4
 python train.py --config-name=mdd_direct \
-    experiment.name=mdd_gm_wm_csf_falff \
+    experiment.name=mdd_gm_wm_csf_falff_lr$LR \
     "experiment.target_folds=[$SLURM_ARRAY_TASK_ID]" \
     experiment.epochs=60 \
     experiment.batch_size=8 \
+    optimizer.base_lr=$LR \
     loader.train.num_workers=10 \
     loader.eval.num_workers=10 \
     stream_log=False

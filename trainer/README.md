@@ -59,6 +59,7 @@ Everything lands under `logs/<experiment.name>/`.
 | `summary.json` | mean, std, median and a 95% t interval across folds |
 | `config.yaml` | the resolved config that actually ran |
 | `run.log` | everything printed, including from spawned DDP ranks |
+| `curves.png` | every fold's curves in one figure, one line per fold |
 
 And per fold, in `fold_<i>/`:
 
@@ -69,6 +70,7 @@ And per fold, in `fold_<i>/`:
 | `fold_summary.json` | best epoch, best metrics, seeds, wall time |
 | `test_predictions.csv` | every test sample's `logit_k, prob_k, target`, merged across ranks |
 | `split_indices.json` | the train/valid/test split as dataset indices |
+| `curves.png` | per-epoch LR, loss, AUC and accuracy, with the run's info |
 | `model.best.pth` | weights from the best epoch |
 
 and the detail, in `fold_<i>/more/`:

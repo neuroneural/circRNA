@@ -35,11 +35,14 @@ echo "Using python from: $(which python)"
 # host_slurm in the config points at the mongod reachable from compute nodes.
 # Each worker opens its own connection, so keep the pools modest.
 # stream_log=False: parallel tasks would interleave run.log
+# the lr in the name gives each run its own folder; 8e-4 is 10x below the 0.008 default
+LR=8e-4
 python train.py --config-name=mongo_fbirn \
-    experiment.name=fbirn_smri_dwi_falff_gender \
+    experiment.name=fbirn_smri_dwi_falff_gender_lr$LR \
     "experiment.target_folds=[$SLURM_ARRAY_TASK_ID]" \
     experiment.epochs=60 \
     experiment.batch_size=8 \
+    optimizer.base_lr=$LR \
     loader.train.num_workers=8 \
     loader.eval.num_workers=8 \
     loader.train.prefetch_factor=2 \
