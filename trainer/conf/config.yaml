@@ -1,5 +1,12 @@
 # Every key here is read by train.py. If you add one, wire it up or drop it.
 
+defaults:
+  - override hydra/job_logging: stdout  # no train.log; python logging goes to stdout
+
+hydra:
+  output_subdir: null    # no .hydra/ logs
+  run: {dir: .}          # no outputs/<date>/<time>/
+
 data:
   name: dummy            # a module in src/datasets/; its default_HPs() holds the default params
   params: {}             # override any default_HPs() key, e.g. +data.params.n_samples=500
