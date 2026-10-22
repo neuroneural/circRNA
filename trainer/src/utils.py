@@ -11,6 +11,7 @@ import time
 
 import numpy as np
 import torch
+from catalyst import dl
 
 _TEE_PROCESS = None  # kept alive for the life of the run
 
@@ -62,8 +63,7 @@ def clear_rundir(rundir):
     """Move an earlier run's artefacts into ``backup_<timestamp>/``.
 
     Catalyst's CSVLogger opens its files "a+", so a rerun of the same experiment name
-    would otherwise interleave two runs in one csv, and a stale model.<epoch>.pth from
-    a longer previous run would survive the topk pruning and look like one of ours.
+    would otherwise interleave two runs in one csv.
     """
     if not os.path.isdir(rundir):
         return
@@ -81,6 +81,62 @@ def clear_rundir(rundir):
             moved += 1
     if moved:
         print(f"[Log] moved {moved} file(s) from an earlier run into {backup}")
+
+
+class ModelCheckpoint(dl.ICheckpointCallback):
+    """Best weights per selection metric, plus the full training state for resuming.
+
+    ``model.best.pth`` holds the first metric's best epoch, ``model.best_<metric>.pth``
+    the others'; ``state.last.pth`` (with ``save_state``) the weights, optimizer, scheduler,
+    epoch and best epochs after the latest epoch. The main process replaces each file
+    atomically, so an interruption at any point leaves the previous complete set.
+    """
+
+    def __init__(self, logdir, selection, save_state=True, resume_from=None):
+        super().__init__()
+        self.logdir, self.selection = logdir, list(selection)
+        self.save_state, self.resume_from = save_state, resume_from
+        self.best = {}  # metric -> {"epoch", "score", "metrics"} of its best epoch so far
+
+    def path(self, metric):
+        name = "model.best" if metric == self.selection[0] else f"model.best_{metric}"
+        return os.path.join(self.logdir, f"{name}.pth")
+
+    def _save(self, runner, obj, path):
+        if runner.engine.is_main_process:  # every rank holds the same weights
+            torch.save(obj, path + ".tmp")
+            os.replace(path + ".tmp", path)
+
+    def on_experiment_start(self, runner):
+        if self.resume_from:
+            state = torch.load(self.resume_from, map_location="cpu")
+            runner.engine.unwrap_model(runner.model).load_state_dict(state["model"])  # DDP-safe
+            runner.optimizer.load_state_dict(state["optimizer"])
+            runner.scheduler.load_state_dict(state["scheduler"])
+            runner.epoch_step, self.best = state["epoch"], state["best"]
+            runner.loaders["train"].set_epoch(runner.epoch_step)  # data order as if never stopped
+            print(f"[Resume] from epoch {runner.epoch_step}, best epochs",
+                  {k: v["epoch"] for k, v in self.best.items()})
+
+    def on_epoch_end(self, runner):
+        model = runner.engine.unwrap_model(runner.model)
+        metrics = {k: dict(v) for k, v in runner.epoch_metrics.items() if k != "_epoch_"}
+        for metric in self.selection:
+            score, best = metrics["valid"][metric], self.best.get(metric, {}).get("score")
+            if best is None or (score < best if metric == "loss" else score > best):
+                self.best[metric] = {
+                    "epoch": runner.epoch_step, "score": score, "metrics": metrics
+                }
+                self._save(runner, model.state_dict(), self.path(metric))
+        if self.save_state:
+            state = {
+                "model": model.state_dict(),
+                "optimizer": runner.optimizer.state_dict(),
+                "scheduler": runner.scheduler.state_dict(),
+                "epoch": runner.epoch_step,
+                "best": self.best,
+            }
+            self._save(runner, state, os.path.join(self.logdir, "state.last.pth"))
 
 
 def run_info(summaries, cfg):

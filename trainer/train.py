@@ -7,7 +7,6 @@ import gc
 import glob
 import json
 import os
-import shutil
 import time
 
 import hydra
@@ -26,6 +25,7 @@ from torch.utils.data import DataLoader
 from src.datasets.base import SeededBatchSampler, collate_volumes
 from src.registry import build_dataset, build_model, resolve_params
 from src.utils import (
+    ModelCheckpoint,
     clear_rundir,
     plot_curves,
     setup_distributed_port,
@@ -64,7 +64,6 @@ class CustomRunner(dl.Runner):
 
         self._started = time.time()
         self._split_sizes = {}
-        self._best = {}  # selection metric -> its best epoch
 
     def get_engine(self):
         # Pin the spawn/world size: Catalyst otherwise spawns one process per *physical*
@@ -124,13 +123,6 @@ class CustomRunner(dl.Runner):
                 path = os.path.join(self._logdir, f"{key}.csv")
                 if os.path.isfile(path):
                     self.loggers["csv"].loggers[key] = open(path, "a")
-
-        # recover the best epochs; last line per selection wins
-        path = os.path.join(self._moredir, "best_so_far.jsonl")
-        for line in open(path).read().splitlines() if os.path.isfile(path) else []:
-            best = json.loads(line)
-            self._best[best["selection"]] = best
-        print("[Resume] best epochs so far:", {k: v["epoch"] for k, v in self._best.items()})
 
     def get_loaders(self):
         experiment, runtime = self.cfg.experiment, self.cfg.runtime
@@ -227,6 +219,8 @@ class CustomRunner(dl.Runner):
             torch.manual_seed(self.cfg.model.init_seed)
 
         model = build_model(self.cfg)
+        if self.cfg.experiment.paths.init_weights:  # start from saved weights (not a resume)
+            model.load_state_dict(load_checkpoint(self.cfg.experiment.paths.init_weights))
         if self.cfg.experiment.channels_last:  # before DDP wraps it
             model = model.to(memory_format=torch.channels_last_3d)
         if self.cfg.experiment.compile:  # in place, keeps state_dict keys
@@ -255,34 +249,16 @@ class CustomRunner(dl.Runner):
         )
 
     def get_callbacks(self):
-        main = self.cfg.experiment.selection[0]
-        callbacks = {
-            # checkpoint of the main selection's best epoch
-            "checkpoint": dl.CheckpointCallback(
+        return {
+            # best weights per selection metric, and the state for a mid-fold resume
+            "checkpoint": ModelCheckpoint(
                 self._logdir,
-                save_best=False,  # train.py writes the true best
-                save_last=False,  # nothing reads model.last.pth
-                metric_key=main,
-                loader_key="valid",
-                minimize=main == "loss",
-                load_best_on_end=False,  # on_experiment_end loads the best epoch itself
-                resume_model=self.cfg.experiment.paths.init_weights or None,
+                self.cfg.experiment.selection,
+                save_state=self.cfg.experiment.save_state,
+                resume_from=self.cfg.runtime.resume_runner or None,
             ),
             "tqdm": dl.TqdmCallback(),
         }
-
-        if self.cfg.experiment.save_state:
-            # rolling full-state checkpoint for mid-fold resume
-            callbacks["state"] = dl.CheckpointCallback(
-                self._logdir,
-                topk=1,
-                mode="runner",
-                save_best=False,
-                save_last=False,
-                resume_runner=self.cfg.runtime.resume_runner or None,
-            )
-
-        return callbacks
 
     def on_loader_start(self, runner):
         super().on_loader_start(runner)
@@ -318,36 +294,14 @@ class CustomRunner(dl.Runner):
     def on_epoch_end(self, runner):
         self.epoch_metrics["_epoch_"]["lr"] = self.optimizer.param_groups[0]["lr"]
         self.epoch_metrics["_epoch_"]["momentum"] = get_optimizer_momentum(self.optimizer)
-
-        # track each selection's best epoch; Catalyst's CheckpointCallback breaks on interruptions
-        for i, metric in enumerate(self.cfg.experiment.selection):
-            score, best = self.epoch_metrics["valid"][metric], self._best.get(metric)
-            if best is None or (score < best["score"] if metric == "loss" else score > best["score"]):
-                self._best[metric] = best = {
-                    "selection": metric,
-                    "epoch": int(self.epoch_step),
-                    "score": float(score),
-                    "metrics": {k: dict(v) for k, v in self.epoch_metrics.items() if k != "_epoch_"},
-                }
-                if self.engine.is_main_process:
-                    # append-only, so whatever kills the run can damage at most the last line
-                    with open(os.path.join(self._moredir, "best_so_far.jsonl"), "a") as handle:
-                        handle.write(json.dumps(best) + "\n")
-                    if i > 0:  # the main selection's weights come from CheckpointCallback
-                        path = os.path.join(self._logdir, f"model.best_{metric}.pth")
-                        torch.save(self.engine.unwrap_model(self.model).state_dict(), path + ".tmp")
-                        os.replace(path + ".tmp", path)
         super().on_epoch_end(runner)
 
     def on_experiment_end(self, runner):
-        # load the main selection's best checkpoint and run it on test
-        main = self.cfg.experiment.selection[0]
-        best = self._best[main]
-        best_ckpt = f"model.{best['epoch']:04d}.pth"
-        self.engine.wait_for_everyone()
-        self.engine.unwrap_model(self.model).load_state_dict(
-            load_checkpoint(os.path.join(self._logdir, best_ckpt))
-        )
+        # load the main selection's best weights and run them on test
+        checkpoint, main = self.callbacks["checkpoint"], self.cfg.experiment.selection[0]
+        best = checkpoint.best[main]
+        self.engine.wait_for_everyone()  # the main process has finished writing them
+        self.engine.unwrap_model(self.model).load_state_dict(load_checkpoint(checkpoint.path(main)))
 
         # prepare for test
         # epoch_step stamps the raw_preds rows, so point it at the epoch these
@@ -369,13 +323,6 @@ class CustomRunner(dl.Runner):
 
         # final logging and cleanup
         if self.engine.is_main_process:
-            # publish the best epoch as model.best.pth; catalyst's own
-            # ranking restarts on resume, so the true best is tracked here
-            src = os.path.join(self._logdir, best_ckpt)
-            dst = os.path.join(self._logdir, "model.best.pth")
-            shutil.copyfile(src, dst + ".tmp")
-            os.replace(dst + ".tmp", dst)
-
             # combine raw test predictions into a clear file.
             preds = {}
             for path in sorted(glob.glob(os.path.join(self._moredir, "raw_preds_test_rank*.csv"))):
@@ -391,11 +338,10 @@ class CustomRunner(dl.Runner):
                 "fold_idx": self.cfg.runtime.fold_idx,
                 "selected_on": f"{'min' if main == 'loss' else 'max'} valid/{main}",
                 "best_epoch": best["epoch"],
-                "best_checkpoint": best_ckpt,
                 "epochs_run": int(self.epoch_step),
                 "split_sizes": self._split_sizes,
                 "metrics": best["metrics"],
-                "bests": self._best,  # every selection; test scores only with test_every_epoch
+                "bests": checkpoint.best,  # every selection; test scores only with test_every_epoch
                 "seeds": {
                     "cv_seed": self.cfg.experiment.cv_seed,
                     "train_val_seed": self.cfg.experiment.train_val_seed,
@@ -562,14 +508,12 @@ def main(cfg: DictConfig):
             print(f"Starting fold {fold_idx} ({position}/{len(target_folds)})")
             os.makedirs(rundir, exist_ok=True)
 
-            # decide if (and how to) resume
-            runner_checkpoints = sorted(glob.glob(os.path.join(rundir, "runner.*.pth")))
-            if not cfg.experiment.save_state:  # no state callback to load them
-                runner_checkpoints = []
-            resume_runner = runner_checkpoints[-1] if (resume and runner_checkpoints) else ""
-            if resume_runner:  # pick an interrupted fold up where it stopped
-                print(f"[Resume] continuing fold {fold_idx} from {os.path.basename(resume_runner)}")
-            else:  # fresh fold: drop what an earlier run left here
+            # pick an interrupted fold up where it stopped, or start it fresh
+            state = os.path.join(rundir, "state.last.pth")
+            resume_runner = state if resume and os.path.isfile(state) else ""
+            if resume_runner:
+                print(f"[Resume] continuing fold {fold_idx} from state.last.pth")
+            else:  # drop what an earlier run left here
                 clear_rundir(rundir)
 
             # RUN THE FOLD
@@ -578,15 +522,12 @@ def main(cfg: DictConfig):
             runner = CustomRunner(logdir=rundir, dataset=dataset, cfg=cfg)
             runner.run()
 
-            # GC step
+            # GC step; the fold is done, so its resume state can go
             del runner
             torch.cuda.empty_cache()
             gc.collect()
-            for stale in glob.glob(os.path.join(rundir, "runner.*")) + [
-                os.path.join(rundir, "more", "best_so_far.jsonl")
-            ]:
-                if os.path.isfile(stale):
-                    os.remove(stale)
+            if os.path.isfile(state):
+                os.remove(state)
             if not os.path.isfile(os.path.join(rundir, "fold_summary.json")):
                 print(f"[Warn] fold {fold_idx} produced no fold_summary.json")
 
@@ -613,7 +554,6 @@ def main(cfg: DictConfig):
                     "batch_size_per_rank": best["batch_size_per_rank"],
                     "max_lr": best["max_lr"],
                     "minutes": best["minutes"],
-                    "best_checkpoint": best["best_checkpoint"],
                 }
             )
         rows.sort(key=lambda row: row["fold"])

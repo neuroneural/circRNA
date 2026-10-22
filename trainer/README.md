@@ -79,6 +79,7 @@ And per fold, in `fold_<i>/`:
 | `curves.png` | per-epoch LR, loss, AUC and accuracy, with the run's info |
 | `model.best.pth` | weights from the best epoch |
 | `model.best_<metric>.pth` | weights from the best epoch of each extra selection |
+| `state.last.pth` | weights, optimizer, scheduler and best epochs after the latest epoch, for resuming; deleted once the fold finishes |
 
 and the detail, in `fold_<i>/more/`:
 
@@ -87,7 +88,6 @@ and the detail, in `fold_<i>/more/`:
 | `fold_config.yaml` | the config plus every seed, enough to reproduce this fold |
 | `*_ids.txt` | the same split as readable sample ids |
 | `raw_preds_<loader>_rank<r>.csv` | every sample's `logit_k, prob_k, target` per epoch, per rank |
-| `best_so_far.jsonl` | best epoch log |
 
 Rerunning an experiment name clears the fold directory first — nothing is deleted, the
 old artefacts move to `backup_<timestamp>/`. With `experiment.resume=true` it instead continues from an interrupted fold, or restarts it if `experiment.save_state=false`.
