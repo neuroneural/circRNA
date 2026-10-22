@@ -51,3 +51,4 @@ venv/
 ENV/
 
 sync_docs_data.sh
+Claude outputs/
