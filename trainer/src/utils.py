@@ -113,7 +113,7 @@ def run_info(summaries, cfg):
                 f"{k} {np.mean(v):.3f}" + (f"±{np.std(v):.3f}" if len(v) > 1 else "")
                 for k, v in values.items()
             ))
-    lines.append("curves      train blue, valid orange; one line per fold")
+    lines.append("curves      train blue, valid orange, test green if logged; one line per fold")
     return "\n".join(textwrap.fill(line, 74, subsequent_indent=" " * 12) for line in lines)
 
 
@@ -135,8 +135,11 @@ def plot_curves(rundirs, cfg, path):
         for i, rundir in enumerate(rundirs):
             # per-epoch logs as {column: array}, and the fold's summary
             logs = {}
-            for name in ("train", "valid", "_epoch_"):
-                with open(os.path.join(rundir, f"{name}.csv")) as handle:
+            for name in ("train", "valid", "test", "_epoch_"):
+                log_path = os.path.join(rundir, f"{name}.csv")
+                if not os.path.isfile(log_path):  # test.csv exists only with test_every_epoch
+                    continue
+                with open(log_path) as handle:
                     rows = list(csv.DictReader(handle))
                 logs[name] = {key: np.array([float(row[key]) for row in rows]) for key in rows[0]}
             with open(os.path.join(rundir, "fold_summary.json")) as handle:
@@ -146,7 +149,9 @@ def plot_curves(rundirs, cfg, path):
 
             # lr; train vs valid: loss, auc (solid), accuracy (dashed)
             lr_ax.plot(logs["_epoch_"]["step"], logs["_epoch_"]["lr"], color="k", alpha=alpha)
-            for name, color in (("train", "C0"), ("valid", "C1")):
+            for name, color in (("train", "C0"), ("valid", "C1"), ("test", "C2")):
+                if name not in logs:
+                    continue
                 log = logs[name]
                 loss_ax.plot(log["step"], log["loss"], color=color, alpha=alpha, label=hide + name)
                 metric_ax.plot(log["step"], log["auc"], color=color, alpha=alpha,

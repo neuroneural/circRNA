@@ -64,7 +64,7 @@ class CustomRunner(dl.Runner):
 
         self._started = time.time()
         self._split_sizes = {}
-        self._best = None
+        self._best = {}  # selection metric -> its best epoch
 
     def get_engine(self):
         # Pin the spawn/world size: Catalyst otherwise spawns one process per *physical*
@@ -111,8 +111,9 @@ class CustomRunner(dl.Runner):
     def on_experiment_start(self, runner):
         torch.backends.cudnn.benchmark = self.cfg.experiment.cudnn_benchmark
         super().on_experiment_start(runner)
-        # engine.prepare has sharded it; pull it out of the epoch loop for a single pass
-        self.test_loader = self.loaders.pop("test")
+        # engine.prepare has sharded it; test runs once at the end, or also every epoch
+        every_epoch = self.cfg.experiment.test_every_epoch
+        self.test_loader = self.loaders["test"] if every_epoch else self.loaders.pop("test")
         if not self.cfg.runtime.resume_runner:
             return
 
@@ -124,12 +125,12 @@ class CustomRunner(dl.Runner):
                 if os.path.isfile(path):
                     self.loggers["csv"].loggers[key] = open(path, "a")
 
-        # recover the best epoch; last line wins
+        # recover the best epochs; last line per selection wins
         path = os.path.join(self._moredir, "best_so_far.jsonl")
-        lines = open(path).read().splitlines() if os.path.isfile(path) else []
-        if lines:
-            self._best = json.loads(lines[-1])
-            print(f"[Resume] best epoch so far: {self._best['epoch']} ({self._best['score']:.4f})")
+        for line in open(path).read().splitlines() if os.path.isfile(path) else []:
+            best = json.loads(line)
+            self._best[best["selection"]] = best
+        print("[Resume] best epochs so far:", {k: v["epoch"] for k, v in self._best.items()})
 
     def get_loaders(self):
         experiment, runtime = self.cfg.experiment, self.cfg.runtime
@@ -254,16 +255,16 @@ class CustomRunner(dl.Runner):
         )
 
     def get_callbacks(self):
-        selection = self.cfg.experiment.selection
+        main = self.cfg.experiment.selection[0]
         callbacks = {
-            # model checkpoint configured according to config
+            # checkpoint of the main selection's best epoch
             "checkpoint": dl.CheckpointCallback(
                 self._logdir,
                 save_best=False,  # train.py writes the true best
                 save_last=False,  # nothing reads model.last.pth
-                metric_key=selection.metric,
+                metric_key=main,
                 loader_key="valid",
-                minimize=selection.minimize,
+                minimize=main == "loss",
                 load_best_on_end=False,  # on_experiment_end loads the best epoch itself
                 resume_model=self.cfg.experiment.paths.init_weights or None,
             ),
@@ -318,26 +319,31 @@ class CustomRunner(dl.Runner):
         self.epoch_metrics["_epoch_"]["lr"] = self.optimizer.param_groups[0]["lr"]
         self.epoch_metrics["_epoch_"]["momentum"] = get_optimizer_momentum(self.optimizer)
 
-        # track the best epoch for logs; Catalyst's CheckpointCallback breaks on interruptions
-        selection = self.cfg.experiment.selection
-        score = self.epoch_metrics["valid"][selection.metric]
-        if self._best is None or (
-            score < self._best["score"] if selection.minimize else score > self._best["score"]
-        ):
-            self._best = {
-                "epoch": int(self.epoch_step),
-                "score": float(score),
-                "metrics": {k: dict(v) for k, v in self.epoch_metrics.items() if k != "_epoch_"},
-            }
-            if self.engine.is_main_process:
-                # append-only, so whatever kills the run can damage at most the last line
-                with open(os.path.join(self._moredir, "best_so_far.jsonl"), "a") as handle:
-                    handle.write(json.dumps(self._best) + "\n")
+        # track each selection's best epoch; Catalyst's CheckpointCallback breaks on interruptions
+        for i, metric in enumerate(self.cfg.experiment.selection):
+            score, best = self.epoch_metrics["valid"][metric], self._best.get(metric)
+            if best is None or (score < best["score"] if metric == "loss" else score > best["score"]):
+                self._best[metric] = best = {
+                    "selection": metric,
+                    "epoch": int(self.epoch_step),
+                    "score": float(score),
+                    "metrics": {k: dict(v) for k, v in self.epoch_metrics.items() if k != "_epoch_"},
+                }
+                if self.engine.is_main_process:
+                    # append-only, so whatever kills the run can damage at most the last line
+                    with open(os.path.join(self._moredir, "best_so_far.jsonl"), "a") as handle:
+                        handle.write(json.dumps(best) + "\n")
+                    if i > 0:  # the main selection's weights come from CheckpointCallback
+                        path = os.path.join(self._logdir, f"model.best_{metric}.pth")
+                        torch.save(self.engine.unwrap_model(self.model).state_dict(), path + ".tmp")
+                        os.replace(path + ".tmp", path)
         super().on_epoch_end(runner)
 
     def on_experiment_end(self, runner):
-        # load best checkpoint and run it on test
-        best_ckpt = f"model.{self._best['epoch']:04d}.pth"
+        # load the main selection's best checkpoint and run it on test
+        main = self.cfg.experiment.selection[0]
+        best = self._best[main]
+        best_ckpt = f"model.{best['epoch']:04d}.pth"
         self.engine.wait_for_everyone()
         self.engine.unwrap_model(self.model).load_state_dict(
             load_checkpoint(os.path.join(self._logdir, best_ckpt))
@@ -346,7 +352,7 @@ class CustomRunner(dl.Runner):
         # prepare for test
         # epoch_step stamps the raw_preds rows, so point it at the epoch these
         # weights come from, then put the true epoch count back for epochs_run
-        epoch_buffer, self.epoch_step = self.epoch_step, self._best["epoch"]
+        epoch_buffer, self.epoch_step = self.epoch_step, best["epoch"]
         self.loader_key, self.loader = "test", self.test_loader
 
         # run test
@@ -357,7 +363,7 @@ class CustomRunner(dl.Runner):
         # save logs and restore things
         self.engine.wait_for_everyone()  # every rank has closed its raw_preds file
         self.epoch_step = epoch_buffer
-        self._best["metrics"]["test"] = {
+        best["metrics"]["test"] = {
             k: float(v) for k, v in sorted(self.loader_metrics.items())
         }
 
@@ -381,16 +387,15 @@ class CustomRunner(dl.Runner):
                 writer.writerows(preds[i] for i in sorted(preds))
 
             # save fold summary
-            selection = self.cfg.experiment.selection
             summary = {
                 "fold_idx": self.cfg.runtime.fold_idx,
-                "selected_on": f"{'min' if selection.minimize else 'max'} "
-                               f"valid/{selection.metric}",
-                "best_epoch": self._best["epoch"],
+                "selected_on": f"{'min' if main == 'loss' else 'max'} valid/{main}",
+                "best_epoch": best["epoch"],
                 "best_checkpoint": best_ckpt,
                 "epochs_run": int(self.epoch_step),
                 "split_sizes": self._split_sizes,
-                "metrics": self._best["metrics"],
+                "metrics": best["metrics"],
+                "bests": self._best,  # every selection; test scores only with test_every_epoch
                 "seeds": {
                     "cv_seed": self.cfg.experiment.cv_seed,
                     "train_val_seed": self.cfg.experiment.train_val_seed,
@@ -408,8 +413,8 @@ class CustomRunner(dl.Runner):
             # training curves and run info
             plot_curves([self._logdir], self._hparams, os.path.join(self._logdir, "curves.png"))
             print(
-                f"[Fold {self.cfg.runtime.fold_idx}] best epoch {self._best['epoch']} "
-                f"(valid/{selection.metric}={self._best['score']:.4f})"
+                f"[Fold {self.cfg.runtime.fold_idx}] best epoch {best['epoch']} "
+                f"(valid/{main}={best['score']:.4f})"
             )
         super().on_experiment_end(runner)
 
@@ -465,8 +470,9 @@ def main(cfg: DictConfig):
     # ===== Initial setup =====
     logdir = os.path.join(cfg.experiment.paths.logdir, cfg.experiment.name)
     os.makedirs(logdir, exist_ok=True)
-    if cfg.stream_log:
-        tee_stdout(os.path.join(logdir, "run.log"))
+    if cfg.stream_log:  # one log per job, so parallel fold jobs don't interleave
+        folds = cfg.experiment.target_folds or []
+        tee_stdout(os.path.join(logdir, "run" + "".join(f"_fold{i}" for i in folds) + ".log"))
 
     # validate config
     experiment = cfg.experiment
@@ -477,8 +483,9 @@ def main(cfg: DictConfig):
         (experiment.epochs >= 1, "epochs must be at least 1"),
         (experiment.cv_folds >= 2, "cv_folds must be at least 2"),
         (0 < experiment.valid_ratio < 1, "valid_ratio must be between 0 and 1"),
-        (experiment.selection.metric in ("loss", "accuracy", "auc", "auc_weighted"),
-         "selection.metric: loss, accuracy, auc or auc_weighted"),
+        (len(experiment.selection) > 0
+         and set(experiment.selection) <= {"loss", "accuracy", "auc", "auc_weighted"},
+         "selection: a list of loss, accuracy, auc, auc_weighted"),
         (target_folds and all(0 <= i < experiment.cv_folds for i in target_folds),
          f"target_folds must be a non-empty subset of 0..{experiment.cv_folds - 1}"),
     ):
@@ -596,8 +603,11 @@ def main(cfg: DictConfig):
                     **{f"n_{name}": size for name, size in best["split_sizes"].items()},
                     "epochs_run": best["epochs_run"],
                     "best_epoch": best["best_epoch"],
+                    **{f"best_epoch@{m}": b["epoch"] for m, b in best.get("bests", {}).items()},
                     **{f"valid_{key}": value for key, value in valid.items()},
                     **{f"test_{key}": value for key, value in test.items()},
+                    **{f"test_{k}@{m}": v for m, b in best.get("bests", {}).items()
+                       for k, v in b["metrics"].get("test", {}).items()},
                     **best["seeds"],
                     "world_size": best["world_size"],
                     "batch_size_per_rank": best["batch_size_per_rank"],
@@ -608,7 +618,7 @@ def main(cfg: DictConfig):
             )
         rows.sort(key=lambda row: row["fold"])
         with open(os.path.join(logdir, "CV_records.csv"), "w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+            writer = csv.DictWriter(handle, fieldnames=list({k: 0 for row in rows for k in row}))
             writer.writeheader()
             writer.writerows(rows)
 

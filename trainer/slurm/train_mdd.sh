@@ -32,19 +32,19 @@ export MKL_THREADING_LAYER=GNU   # conda MKL vs torch's OpenMP
 source /data/users2/ppopov1/miniconda/bin/activate circrna
 echo "Using python from: $(which python)"
 
-# 2 ranks, each with a train and a valid worker pool: 2*(1+10+10) = 42 of 48.
-# stream_log=False: parallel tasks would interleave run.log
+# 2 ranks, each with train, valid and test worker pools, one busy at a time: 2*(1+10) of 48.
 # the lr in the name gives each run its own folder; 8e-4 is 10x below the 0.008 default
+# test_every_epoch gives each selection (config default: loss, auc) its own test scores
 LR=8e-4
 python train.py --config-name=mdd_direct \
-    experiment.name=mdd_gm_wm_csf_falff_lr$LR \
+    experiment.name=mdd_gm_wm_csf_falff_lr${LR}_testall \
     "experiment.target_folds=[$SLURM_ARRAY_TASK_ID]" \
     experiment.epochs=60 \
     experiment.batch_size=8 \
     optimizer.base_lr=$LR \
+    experiment.test_every_epoch=true \
     loader.train.num_workers=10 \
-    loader.eval.num_workers=10 \
-    stream_log=False
+    loader.eval.num_workers=10
 
 sleep 5s
 echo "Job $SLURM_JOB_ID completed"

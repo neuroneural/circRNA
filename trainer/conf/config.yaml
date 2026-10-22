@@ -23,9 +23,9 @@ experiment:
   train_val_seed: 42     # seed for train/valid slice inside a fold
   sampler_seed: 42       # seed for data order within an epoch
   
-  selection:             # which valid metric determines the best model
-    metric: loss         # loss, accuracy, auc (macro) or auc_weighted
-    minimize: True
+  selection: [loss, auc]   # valid metrics (loss, accuracy, auc, auc_weighted) that each pick a best
+                           # epoch; the first one's model is tested, the rest only save weights
+  test_every_epoch: False  # also test after every epoch: test.csv and test scores per selection
   paths:
     logdir: ./logs       # path to the directory where logs will be stored
     init_weights: null   # checkpoint to initialise the model from (not a run resume)
@@ -71,4 +71,4 @@ runtime:                 # filled in by train.py at startup; not for hand editin
   max_lr: null           # base_lr after scale_lr
   resume_runner: null    # checkpoint an interrupted fold is continuing from
 
-stream_log: True         # tee stdout into <experiment>/run.log
+stream_log: True         # tee stdout into <experiment>/run.log, run_fold<i>.log with target_folds

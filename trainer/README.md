@@ -38,7 +38,7 @@ src/datasets/             datasets, and their own README
 | section | what it sets |
 |---|---|
 | `data` | dataset `name` (a module in `src/datasets/`) and `params` |
-| `experiment` | experiment `name`; experiment params like `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`; random seeds; utility params like `resume`, `save_state`, `cudnn_benchmark`, `bf16`, `channels_last`, `compile`; `paths` (`logdir`, `init_weights`: a checkpoint to start the model from) |
+| `experiment` | experiment `name`; experiment params like `epochs`, `batch_size` (per rank), `cv_folds`, `target_folds`, `valid_ratio`, `selection`, `test_every_epoch`; random seeds; utility params like `resume`, `save_state`, `cudnn_benchmark`, `bf16`, `channels_last`, `compile`; `paths` (`logdir`, `init_weights`: a checkpoint to start the model from) |
 | `model` | model `name` (a module in `src/models/`), `init_seed`, `params` |
 | `optimizer` | `base_lr` (per rank), and `scale_lr` for `base_lr * sqrt(world_size)` |
 | `loader` | `num_workers`, `prefetch_factor`, `persistent_workers`, `prefetches` for `train` and `eval` |
@@ -47,10 +47,12 @@ src/datasets/             datasets, and their own README
 | `stream_log` | config for stdout logger that fills `run.log` |
 
 `experiment.name` is the log folder name *and* the wandb run name, so a run is easy to
-trace in either direction. `experiment.selection` decides which epoch counts as best —
-the checkpoint that is kept and the metrics that get reported — and defaults to the
-lowest `valid/loss`; `experiment.selection.metric=auc experiment.selection.minimize=false`
-switches it to the highest valid AUC.
+trace in either direction. `experiment.selection` lists the valid metrics that each pick a
+best epoch (lowest loss, highest accuracy or AUC). The first one picks the checkpoint that is
+tested and reported; the others only save their weights (`model.best_<metric>.pth`) and best
+epoch. `experiment.selection=[auc,loss]` makes the highest valid AUC the tested model.
+`experiment.test_every_epoch=true` also runs test after every epoch (`test.csv`), which gives
+every selection its own test scores (`test_auc@auc`, ... in `CV_records.csv`).
 
 ## Logs
 
@@ -61,7 +63,7 @@ Everything lands under `logs/<experiment.name>/`.
 | `CV_records.csv` | one row per fold: split sizes, best epoch, valid and **test** metrics, seeds, wall time |
 | `summary.json` | mean, std, median and a 95% t interval across folds |
 | `config.yaml` | the resolved config that actually ran |
-| `run.log` | everything printed, including from spawned DDP ranks |
+| `run.log` | everything printed, including from spawned DDP ranks; `run_fold<i>.log` for a job given `target_folds` |
 | `curves.png` | every fold's training curves in one figure, one line per fold |
 
 And per fold, in `fold_<i>/`:
@@ -69,12 +71,14 @@ And per fold, in `fold_<i>/`:
 | file | what |
 |---|---|
 | `train.csv` `valid.csv` | per-epoch `accuracy, auc, loss` |
+| `test.csv` | the same for test, with `experiment.test_every_epoch=true` |
 | `_epoch_.csv` | per-epoch `lr` and `momentum` |
 | `fold_summary.json` | best epoch, best metrics, seeds, wall time |
 | `test_predictions.csv` | every test sample's `logit_k, prob_k, target`, merged across ranks |
 | `split_indices.json` | the train/valid/test split as dataset indices |
 | `curves.png` | per-epoch LR, loss, AUC and accuracy, with the run's info |
 | `model.best.pth` | weights from the best epoch |
+| `model.best_<metric>.pth` | weights from the best epoch of each extra selection |
 
 and the detail, in `fold_<i>/more/`:
 
