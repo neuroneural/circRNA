@@ -59,7 +59,7 @@ def collate_volumes(results):
     """``[{index: record}]`` -> ``(inputs [B,C,D,H,W], labels [B], indices [B])``.
 
     ``indices`` are positions in the full dataset, so a prediction row joins back to
-    ``dataset.ids`` and to ``split_indices.json``.
+    ``dataset.ids`` and to ``more/split.json``.
     """
     results = results[0]
     inputs = torch.stack([record["input"] for record in results.values()])
@@ -74,7 +74,7 @@ class VolumeDataset(Dataset):
     """Base class. Subclasses set ``labels`` / ``ids`` and implement ``load``."""
 
     labels: np.ndarray  # one int per sample, used for the stratified CV split
-    ids: list           # one readable id per sample, dumped to <split>_ids.txt
+    ids: list           # one readable id per sample, dumped to more/split.json
     n_channels = 1      # channels per sample; main() sizes the model's input from it
 
     normalize = staticmethod(safe_normalize)

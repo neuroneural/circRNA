@@ -44,15 +44,8 @@ src/datasets/             datasets, and their own README
 | `loader` | `num_workers`, `prefetch_factor`, `persistent_workers`, `prefetches` for `train` and `eval` |
 | `wandb` | `project` / `entity` / `name`; off unless you uncomment the logger |
 | `runtime` | filled in by `train.py` at startup — fold index, world size, the scaled lr, the resume checkpoint, and the dataset's channel and class counts. Not for hand editing; it is there so the logged config says what ran |
-| `stream_log` | config for stdout logger that fills `run.log` |
+| `stream_log` | config for stdout logger that fills each fold's `more/run.log` |
 
-`experiment.name` is the log folder name *and* the wandb run name, so a run is easy to
-trace in either direction. `experiment.selection` lists the valid metrics that each pick a
-best epoch (lowest loss, highest accuracy or AUC). The first one picks the checkpoint that is
-tested and reported; the others only save their weights (`model.best_<metric>.pth`) and best
-epoch. `experiment.selection=[auc,loss]` makes the highest valid AUC the tested model.
-`experiment.test_every_epoch=true` also runs test after every epoch (`test.csv`), which gives
-every selection its own test scores (`test_auc@auc`, ... in `CV_records.csv`).
 
 ## Logs
 
@@ -63,19 +56,15 @@ Everything lands under `logs/<experiment.name>/`.
 | `CV_records.csv` | one row per fold: split sizes, best epoch, valid and **test** metrics, seeds, wall time |
 | `summary.json` | mean, std, median and a 95% t interval across folds |
 | `config.yaml` | the resolved config that actually ran |
-| `run.log` | everything printed, including from spawned DDP ranks; `run_fold<i>.log` for a job given `target_folds` |
 | `curves.png` | every fold's training curves in one figure, one line per fold |
 
 And per fold, in `fold_<i>/`:
 
 | file | what |
 |---|---|
-| `train.csv` `valid.csv` | per-epoch `accuracy, auc, loss` |
-| `test.csv` | the same for test, with `experiment.test_every_epoch=true` |
-| `_epoch_.csv` | per-epoch `lr` and `momentum` |
+| `_epoch_.csv` | one row per epoch: `lr`, `momentum` and each loader's `accuracy, auc, loss` (`train_loss`, `valid_auc`, ...; `test_*` with `experiment.test_every_epoch=true`) |
 | `fold_summary.json` | best epoch, best metrics, seeds, wall time |
 | `test_predictions.csv` | every test sample's `logit_k, prob_k, target`, merged across ranks |
-| `split_indices.json` | the train/valid/test split as dataset indices |
 | `curves.png` | per-epoch LR, loss, AUC and accuracy, with the run's info |
 | `model.best.pth` | weights from the best epoch |
 | `model.best_<metric>.pth` | weights from the best epoch of each extra selection |
@@ -86,8 +75,9 @@ and the detail, in `fold_<i>/more/`:
 | file | what |
 |---|---|
 | `fold_config.yaml` | the config plus every seed, enough to reproduce this fold |
-| `*_ids.txt` | the same split as readable sample ids |
+| `split.json` | the train/valid/test split as dataset indices and sample ids |
 | `raw_preds_<loader>_rank<r>.csv` | every sample's `logit_k, prob_k, target` per epoch, per rank |
+| `run.log` | everything the fold printed, including from spawned DDP ranks |
 
 Rerunning an experiment name clears the fold directory first — nothing is deleted, the
 old artefacts move to `backup_<timestamp>/`. With `experiment.resume=true` it instead continues from an interrupted fold, or restarts it if `experiment.save_state=false`.

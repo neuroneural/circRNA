@@ -117,12 +117,10 @@ class CustomRunner(dl.Runner):
             return
 
         # === Resume routines ===
-        # reopen CSVLoggers manually to avoid writing headers again
-        if "csv" in self.loggers:  # only the main process has loggers
-            for key in [*self.loaders, "_epoch_"]:
-                path = os.path.join(self._logdir, f"{key}.csv")
-                if os.path.isfile(path):
-                    self.loggers["csv"].loggers[key] = open(path, "a")
+        # reopen the CSVLogger's file manually to avoid writing its header again
+        path = os.path.join(self._logdir, "_epoch_.csv")
+        if "csv" in self.loggers and os.path.isfile(path):  # only the main process has loggers
+            self.loggers["csv"].loggers["_epoch_"] = open(path, "a")
 
     def get_loaders(self):
         experiment, runtime = self.cfg.experiment, self.cfg.runtime
@@ -147,22 +145,16 @@ class CustomRunner(dl.Runner):
         )
 
         if self.engine.is_main_process:
-            # save the split, as dataset indices and as ids
-            payload = {
-                "fold_idx": runtime.fold_idx,
-                "cv_folds": experiment.cv_folds,
-                "cv_seed": experiment.cv_seed,
-                "train_val_seed": experiment.train_val_seed,
-            }
-            for name, indices in splits.items():
-                payload[name] = {
+            # save the split as dataset indices and ids; its seeds are in fold_config.yaml
+            split = {
+                name: {
                     "indices": [int(i) for i in indices],
-                    "labels": [int(self.labels[int(i)]) for i in indices],
+                    "ids": [self.dataset.ids[int(i)] for i in indices],
                 }
-                with open(os.path.join(self._moredir, f"{name}_ids.txt"), "w") as handle:
-                    handle.writelines(f"{self.dataset.ids[int(i)]}\n" for i in indices)
-            with open(os.path.join(self._logdir, "split_indices.json"), "w") as handle:
-                json.dump(payload, handle, indent=4)
+                for name, indices in splits.items()
+            }
+            with open(os.path.join(self._moredir, "split.json"), "w") as handle:
+                json.dump(split, handle, indent=4, default=str)  # ids may be numpy or bson types
 
             # everything needed to reproduce this fold, seeds included
             fold_cfg = {
@@ -292,8 +284,12 @@ class CustomRunner(dl.Runner):
         super().on_loader_end(runner)
 
     def on_epoch_end(self, runner):
-        self.epoch_metrics["_epoch_"]["lr"] = self.optimizer.param_groups[0]["lr"]
-        self.epoch_metrics["_epoch_"]["momentum"] = get_optimizer_momentum(self.optimizer)
+        # one row per epoch in _epoch_.csv: lr, momentum and every loader's metrics
+        row = self.epoch_metrics["_epoch_"]
+        row["lr"] = self.optimizer.param_groups[0]["lr"]
+        row["momentum"] = get_optimizer_momentum(self.optimizer)
+        for key in self.loaders:
+            row.update({f"{key}_{k}": v for k, v in self.epoch_metrics.pop(key).items()})
         super().on_epoch_end(runner)
 
     def on_experiment_end(self, runner):
@@ -416,9 +412,6 @@ def main(cfg: DictConfig):
     # ===== Initial setup =====
     logdir = os.path.join(cfg.experiment.paths.logdir, cfg.experiment.name)
     os.makedirs(logdir, exist_ok=True)
-    if cfg.stream_log:  # one log per job, so parallel fold jobs don't interleave
-        folds = cfg.experiment.target_folds or []
-        tee_stdout(os.path.join(logdir, "run" + "".join(f"_fold{i}" for i in folds) + ".log"))
 
     # validate config
     experiment = cfg.experiment
@@ -506,7 +499,7 @@ def main(cfg: DictConfig):
             print(f"[Resume] fold {fold_idx} ({position}/{len(target_folds)}) done, skipping")
         else:
             print(f"Starting fold {fold_idx} ({position}/{len(target_folds)})")
-            os.makedirs(rundir, exist_ok=True)
+            os.makedirs(os.path.join(rundir, "more"), exist_ok=True)
 
             # pick an interrupted fold up where it stopped, or start it fresh
             state = os.path.join(rundir, "state.last.pth")
@@ -515,12 +508,15 @@ def main(cfg: DictConfig):
                 print(f"[Resume] continuing fold {fold_idx} from state.last.pth")
             else:  # drop what an earlier run left here
                 clear_rundir(rundir)
+            if cfg.stream_log:  # this fold's own stdout, beside its detail logs
+                tee_stdout(os.path.join(rundir, "more", "run.log"))
 
             # RUN THE FOLD
             cfg.runtime.fold_idx = fold_idx
             cfg.runtime.resume_runner = resume_runner
             runner = CustomRunner(logdir=rundir, dataset=dataset, cfg=cfg)
             runner.run()
+            tee_stdout()  # back to the console only
 
             # GC step; the fold is done, so its resume state can go
             del runner
