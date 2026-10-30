@@ -68,9 +68,6 @@ def tee_stdout(path=None):
 
 def clear_rundir(rundir):
     """Move an earlier run's artefacts into ``backup_<timestamp>/``.
-
-    Catalyst's CSVLogger opens its files "a+" and the run log appends, so a rerun of the
-    same experiment name would otherwise interleave two runs in one file.
     """
     if not os.path.isdir(rundir):
         return
