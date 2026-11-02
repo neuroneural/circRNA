@@ -12,6 +12,7 @@ Drop-in model files extracted from two projects and adapted to the
 | `phase_LSTM.py` | `PhaseBiLSTM`, `PhaseBiLSTMAttention`, `with_seq_len` | `phase_prediction/models/bilstm.py`, `bisltm_attention.py` |
 | `phase_GRU.py` | `PhaseBiGRU`, `PhaseBiGRUAttention`, `with_seq_len` | `phase_prediction/models/gru.py`, `bigru_attention.py` |
 | `phase_Transformer.py` | `PhaseTransformer`, `with_seq_len` | `phase_prediction/models/transformer.py` |
+| `DGCNN.py` | `DGCNN`, `DGCNNRaw` | Zhang et al. 2018 (AAAI), set up as in Zhu et al. 2023 (Front. Hum. Neurosci.); FNC model |
 
 Every file is self-contained — only `torch` and `ml4fmri.models.helper_functions` — so it can be
 copied anywhere on the path.
