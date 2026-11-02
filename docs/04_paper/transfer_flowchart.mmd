@@ -1,0 +1,67 @@
+---
+config:
+  theme: base
+  fontFamily: "Inter, Helvetica, Arial, sans-serif"
+  themeVariables:
+    primaryColor: "#f3f3f1"
+    primaryBorderColor: "#9a9994"
+    primaryTextColor: "#111111"
+    lineColor: "#555555"
+    clusterBkg: "#fafaf8"
+    clusterBorder: "#b5b4af"
+    edgeLabelBackground: "#ffffff"
+    fontSize: "15px"
+  flowchart:
+    wrappingWidth: 760
+    useMaxWidth: false
+    subGraphTitleMargin:
+      top: 4
+      bottom: 8
+    nodeSpacing: 30
+    rankSpacing: 42
+---
+%% Part B transfer design: the data split, the loop over rounds, and what ends up in the boxplot figure
+flowchart TB
+    data["<b>1,944 subjects, 14 sites</b><br/>612 patients with HAMD-3 (10 sites), split once into 2 halves with the same site mix<br/>1,332 others: all HC and the MDD without HAMD-3, incl. 4 sites with no HAMD-3 patients"]
+
+    subgraph round["<b>Loop over rounds r = 1, 2</b> (round 2 swaps the halves)"]
+        target["<b>target data</b> = half r (306 patients, fewer where a target label is missing)<br/>4 targets: HAMD-3 0–1 v 2–4, first episode, on medication, sex"]
+        pool["<b>pretraining pool</b> = everyone not in half r<br/>(the other half + the 1,332 others)"]
+
+        subgraph pre["<b>Pretraining</b> · 2 subject sets × 2 tasks = 4 models per round"]
+            sep["<b>separate sites</b>: 770 subjects (427 MDD / 343 HC) from the 4 sites with no HAMD-3 patients<br/>same subjects in both rounds, so the same 2 models"]
+            sh["<b>shared sites</b>: 770 subjects, same MDD / HC mix, drawn from the whole pool<br/>can include the other half, so 2 new models each round"]
+            fit["tasks: <b>MDD vs HC</b>, <b>sex</b> · train on 80%, validate on 20%<br/>→ validation AUC (sanity table)"]
+        end
+
+        subgraph cv["<b>Target task</b> · for each target and each of the 10 CV folds inside half r"]
+            split["each fold: train on 9/10 (20% of it for early stopping), test on 1/10<br/>all 13 models share the split: 1 from scratch + 4 pretrained × 3"]
+            scratch["<b>trained from scratch</b><br/>random init"]
+            enc["<b>encoder</b><br/>head zeroed, all retrained"]
+            head["<b>encoder + head</b><br/>all retrained"]
+            frozen["<b>encoder + head, frozen</b><br/>scored as is"]
+            auc(["test AUC on the held-out fold"])
+        end
+    end
+
+    data -- "half r" --> target
+    data -- "everyone else" --> pool
+    pool --> sep & sh
+    sep & sh --> fit
+    target --> cv
+    split --> scratch & enc & head & frozen
+    fit -- "4 pretrained models" --> enc
+    fit --> head & frozen
+    scratch & enc & head & frozen --> auc
+
+    fig["<b>Boxplot figure</b><br/>panel = target · x = trained from scratch, or one of the 4 pretrained models (task, sites)<br/>colour = transferred weights, as above · grey dashed line = median of trained from scratch<br/>box = 20 test AUCs: 10 folds × 2 rounds (a shared-sites box pools the two rounds' models)"]
+    auc --> fig
+
+    classDef none fill:#d9d8d4,stroke:#7a7975,color:#111111
+    classDef encoder fill:#2a78d6,stroke:#1d5aa3,color:#ffffff
+    classDef encoderhead fill:#eb6834,stroke:#b34d22,color:#ffffff
+    classDef frozen fill:#6250d6,stroke:#4536a8,color:#ffffff
+    class scratch none
+    class enc encoder
+    class head encoderhead
+    class frozen frozen

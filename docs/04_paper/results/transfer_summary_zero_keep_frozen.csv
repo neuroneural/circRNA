@@ -1,0 +1,57 @@
+target,start,weights,n,auc,delta,wins,p
+HAMD-3 0-1 v 2-4,"trained
+ from scratch",none,612,0.653 ± 0.081,0.0,0/20,
+HAMD-3 0-1 v 2-4,"MDD vs HC, separate sites",encoder,612,0.658 ± 0.068,0.005,9/20,0.856
+HAMD-3 0-1 v 2-4,"MDD vs HC, separate sites",encoder + head,612,0.666 ± 0.103,0.013,12/20,0.791
+HAMD-3 0-1 v 2-4,"MDD vs HC, separate sites","encoder + head, frozen",612,0.563 ± 0.108,-0.09,5/20,0.13
+HAMD-3 0-1 v 2-4,"sex, separate sites",encoder,612,0.667 ± 0.074,0.013,15/20,0.166
+HAMD-3 0-1 v 2-4,"sex, separate sites",encoder + head,612,0.655 ± 0.103,0.001,9/20,0.974
+HAMD-3 0-1 v 2-4,"sex, separate sites","encoder + head, frozen",612,0.535 ± 0.105,-0.118,3/20,0.021
+HAMD-3 0-1 v 2-4,"MDD vs HC, shared sites",encoder,612,0.669 ± 0.061,0.015,14/20,0.424
+HAMD-3 0-1 v 2-4,"MDD vs HC, shared sites",encoder + head,612,0.648 ± 0.103,-0.005,13/20,0.915
+HAMD-3 0-1 v 2-4,"MDD vs HC, shared sites","encoder + head, frozen",612,0.573 ± 0.110,-0.08,8/20,0.204
+HAMD-3 0-1 v 2-4,"sex, shared sites",encoder,612,0.670 ± 0.093,0.017,14/20,0.458
+HAMD-3 0-1 v 2-4,"sex, shared sites",encoder + head,612,0.626 ± 0.124,-0.028,9/20,0.521
+HAMD-3 0-1 v 2-4,"sex, shared sites","encoder + head, frozen",612,0.591 ± 0.115,-0.063,7/20,0.157
+first episode,"trained
+ from scratch",none,582,0.720 ± 0.099,0.0,0/20,
+first episode,"MDD vs HC, separate sites",encoder,582,0.715 ± 0.085,-0.005,8/20,0.808
+first episode,"MDD vs HC, separate sites",encoder + head,582,0.669 ± 0.125,-0.051,3/20,0.131
+first episode,"MDD vs HC, separate sites","encoder + head, frozen",582,0.446 ± 0.156,-0.274,2/20,0.003
+first episode,"sex, separate sites",encoder,582,0.711 ± 0.076,-0.009,8/20,0.632
+first episode,"sex, separate sites",encoder + head,582,0.679 ± 0.097,-0.041,6/20,0.257
+first episode,"sex, separate sites","encoder + head, frozen",582,0.383 ± 0.100,-0.337,0/20,0.0
+first episode,"MDD vs HC, shared sites",encoder,582,0.718 ± 0.096,-0.002,8/20,0.942
+first episode,"MDD vs HC, shared sites",encoder + head,582,0.675 ± 0.089,-0.045,7/20,0.158
+first episode,"MDD vs HC, shared sites","encoder + head, frozen",582,0.497 ± 0.116,-0.223,2/20,0.006
+first episode,"sex, shared sites",encoder,582,0.734 ± 0.074,0.014,11/20,0.515
+first episode,"sex, shared sites",encoder + head,582,0.689 ± 0.079,-0.031,7/20,0.432
+first episode,"sex, shared sites","encoder + head, frozen",582,0.479 ± 0.094,-0.241,1/20,0.0
+on medication,"trained
+ from scratch",none,449,0.823 ± 0.091,0.0,0/20,
+on medication,"MDD vs HC, separate sites",encoder,449,0.825 ± 0.099,0.001,12/20,0.865
+on medication,"MDD vs HC, separate sites",encoder + head,449,0.805 ± 0.117,-0.018,7/20,0.409
+on medication,"MDD vs HC, separate sites","encoder + head, frozen",449,0.552 ± 0.155,-0.271,0/20,0.0
+on medication,"sex, separate sites",encoder,449,0.838 ± 0.091,0.015,14/20,0.22
+on medication,"sex, separate sites",encoder + head,449,0.786 ± 0.105,-0.037,6/20,0.227
+on medication,"sex, separate sites","encoder + head, frozen",449,0.657 ± 0.130,-0.167,2/20,0.001
+on medication,"MDD vs HC, shared sites",encoder,449,0.838 ± 0.076,0.015,13/20,0.315
+on medication,"MDD vs HC, shared sites",encoder + head,449,0.784 ± 0.092,-0.04,5/20,0.216
+on medication,"MDD vs HC, shared sites","encoder + head, frozen",449,0.470 ± 0.114,-0.354,0/20,0.0
+on medication,"sex, shared sites",encoder,449,0.836 ± 0.079,0.013,12/20,0.341
+on medication,"sex, shared sites",encoder + head,449,0.777 ± 0.098,-0.046,5/20,0.174
+on medication,"sex, shared sites","encoder + head, frozen",449,0.510 ± 0.133,-0.314,0/20,0.0
+sex,"trained
+ from scratch",none,612,0.706 ± 0.077,0.0,0/20,
+sex,"MDD vs HC, separate sites",encoder,612,0.703 ± 0.072,-0.003,11/20,0.797
+sex,"MDD vs HC, separate sites",encoder + head,612,0.693 ± 0.097,-0.013,10/20,0.719
+sex,"MDD vs HC, separate sites","encoder + head, frozen",612,0.499 ± 0.079,-0.207,1/20,0.0
+sex,"sex, separate sites",encoder,612,0.728 ± 0.066,0.022,11/20,0.32
+sex,"sex, separate sites",encoder + head,612,0.767 ± 0.081,0.061,16/20,0.154
+sex,"sex, separate sites","encoder + head, frozen",612,0.730 ± 0.097,0.024,12/20,0.623
+sex,"MDD vs HC, shared sites",encoder,612,0.712 ± 0.084,0.006,12/20,0.783
+sex,"MDD vs HC, shared sites",encoder + head,612,0.694 ± 0.106,-0.013,9/20,0.727
+sex,"MDD vs HC, shared sites","encoder + head, frozen",612,0.506 ± 0.085,-0.2,0/20,0.001
+sex,"sex, shared sites",encoder,612,0.757 ± 0.055,0.051,17/20,0.023
+sex,"sex, shared sites",encoder + head,612,0.789 ± 0.060,0.083,18/20,0.001
+sex,"sex, shared sites","encoder + head, frozen",612,0.773 ± 0.053,0.067,16/20,0.037

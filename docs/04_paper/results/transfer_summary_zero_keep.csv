@@ -1,0 +1,37 @@
+target,start,head,n,auc,delta,wins,p
+HAMD-3 0-1 v 2-4,scratch,-,612,0.653 ± 0.081,0.0,0/20,
+HAMD-3 0-1 v 2-4,"MDD vs HC, separate sites",zero,612,0.658 ± 0.068,0.005,9/20,0.856
+HAMD-3 0-1 v 2-4,"MDD vs HC, separate sites",keep,612,0.666 ± 0.103,0.013,12/20,0.791
+HAMD-3 0-1 v 2-4,"sex, separate sites",zero,612,0.667 ± 0.074,0.013,15/20,0.166
+HAMD-3 0-1 v 2-4,"sex, separate sites",keep,612,0.655 ± 0.103,0.001,9/20,0.974
+HAMD-3 0-1 v 2-4,"MDD vs HC, shared sites",zero,612,0.669 ± 0.061,0.015,14/20,0.424
+HAMD-3 0-1 v 2-4,"MDD vs HC, shared sites",keep,612,0.648 ± 0.103,-0.005,13/20,0.915
+HAMD-3 0-1 v 2-4,"sex, shared sites",zero,612,0.670 ± 0.093,0.017,14/20,0.458
+HAMD-3 0-1 v 2-4,"sex, shared sites",keep,612,0.626 ± 0.124,-0.028,9/20,0.521
+first episode,scratch,-,582,0.720 ± 0.099,0.0,0/20,
+first episode,"MDD vs HC, separate sites",zero,582,0.715 ± 0.085,-0.005,8/20,0.808
+first episode,"MDD vs HC, separate sites",keep,582,0.669 ± 0.125,-0.051,3/20,0.131
+first episode,"sex, separate sites",zero,582,0.711 ± 0.076,-0.009,8/20,0.632
+first episode,"sex, separate sites",keep,582,0.679 ± 0.097,-0.041,6/20,0.257
+first episode,"MDD vs HC, shared sites",zero,582,0.718 ± 0.096,-0.002,8/20,0.942
+first episode,"MDD vs HC, shared sites",keep,582,0.675 ± 0.089,-0.045,7/20,0.158
+first episode,"sex, shared sites",zero,582,0.734 ± 0.074,0.014,11/20,0.515
+first episode,"sex, shared sites",keep,582,0.689 ± 0.079,-0.031,7/20,0.432
+on medication,scratch,-,449,0.823 ± 0.091,0.0,0/20,
+on medication,"MDD vs HC, separate sites",zero,449,0.825 ± 0.099,0.001,12/20,0.865
+on medication,"MDD vs HC, separate sites",keep,449,0.805 ± 0.117,-0.018,7/20,0.409
+on medication,"sex, separate sites",zero,449,0.838 ± 0.091,0.015,14/20,0.22
+on medication,"sex, separate sites",keep,449,0.786 ± 0.105,-0.037,6/20,0.227
+on medication,"MDD vs HC, shared sites",zero,449,0.838 ± 0.076,0.015,13/20,0.315
+on medication,"MDD vs HC, shared sites",keep,449,0.784 ± 0.092,-0.04,5/20,0.216
+on medication,"sex, shared sites",zero,449,0.836 ± 0.079,0.013,12/20,0.341
+on medication,"sex, shared sites",keep,449,0.777 ± 0.098,-0.046,5/20,0.174
+sex,scratch,-,612,0.706 ± 0.077,0.0,0/20,
+sex,"MDD vs HC, separate sites",zero,612,0.703 ± 0.072,-0.003,11/20,0.797
+sex,"MDD vs HC, separate sites",keep,612,0.693 ± 0.097,-0.013,10/20,0.719
+sex,"sex, separate sites",zero,612,0.728 ± 0.066,0.022,11/20,0.32
+sex,"sex, separate sites",keep,612,0.767 ± 0.081,0.061,16/20,0.154
+sex,"MDD vs HC, shared sites",zero,612,0.712 ± 0.084,0.006,12/20,0.783
+sex,"MDD vs HC, shared sites",keep,612,0.694 ± 0.106,-0.013,9/20,0.727
+sex,"sex, shared sites",zero,612,0.757 ± 0.055,0.051,17/20,0.023
+sex,"sex, shared sites",keep,612,0.789 ± 0.060,0.083,18/20,0.001
