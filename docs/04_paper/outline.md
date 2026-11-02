@@ -4,11 +4,11 @@
 Purpose:  see if MDD classification task can be potentially used as a pretraining objective useful for prediction of other useful categories: suicidality, medication, first/repeated episodes of depression. 
 Motivation: improving accuracy on more difficult tasks is a hard problem, so using a related task for pretraining is a valid way to both improve scores and reveal hidden connections between the tasks that share common features
 What we do in the process:  
-- benchmark models on MDD classification task on DIRECT data, see what results they achieve on that task
+- benchmark models on MDD and HAMD-3 suicidality scores classification task on DIRECT data, see what results they achieve on that task
 - transfer them on other tasks and test different transfer configuration performance (frozen, encoder transfer and retraining, of full transfer and retraining)
 
 **Data**
-- DIRECT-II super_clean: 1,944 subjects (1,113 MDD / 831 HC), 14 sites
+- DIRECT-II {TODO explain briefly what went into duperclean (same TR 2.0, length at least 230, what else}: 1,944 subjects (1,113 MDD / 831 HC), 14 sites
 - NeuroMark ICA time courses: ICA-53 (main) and ICA-105
 - ml4fmri models; within a task, every model uses the same 10 CV folds
 
@@ -16,9 +16,7 @@ What we do in the process:
 - 13 ml4fmri models on ICA-53: meanMLP best, AUC 0.741 ± 0.046
 - FNC models ~0.70 (BNT, BrainNetCNN, FBNetGen); DGCNN (Zhu et al. 2023) 0.645
 - ICA-105: meanMLP 0.735, LR 0.724
-- Context: REST-meta-MDD papers report 61–82% accuracy; site alone gives AUC ~0.59
-
-TODO in the end of each results section, please lead with a short opening sentense telling what this experiment is (e.g., benchmarking models on MDD classification...), and close with what its main conclustion is (e.g., models are able to classify it, best models achieve this, plateau is this). no need to write a lot of results as a text, figures should be the showing point
+- Context: REST-meta-MDD papers report 61–82% accuracy; site alone gives AUC ~0.60
 
 ## 2. Suicidality (HAMD item 3)
 - Patients only (n = 613): meanMLP AUC 0.69 (0–1 vs 2–4) to 0.78 (0 vs 4)
@@ -43,3 +41,5 @@ TODO in the end of each results section, please lead with a short opening senten
 **Files**
 - `paper_results.ipynb`: part A gathers finished runs; part B runs the transfer experiments
 - `results/`: tables and figures
+- `paper_summary.md`: one-page summary built from this outline
+- `transfer_flowchart.mmd`: source of the transfer design figure
