@@ -8,7 +8,7 @@ What we do in the process:
 - transfer them on other tasks and test different transfer configuration performance (frozen, encoder transfer and retraining, of full transfer and retraining)
 
 **Data**
-- DIRECT-II {TODO explain briefly what went into duperclean (same TR 2.0, length at least 230, what else}: 1,944 subjects (1,113 MDD / 831 HC), 14 sites
+- DIRECT-II super_clean (TR = 2.0 s and ≥ 230 timepoints, cropped to 230; MDD or HC with sex and age; no head-motion exclusion): 1,944 subjects (1,113 MDD / 831 HC), 14 sites
 - NeuroMark ICA time courses: ICA-53 (main) and ICA-105
 - ml4fmri models; within a task, every model uses the same 10 CV folds
 
@@ -30,8 +30,8 @@ What we do in the process:
 - Pretraining task: MDD vs HC, or sex as a control; subjects from separate sites or from shared sites
 - Pretrained models learn their task: validation AUC 0.68 / 0.75 (MDD vs HC), 0.89 / 0.90 (sex), separate / shared sites
 - Target task (the 612 HAMD-3 patients, two halves): HAMD-3 0–1 vs 2–4, first episode (582), on medication (449), sex
-- MDD pretraining helps no target: ΔAUC −0.05 to +0.02 vs scratch, none significant
-- Sex → sex transfers (+0.05 to +0.08 with shared sites), so the setup can detect transfer
+- MDD pretraining helps no target: ΔAUC −0.05 to +0.01 vs scratch, none significant (random-head encoder)
+- Sex → sex transfers (+0.04 to +0.08 with shared sites), so the setup can detect transfer
 - Frozen pretrained models (no retraining): MDD model 0.45–0.57 on the clinical targets and 0.50 on sex; sex model 0.73–0.77 on sex
 - To add: site-only baselines (medication 0.82 and first episode 0.72 from scratch may be site)
 
